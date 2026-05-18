@@ -64,6 +64,10 @@ index_generator:
   per_page: 9
   order_by: -date
 
+archive_generator:
+  per_page: 0
+  order_by: -date
+
 # Category & Tag
 default_category: uncategorized
 category_map:
