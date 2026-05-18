@@ -48,37 +48,67 @@ themes/coldnight/
 
 All Stylus variables (colors, spacing, typography, breakpoints) are declared in `source/css/_variables.styl` and used by every other stylesheet. The entry point is `style.styl`, which `@import`s the others in dependency order. Never hardcode color values in partials — always reference a variable from `_variables.styl`.
 
+### Page layouts
+
+Two distinct page shells are used:
+
+**Two-column shell** (`post`, `index`) — `.page-wrapper` with a CSS Grid (`65fr 35fr`) containing `.main-content` and `.sidebar`. The sidebar is controlled by `theme.sidebar.position`.
+
+**Full-width shell** (`archive`, `tag`, `category`, `page`) — `.archive-wrapper` with `width: 100%; max-width: 1100px; margin: 0 auto`. No sidebar. Used for the archive list, tag/category filtered lists, and static pages like About.
+
+`body` is `display: flex; flex-direction: column; min-height: 100vh`. Direct children that should push the footer down need `flex: 1` — both `.page-wrapper` and `.archive-wrapper` have this.
+
 ### EJS layouts and data flow
 
-Each page type (`index`, `post`, `archive`, `tag`, `category`, `404`) is a full HTML document that `partial()`-includes `_partial/head`, `_partial/header`, `_partial/footer`, etc. The `page` object is Hexo's built-in page context; `theme` is the deserialized `themes/coldnight/_config.yml`.
+Each page type (`index`, `post`, `archive`, `tag`, `category`, `page`, `404`) is a full HTML document that `partial()`-includes `_partial/head`, `_partial/header`, `_partial/footer`, etc. The `page` object is Hexo's built-in page context; `theme` is the deserialized `themes/coldnight/_config.yml`.
 
 `post-card.ejs` is the only partial that expects a local variable — always call it as `partial('_partial/post-card', { post })`.
 
+### Archive / tag / category list layout
+
+These pages use a year-grouped list instead of a card grid. Posts are grouped by `post.date.year()` in the EJS template, sorted newest-first. Each row uses `.archive-item` (CSS Grid: `3.5rem 1fr auto`) showing date, linked title, and category + reading time. Styles live in `_layout.styl` under the `// ─── Archive list` section.
+
+Pagination is disabled for all three via `_config.yml`:
+- `archive_generator.per_page: 0`
+- `tag_generator.per_page: 0`
+- `category_generator.per_page: 0`
+
+### Static pages
+
+`layout/page.ejs` renders static Hexo pages (created with `hexo new page`). It uses the full-width shell with no post metadata. The only static page currently in `source/` is `source/about/index.md`.
+
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 
-Three extensions are registered:
+Four extensions are registered:
 
 | Name | Type | Usage |
 |------|------|-------|
 | `reading_time(content)` | helper | `<%= reading_time(post.content) %>` in EJS |
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box |
+| `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
+
+### Code blocks
+
+Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name.
+
+`source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover.
 
 ### LightGallery integration
 
 LightGallery v2 is loaded from jsDelivr CDN **only on post pages** (controlled by `theme.lightgallery.enabled`). `source/js/gallery.js` handles two cases:
 
-1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): clicking any `.post-body img` not tagged `.no-gallery` opens a full-screen lightbox using a `dynamic` gallery built at runtime.
-2. **Explicit galleries**: `{% gallery %}` tag renders a `.lg-gallery` div; `gallery.js` calls `lightGallery(el, { selector: 'a' })` on each one.
+1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): clicking any `.post-body img` not tagged `.no-gallery` opens a full-screen lightbox.
+2. **Explicit galleries**: `{% gallery %}` tag renders a `.lg-gallery` div; `gallery.js` mounts LightGallery on each one.
 
-### Post grid
+### Post grid (index page only)
 
-The index/archive/tag/category pages render posts inside `.post-grid`, a CSS Grid container defined in `_layout.styl`:
+The index page renders posts inside `.post-grid` (CSS Grid, `_layout.styl`):
 - Desktop (>1024px): 3 columns
 - Tablet (≤1024px): 2 columns
 - Mobile (≤640px): 1 column
 
-`per_page: 9` in `_config.yml` keeps the grid full (3×3). Changing this value without adjusting the CSS grid columns will leave incomplete rows.
+`per_page: 9` in `_config.yml` keeps the grid full (3×3). Archive, tag, and category pages use the list layout instead.
 
 ## Post front-matter
 
@@ -97,7 +127,7 @@ excerpt: "Override the auto-excerpt shown on post cards."
 
 ## Theme configuration
 
-User-facing settings are in `themes/coldnight/_config.yml`. The full schema is documented inline there. Key toggles:
+User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 
 - `sidebar.position: hidden` — hides the sidebar on all pages
 - `lightgallery.enabled: false` — removes all LightGallery CDN requests
