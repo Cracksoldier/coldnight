@@ -35,7 +35,7 @@ themes/coldnight/
 ├── _config.yml          ← theme settings (all user-facing knobs live here)
 ├── layout/
 │   ├── _partial/        ← reusable fragments included via partial()
-│   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive, about)
+│   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive, about, toc)
 │   └── *.ejs            ← one file per Hexo page type
 ├── source/
 │   ├── css/             ← Stylus source; compiled by hexo-renderer-stylus
@@ -79,11 +79,12 @@ Pagination is disabled for all three via `_config.yml`:
 
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 
-Five extensions are registered:
+Six extensions are registered:
 
 | Name | Type | Usage |
 |------|------|-------|
 | `reading_time(content)` | helper | `<%= reading_time(post.content) %>` in EJS — strips `<pre>`/`<figure>` blocks before counting so code doesn't inflate the estimate |
+| `render_toc(content)` | helper | `<%- render_toc(page.content) %>` in EJS — parses `<h2>`/`<h3>` with `id` attributes from rendered HTML and returns a flat `<ol class="toc-list">`. Returns `""` if no headings found. Respects `theme.toc.max_depth` (2 = h2 only, 3 = h2+h3). |
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box |
 | `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
@@ -94,6 +95,18 @@ Five extensions are registered:
 Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name.
 
 `source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover. Clipboard writes use `navigator.clipboard` with an `execCommand('copy')` fallback for non-HTTPS contexts.
+
+### Table of contents
+
+`source/js/toc.js` is loaded on post pages when `theme.toc.enabled` is true. It uses `IntersectionObserver` (rootMargin `0px 0px -65% 0px`) to mark a heading active when it enters the top 35% of the viewport, toggling `.active` on the matching `.toc-link`. Headings are resolved from the TOC links' `href` attributes, so the DOM and helper output must agree on ids (they always do because `render_toc` reads from the same rendered HTML).
+
+The `toc` widget is registered in `sidebar.ejs` with a `page.layout === 'post'` guard — it never renders on archive/tag/category/page layouts. The widget partial (`widgets/toc.ejs`) calls `render_toc(page.content)` and renders nothing if the result is empty, so headingless posts show no widget. The toggle button collapses/expands the `<nav id="toc-list">` via `hidden` attribute.
+
+Styles live in `_components.styl` under `.widget-toc__toggle`, `.toc-list`, `.toc-item`, `.toc-item--h3`, and `.toc-link`.
+
+### Reading progress bar
+
+`source/js/reading-progress.js` is loaded on post pages when `theme.progress_bar` is true. A passive scroll listener computes `scrollY / (scrollHeight - clientHeight) * 100` and sets it as the `width` of `#reading-progress`. The element is a `<div>` injected at the very top of `<body>` in `post.ejs`, styled as `position: fixed; top: 0; height: 3px; z-index: 6` (above the sticky navbar at z-index 5). `pointer-events: none` prevents it from intercepting clicks.
 
 ### Back-to-top button
 
@@ -143,3 +156,6 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `reading_time: false` — removes reading-time estimates everywhere
 - `grid.columns: 1` — switches the index page to list view; any value >1 sets the grid column count
 - `grid.rows: 3` — rows per page in grid mode; ignored in list mode (`per_page` from site config applies)
+- `toc.enabled: false` — disables the TOC widget and prevents `toc.js` from loading
+- `toc.max_depth: 2` — limit TOC to h2 headings only (default 3 includes h3)
+- `progress_bar: false` — removes the reading progress bar from post pages
