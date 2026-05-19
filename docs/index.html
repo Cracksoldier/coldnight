@@ -462,6 +462,8 @@
       <a href="#config-misc">Misc toggles</a>
       <a href="#config-search">Search</a>
       <a href="#config-og">Open Graph / SEO</a>
+      <a href="#config-related-posts">Related posts</a>
+      <a href="#config-pinned">Featured post</a>
     </div>
 
     <div class="nav-section">
@@ -475,7 +477,7 @@
       <div class="nav-section-label">Layouts &amp; structure</div>
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
-      <a href="#ui-features">UI features (TOC, progress bar, search, back-to-top)</a>
+      <a href="#ui-features">UI features (TOC, progress bar, search, back-to-top, related posts, pinned hero)</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -558,6 +560,16 @@
         <div class="icon">🔗</div>
         <h4>Open Graph &amp; SEO</h4>
         <p>Canonical tag, <code>og:*</code>, <code>twitter:card</code>, <code>article:published_time</code>, and keywords — all wired from post front-matter.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔁</div>
+        <h4>Related posts</h4>
+        <p>"You might also like" row at the bottom of each post. Scored by shared tags and category at build time — no plugin required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⭐</div>
+        <h4>Featured / pinned post</h4>
+        <p>Add <code>pinned: true</code> to any post's front-matter to promote it as a full-width hero card above the index grid.</p>
       </div>
     </div>
 
@@ -870,6 +882,12 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td>Show a 3px accent-colored reading progress bar fixed to the top of the viewport on post pages. Fills left-to-right as the reader scrolls. No effect on other page types.</td>
         </tr>
         <tr>
+          <td class="opt-key">related_posts</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a "You might also like" section of up to 3 post cards at the bottom of each post page. Posts are scored by shared tags (+2 pts each) and the same primary category (+1 pt). Set to <code>false</code> to hide the section on all posts.</td>
+        </tr>
+        <tr>
           <td class="opt-key">sponsor.enabled</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">false</td>
@@ -936,6 +954,49 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       <p>Set <code>url:</code> in the site <code>_config.yml</code> to your production domain (e.g. <code>https://example.com</code>) so that <code>og:image</code> and <code>canonical</code> links are absolute.</p>
     </div>
 
+    <h2 id="config-related-posts">Related posts</h2>
+    <p>When <code>related_posts: true</code>, a "You might also like" section renders up to 3 post cards at the bottom of every post page (below the post footer, above <code>&lt;/main&gt;</code>). The scoring runs entirely at build time inside <code>post.ejs</code> — no plugin is required.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">related_posts</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the "You might also like" section. Set to <code>false</code> to hide it on all posts.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Scoring algorithm</h3>
+    <p>Every other post is scored against the current post, and the top 3 non-zero scores are shown:</p>
+    <ul>
+      <li><strong>+2 pts</strong> per tag that appears in both posts</li>
+      <li><strong>+1 pt</strong> if both posts share the same primary category</li>
+    </ul>
+    <p>Posts with a score of 0 are excluded. The section is hidden entirely when no candidates score above 0. The cards reuse the same <code>_partial/post-card.ejs</code> partial and the existing <code>.post-grid</code> CSS (fixed at 3 cols desktop, 2 tablet, 1 mobile).</p>
+
+    <h2 id="config-pinned">Featured / Pinned post</h2>
+    <p>Adding <code>pinned: true</code> to a post's front-matter promotes it to a full-width hero card above the index grid on page 1. No theme config toggle is needed — the feature is active whenever at least one post is pinned, and invisible otherwise.</p>
+
+    <table>
+      <thead><tr><th>Behaviour</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Which post becomes hero?</strong></td><td>The most recently dated post with <code>pinned: true</code>. If several posts are pinned, only the newest is shown as hero; the others appear in the grid normally.</td></tr>
+        <tr><td><strong>Page 1</strong></td><td>Hero card renders above the grid. The pinned post is removed from the grid on this page to avoid duplication.</td></tr>
+        <tr><td><strong>Page 2+</strong></td><td>Hero is hidden. The pinned post reappears in its chronological grid slot.</td></tr>
+        <tr><td><strong>No pinned post</strong></td><td>Index page renders exactly as before — no change.</td></tr>
+      </tbody>
+    </table>
+
+    <p>The hero partial is <code>_partial/pinned-post.ejs</code>. It shows a 45%-wide cover panel on the left, a "Featured" badge, category, reading time, title, excerpt, date, and a "Read more" link. On mobile (&lt;640px) the cover stacks above the content. Styles live in <code>_components.scss</code> under <code>// ─── Pinned / Featured post</code>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Give the pinned post a <code>cover_image</code> for the best hero appearance — without a cover the hero displays content-only with a blue accent border.</p>
+    </div>
+
     <hr>
 
     <!-- Front-matter -->
@@ -949,6 +1010,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
 <span class="nb">tags</span><span class="pn">:</span>         <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
 <span class="nb">cover_image</span><span class="pn">:</span>  <span class="str">/images/cover.jpg</span>   <span class="cm"># optional; falls back to cover.default</span>
 <span class="nb">excerpt</span><span class="pn">:</span>      <span class="str">"Override the auto-excerpt shown on post cards."</span>
+<span class="nb">pinned</span><span class="pn">:</span>       <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
 <span class="pn">---</span></code></pre>
 
     <div class="callout callout-tip">
@@ -1079,8 +1141,14 @@ This option will be **removed** in a future release.
     <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.scss</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
 
     <h3>Search</h3>
-    <p>When <code>search.enabled: true</code>, a 200px search input appears in the navbar (hidden on mobile). On first focus, <code>source/js/search.js</code> lazily fetches <code>/search.json</code> (generated by <code>hexo-generator-search</code>) and builds an in-memory index. Results appear in an absolute-positioned dropdown below the input with up to 8 matches.</p>
-    <p>Matching is multi-term: all space-separated words must appear somewhere in the post's title, content, or tags. Matched substrings are wrapped in <code>&lt;mark&gt;</code> for visual highlighting. Keyboard navigation: <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result links; <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Clicking outside also closes it. Styles live in <code>_components.scss</code> under <code>.search-wrap</code>, <code>.search-input</code>, <code>.search-results</code>, and <code>.search-result-item</code>.</p>
+    <p>When <code>search.enabled: true</code>, a 200px search input appears in the navbar and at the top of the mobile nav drawer. On first focus, <code>source/js/search.js</code> lazily fetches <code>/search.json</code> (generated by <code>hexo-generator-search</code>) and caches it. Both inputs share the same data fetch — focusing the mobile input while the desktop fetch is in-flight does not start a second request. Results appear in an absolute-positioned dropdown with up to 8 matches.</p>
+    <p>Matching is multi-term: all space-separated words must appear somewhere in the post's title, content, or tags. Matched substrings are wrapped in <code>&lt;mark&gt;</code>. Keyboard navigation: <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result links; <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Clicking outside also closes it. Styles live in <code>_components.scss</code> under <code>.search-wrap</code>, <code>.search-input</code>, <code>.search-results</code>, and <code>.search-result-item</code>.</p>
+
+    <h3>Related posts</h3>
+    <p>When <code>related_posts: true</code>, a "You might also like" heading and a row of up to 3 post cards appears at the bottom of every post page. The candidates are scored at build time by shared tags and category (see <a href="#config-related-posts">Related posts configuration</a>). The section is omitted entirely when no post scores above 0. Cards reuse <code>_partial/post-card.ejs</code> inside a fixed 3-column <code>.post-grid</code>. Styles live in <code>_layout.scss</code> under <code>.related-posts</code> and <code>.related-posts__heading</code>.</p>
+
+    <h3>Featured / pinned post</h3>
+    <p>When a post has <code>pinned: true</code> in its front-matter, <code>index.ejs</code> detects it at build time and renders a <code>_partial/pinned-post.ejs</code> hero card above the post grid on page 1. The pinned post is filtered out of the grid on that page to avoid duplication. On page 2+ the hero is hidden and the post appears in its normal chronological slot. See <a href="#config-pinned">Featured / Pinned post</a> for full behaviour details.</p>
 
     <hr>
 
