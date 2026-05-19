@@ -975,7 +975,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       <li><strong>+2 pts</strong> per tag that appears in both posts</li>
       <li><strong>+1 pt</strong> if both posts share the same primary category</li>
     </ul>
-    <p>Posts with a score of 0 are excluded. The section is hidden entirely when no candidates score above 0. The cards reuse the same <code>_partial/post-card.ejs</code> partial and the existing <code>.post-grid</code> CSS (fixed at 3 cols desktop, 2 tablet, 1 mobile).</p>
+    <p>Posts with a score of 0 are excluded. The section is hidden entirely when no candidates score above 0. The cards reuse the same <code>_partial/post-card.ejs</code> partial and the existing <code>.post-grid</code> CSS (fixed at 2 cols desktop and tablet, 1 mobile — 3 columns was too narrow inside the post body's ~700px width). The section heading is <code>&lt;h3&gt;</code> to avoid conflicting with post body <code>##</code> headings at the same outline level.</p>
 
     <h2 id="config-pinned">Featured / Pinned post</h2>
     <p>Adding <code>pinned: true</code> to a post's front-matter promotes it to a full-width hero card above the index grid on page 1. No theme config toggle is needed — the feature is active whenever at least one post is pinned, and invisible otherwise.</p>
@@ -990,7 +990,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       </tbody>
     </table>
 
-    <p>The hero partial is <code>_partial/pinned-post.ejs</code>. It shows a 45%-wide cover panel on the left, a "Featured" badge, category, reading time, title, excerpt, date, and a "Read more" link. On mobile (&lt;640px) the cover stacks above the content. Styles live in <code>_components.scss</code> under <code>// ─── Pinned / Featured post</code>.</p>
+    <p>The hero partial is <code>_partial/pinned-post.ejs</code>. It shows a 45%-wide cover panel on the left, a "Featured" badge, category, reading time, title, excerpt, date, and a "Read more" link. On mobile (&lt;640px) the cover stacks above the content. <code>.pinned-post</code> has <code>min-height: 200px</code> to guarantee visual weight with minimal content and to anchor the cover panel height via flexbox stretch. Styles live in <code>_components.scss</code> under <code>// ─── Pinned / Featured post</code>.</p>
 
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>
@@ -1145,7 +1145,7 @@ This option will be **removed** in a future release.
     <p>Matching is multi-term: all space-separated words must appear somewhere in the post's title, content, or tags. Matched substrings are wrapped in <code>&lt;mark&gt;</code>. Keyboard navigation: <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result links; <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Clicking outside also closes it. Styles live in <code>_components.scss</code> under <code>.search-wrap</code>, <code>.search-input</code>, <code>.search-results</code>, and <code>.search-result-item</code>.</p>
 
     <h3>Related posts</h3>
-    <p>When <code>related_posts: true</code>, a "You might also like" heading and a row of up to 3 post cards appears at the bottom of every post page. The candidates are scored at build time by shared tags and category (see <a href="#config-related-posts">Related posts configuration</a>). The section is omitted entirely when no post scores above 0. Cards reuse <code>_partial/post-card.ejs</code> inside a fixed 3-column <code>.post-grid</code>. Styles live in <code>_layout.scss</code> under <code>.related-posts</code> and <code>.related-posts__heading</code>.</p>
+    <p>When <code>related_posts: true</code>, a "You might also like" heading and a row of up to 3 post cards appears at the bottom of every post page. The candidates are scored at build time by shared tags and category (see <a href="#config-related-posts">Related posts configuration</a>). The section is omitted entirely when no post scores above 0. Cards reuse <code>_partial/post-card.ejs</code> inside a fixed 2-column <code>.post-grid</code>. Styles live in <code>_layout.scss</code> under <code>.related-posts</code> and <code>.related-posts__heading</code>.</p>
 
     <h3>Featured / pinned post</h3>
     <p>When a post has <code>pinned: true</code> in its front-matter, <code>index.ejs</code> detects it at build time and renders a <code>_partial/pinned-post.ejs</code> hero card above the post grid on page 1. The pinned post is filtered out of the grid on that page to avoid duplication. On page 2+ the hero is hidden and the post appears in its normal chronological slot. See <a href="#config-pinned">Featured / Pinned post</a> for full behaviour details.</p>
