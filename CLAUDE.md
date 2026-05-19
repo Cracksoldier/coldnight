@@ -90,11 +90,23 @@ Six extensions are registered:
 | `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
 | `before_generate` filter | filter | Auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 
+### Footnotes
+
+`hexo-renderer-marked` renders `[^label]` / `[^label]: text` Markdown footnote syntax without any plugin. The theme provides matching CSS in `_typography.scss`.
+
+Rendered HTML:
+- Inline reference: `<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>`
+- Bottom section: `<section class="footnotes"><hr><ol><li id="fn1">...<a href="#fnref1" class="footnote-backref">↩</a></li></ol></section>`
+
+`_typography.scss` inside `.post-body, .prose { }` styles `.footnote-ref a` as a small superscript in `$accent-light`, and styles `.footnotes` with a `border-top` separator (the `<hr>` emitted inside is hidden via `display: none` — the border-top replaces it), smaller font size, and muted text color.
+
 ### Code blocks
 
 Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name.
 
 `source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover. Clipboard writes use `navigator.clipboard` with an `execCommand('copy')` fallback for non-HTTPS contexts.
+
+The same file also handles the **permalink button**: a click handler at the bottom of the `DOMContentLoaded` callback queries `.post-permalink-btn` and calls the shared `writeToClipboard()` / `showToast()` helpers already in scope. The button is rendered in `post.ejs` with `data-permalink="<%= page.permalink %>"` so no client-side URL construction is needed. Gated on `theme.permalink_button !== false`.
 
 ### Table of contents
 

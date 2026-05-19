@@ -45,6 +45,7 @@
     <div class="nav-section nav-section--active">
       <div class="nav-section-label">Writing</div>
       <a href="#front-matter">Post front-matter</a>
+      <a href="#footnotes">Footnotes</a>
       <a href="#tag-gallery">{% gallery %}</a>
       <a href="#tag-note">{% note %}</a>
     </div>
@@ -82,6 +83,7 @@
 <span class="nb">cover_image</span><span class="pn">:</span>  <span class="str">/images/cover.jpg</span>   <span class="cm"># optional; falls back to cover.default</span>
 <span class="nb">excerpt</span><span class="pn">:</span>      <span class="str">"Override the auto-excerpt shown on post cards."</span>
 <span class="nb">pinned</span><span class="pn">:</span>       <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
+<span class="nb">series</span><span class="pn">:</span>       <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
 <span class="pn">---</span></code></pre>
 
     <table>
@@ -94,6 +96,7 @@
         <tr><td class="opt-key">cover_image</td><td>Path to the post's cover image. Used on post cards, the post header, the pinned hero, and as <code>og:image</code>. Falls back to <code>theme.cover.default</code> if omitted.</td></tr>
         <tr><td class="opt-key">excerpt</td><td>Override the auto-excerpt shown on post cards and in <code>og:description</code>. If omitted, Hexo uses the text up to the first <code>&lt;!-- more --&gt;</code> tag, or the start of the post body.</td></tr>
         <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
+        <tr><td class="opt-key">series</td><td>A string that groups this post with others sharing the same value. All matching posts appear in a numbered nav strip above the post body, sorted by date. See <a href="configuration.html#config-series">Series posts</a>.</td></tr>
       </tbody>
     </table>
 
@@ -101,6 +104,38 @@
       <span class="callout-icon">💡</span>
       <p>You can also use <code>&lt;!-- more --&gt;</code> anywhere in the post body to set the excerpt boundary instead of the front-matter <code>excerpt</code> field.</p>
     </div>
+
+    <hr>
+
+    <!-- Footnotes -->
+    <h2 id="footnotes">Footnotes</h2>
+    <p><code>hexo-renderer-marked</code> supports standard Markdown footnote syntax out of the box. The theme provides matching styles — no plugin or extra config required.</p>
+
+    <h3>Syntax</h3>
+<pre><code>Here is a sentence with a footnote.<span class="pn">[^1]</span>
+
+A second reference uses the same syntax.<span class="pn">[^note]</span>
+
+<span class="pn">[^1]</span>: This is the footnote text.
+<span class="pn">[^note]</span>: Footnote labels can be any string — they render as sequential numbers.</code></pre>
+
+    <table>
+      <thead><tr><th>Element</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">[^label]</td><td>Inline reference. Renders as a superscript number linking to the footnote definition at the bottom of the post.</td></tr>
+        <tr><td class="opt-key">[^label]: text</td><td>Footnote definition. Must appear somewhere in the post body (typically at the end). The label can be any alphanumeric string.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Footnote labels are for authoring only — they always render as sequential integers (1, 2, 3, …) in the output regardless of the label string you use.</p>
+    </div>
+
+    <h3>How it works</h3>
+    <p><code>hexo-renderer-marked</code> transforms <code>[^label]</code> references into <code>&lt;sup class="footnote-ref"&gt;&lt;a href="#fn1" id="fnref1"&gt;[1]&lt;/a&gt;&lt;/sup&gt;</code> inline, and collects all definitions into a <code>&lt;section class="footnotes"&gt;</code> element at the end of the rendered HTML. The section contains an <code>&lt;hr&gt;</code> (hidden by the theme's CSS — the border-top on <code>.footnotes</code> replaces it) and a numbered <code>&lt;ol&gt;</code>. Each <code>&lt;li&gt;</code> ends with a <code>&lt;a class="footnote-backref"&gt;↩&lt;/a&gt;</code> that links back to the inline reference.</p>
+
+    <p>All styling lives in <code>_typography.scss</code> inside the <code>.post-body, .prose { }</code> block. The inline reference <code>.footnote-ref a</code> is styled as a small superscript in <code>$accent-light</code>. The <code>.footnotes</code> section gets a top border, smaller font size, and muted color to visually separate it from the main post body.</p>
 
     <hr>
 

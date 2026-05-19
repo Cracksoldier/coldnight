@@ -40,11 +40,14 @@
       <a href="#config-og">Open Graph / SEO</a>
       <a href="#config-related-posts">Related posts</a>
       <a href="#config-pinned">Featured post</a>
+      <a href="#config-series">Series posts</a>
+      <a href="#config-permalink-button">Permalink button</a>
     </div>
 
     <div class="nav-section">
       <div class="nav-section-label">Writing</div>
       <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#footnotes">Footnotes</a>
       <a href="writing.html#tag-gallery">{% gallery %}</a>
       <a href="writing.html#tag-note">{% note %}</a>
     </div>
@@ -371,6 +374,18 @@
           <td class="opt-default">""</td>
           <td>Link destination (Ko-fi, GitHub Sponsors, etc.).</td>
         </tr>
+        <tr>
+          <td class="opt-key">permalink_button</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a copy-to-clipboard icon button at the right of the post metadata row. One click copies the post's canonical URL. Set to <code>false</code> to hide it. See <a href="#config-permalink-button">Permalink button</a>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">series</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the series navigation strip on post pages. When a post has a <code>series:</code> front-matter value, this strip lists all posts in the series with the current post highlighted. Set to <code>false</code> to disable globally. See <a href="#config-series">Series posts</a>.</td>
+        </tr>
       </tbody>
     </table>
 
@@ -515,6 +530,74 @@
       <span class="callout-icon">💡</span>
       <p>Give the pinned post a <code>cover_image</code> for the best hero appearance — without a cover the hero displays content-only with a blue accent border.</p>
     </div>
+
+    <hr>
+
+    <!-- Series posts -->
+    <h2 id="config-series">Series posts</h2>
+    <p>When a post has a <code>series:</code> front-matter key, a numbered navigation strip renders between the cover image and the post body, listing every post in the series and highlighting the current one.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">series</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the series nav strip. Set to <code>false</code> to hide it on all posts regardless of front-matter.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Add <code>series:</code> to any post's front-matter:</p>
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>  <span class="str">Building a CLI Tool — Part 2</span>
+<span class="nb">date</span><span class="pn">:</span>   <span class="val">2026-02-10</span>
+<span class="nb">series</span><span class="pn">:</span> <span class="str">Building a CLI Tool</span>
+<span class="pn">---</span></code></pre>
+
+    <p>All posts with the same <code>series</code> string are grouped together. The strip shows a "Series" badge, the series name, a "Part N of M" counter, and a numbered list of all parts in chronological order.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>The strip only renders when the series has at least 2 posts. A single post with <code>series:</code> set shows no strip.</p>
+    </div>
+
+    <h3>How it works</h3>
+    <p>Series detection runs entirely at <strong>build time</strong> inside the top <code>&lt;% %&gt;</code> block of <code>layout/post.ejs</code>, alongside the related-posts scoring block. No JS and no plugin are required.</p>
+
+    <p>The detection logic uses <code>site.posts.each()</code> — the same Warehouse collection API used by related posts — to collect all posts whose <code>p.series</code> value matches the current page's <code>page.series</code>. The collected array is then sorted ascending by <code>date</code> using a standard JS comparator so the oldest post becomes Part 1. <code>seriesIndex</code> is the 1-based position of the current post in that sorted array, found with <code>Array.findIndex()</code>.</p>
+
+    <p>The current post renders as a <code>&lt;span&gt;</code> rather than an <code>&lt;a&gt;</code>. This prevents a self-link, keeps the tab order clean, and provides the visual distinction of the <code>.series-nav__item--active</code> style (bolder, <code>$text-primary</code> color).</p>
+
+    <p>Styles live in <code>_components.scss</code> under <code>// ─── Series nav</code>. The left accent border (<code>border-left: 3px solid $accent</code>) and the "Series" badge reuse the same <code>$accent</code> / <code>$accent-glow</code> token pairing used by other callout-style components throughout the theme.</p>
+
+    <hr>
+
+    <!-- Permalink button -->
+    <h2 id="config-permalink-button">Permalink button</h2>
+    <p>When <code>permalink_button: true</code>, a chain-link icon button appears at the right end of the post metadata row. Clicking it copies the post's canonical URL to the clipboard and shows a "Link copied" toast notification.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">permalink_button</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the copy-permalink icon in the post metadata row. Set to <code>false</code> to hide it.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>The button is rendered directly in <code>layout/post.ejs</code> inside <code>.post-meta</code> and carries the canonical URL as a <code>data-permalink</code> attribute, populated at build time via <code>page.permalink</code> — Hexo's built-in absolute URL property. No client-side URL construction is needed.</p>
+
+    <p>The click handler lives at the bottom of the <code>DOMContentLoaded</code> callback in <code>source/js/copy-code.js</code>, which is always loaded on post pages. It queries <code>.post-permalink-btn</code>, reads <code>dataset.permalink</code>, and calls the same <code>writeToClipboard()</code> and <code>showToast()</code> helpers that are already defined in that file's IIFE scope — no new script file is needed.</p>
+
+    <p><code>writeToClipboard()</code> uses <code>navigator.clipboard.writeText()</code> with an <code>execCommand('copy')</code> fallback for non-HTTPS contexts. The toast uses the shared <code>#toast-container</code> element rendered by <code>_partial/toast.ejs</code>, which is included on every post page.</p>
+
+    <p>The button uses <code>margin-left: auto</code> in <code>_layout.scss</code> to push it to the far right of the flex <code>.post-meta</code> row, keeping it visually separated from the date, author, and category metadata.</p>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
       coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
