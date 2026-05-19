@@ -458,6 +458,7 @@
       <a href="#config-code">Code blocks</a>
       <a href="#config-lightgallery">LightGallery</a>
       <a href="#config-grid">Post grid</a>
+      <a href="#config-toc">Table of contents</a>
       <a href="#config-misc">Misc toggles</a>
     </div>
 
@@ -472,7 +473,7 @@
       <div class="nav-section-label">Layouts &amp; structure</div>
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
-      <a href="#ui-features">UI features</a>
+      <a href="#ui-features">UI features (TOC, progress bar, back-to-top)</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -535,6 +536,16 @@
         <div class="icon">🔌</div>
         <h4>Tag plugins</h4>
         <p><code>{% gallery %}</code> photo grids and <code>{% note %}</code> callout boxes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📖</div>
+        <h4>Table of contents</h4>
+        <p>Auto-generated from post headings. Sticky in the sidebar with scroll-spy active-section highlighting.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h4>Reading progress bar</h4>
+        <p>3px accent-colored bar fixed to the top of the viewport. Fills as the reader scrolls through a post.</p>
       </div>
     </div>
 
@@ -660,7 +671,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">sidebar.widgets</td>
           <td class="opt-type">array</td>
           <td class="opt-default">—</td>
-          <td>Ordered list of widget names to render. Available: <code>recent_posts</code>, <code>tags</code>, <code>archives</code>, <code>about</code>.</td>
+          <td>Ordered list of widget names to render. Available: <code>toc</code>, <code>recent_posts</code>, <code>tags</code>, <code>archives</code>, <code>about</code>. The <code>toc</code> widget only renders on post pages and is hidden when the post has no headings.</td>
         </tr>
       </tbody>
     </table>
@@ -668,6 +679,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
 <pre><code><span class="nb">sidebar</span><span class="pn">:</span>
   <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>   <span class="cm"># left | right | hidden</span>
   <span class="nb">widgets</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">toc</span>           <span class="cm"># Table of contents (post pages only)</span>
     <span class="pn">-</span> <span class="val">recent_posts</span>
     <span class="pn">-</span> <span class="val">tags</span>
     <span class="pn">-</span> <span class="val">archives</span></code></pre>
@@ -797,6 +809,36 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       </tbody>
     </table>
 
+    <h2 id="config-toc">Table of contents</h2>
+    <p>Auto-generates a sticky TOC in the sidebar from post headings. Add <code>toc</code> to <code>sidebar.widgets</code> to display it. The widget silently renders nothing on posts with no headings.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">toc.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the TOC widget and load <code>toc.js</code> on post pages. Set to <code>false</code> to disable both.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">toc.max_depth</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Maximum heading level to include. <code>2</code> = <code>##</code> headings only; <code>3</code> = <code>##</code> and <code>###</code>. H3 entries are indented in the list.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">toc</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span>   <span class="val">true</span>
+  <span class="nb">max_depth</span><span class="pn">:</span> <span class="val">3</span>   <span class="cm"># 2 = h2 only, 3 = h2 + h3</span></code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Scroll-spy uses <code>IntersectionObserver</code> to highlight the active section as the reader scrolls. The TOC is collapsible on mobile via a toggle button.</p>
+    </div>
+
     <h2 id="config-misc">Misc toggles</h2>
 
     <table>
@@ -807,6 +849,12 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
           <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm. Code blocks are excluded from the word count so they don't inflate the estimate.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">progress_bar</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a 3px accent-colored reading progress bar fixed to the top of the viewport on post pages. Fills left-to-right as the reader scrolls. No effect on other page types.</td>
         </tr>
         <tr>
           <td class="opt-key">sponsor.enabled</td>
@@ -959,6 +1007,14 @@ This option will be **removed** in a future release.
     <!-- UI features -->
     <h2 id="ui-features">UI features</h2>
 
+    <h3>Table of contents</h3>
+    <p>When <code>toc.enabled: true</code> and <code>toc</code> is listed in <code>sidebar.widgets</code>, a sticky Contents widget appears in the post sidebar. It is auto-generated at build time from the post's <code>##</code> and <code>###</code> headings (Hexo assigns <code>id</code> attributes to every heading automatically). Posts with no headings render no widget.</p>
+    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> to highlight the active TOC link as each section scrolls into the top 35% of the viewport. On mobile the widget includes a toggle button that collapses/expands the list. Styles live in <code>_components.styl</code> under <code>.widget-toc__toggle</code>, <code>.toc-list</code>, and <code>.toc-link</code>.</p>
+
+    <h3>Reading progress bar</h3>
+    <p>When <code>progress_bar: true</code>, a 3px bar is injected at the very top of post pages (above the skip-nav link, <code>z-index: 6</code> — above the sticky navbar). It fills left-to-right as the reader scrolls, reaching 100% at the bottom of the page. The bar has <code>pointer-events: none</code> so it never blocks clicks.</p>
+    <p><code>source/js/reading-progress.js</code> updates the bar width on every passive scroll event using <code>scrollY / (scrollHeight - clientHeight)</code>. The script and the bar element are both excluded from non-post pages.</p>
+
     <h3>Back-to-top button</h3>
     <p>A circular floating button appears at the bottom-right of every page once the reader scrolls past one viewport height. Clicking it smoothly scrolls back to the top. It is always enabled — no configuration required.</p>
     <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.styl</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
@@ -976,7 +1032,7 @@ This option will be **removed** in a future release.
         <tr><td class="opt-key">_base.styl</td><td>CSS reset, body defaults, scrollbar</td></tr>
         <tr><td class="opt-key">_typography.styl</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
         <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar, <code>.post-cover</code> image</td></tr>
-        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button</td></tr>
+        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget</td></tr>
         <tr><td class="opt-key">_code.styl</td><td>Code block toolbar, language label, copy button</td></tr>
         <tr><td class="opt-key">_lightgallery.styl</td><td>LightGallery overrides to match the dark theme</td></tr>
       </tbody>
