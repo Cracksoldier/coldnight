@@ -501,7 +501,7 @@
         <span class="tag tag-blue">Hexo 8</span>
         <span class="tag tag-green">Dark theme</span>
         <span class="tag tag-purple">LightGallery v2</span>
-        <span class="tag tag-yellow">EJS + Stylus</span>
+        <span class="tag tag-yellow">EJS + SCSS</span>
       </div>
     </section>
 
@@ -559,7 +559,7 @@
       <li>The following Hexo plugins (installed alongside the theme):
         <ul>
           <li><code>hexo-renderer-ejs</code> ^2.0</li>
-          <li><code>hexo-renderer-stylus</code> ^3.0</li>
+          <li><code>hexo-renderer-dartsass</code> ^1.0</li>
           <li><code>hexo-renderer-marked</code> ^7.0</li>
           <li><code>hexo-generator-archive</code> ^2.0</li>
           <li><code>hexo-generator-tag</code> ^2.0</li>
@@ -591,7 +591,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       </li>
       <li>
         <strong>Install required renderers</strong> (if not already present):
-<pre><code>npm install hexo-renderer-ejs hexo-renderer-stylus hexo-renderer-marked \
+<pre><code>npm install hexo-renderer-ejs hexo-renderer-dartsass hexo-renderer-marked \
   hexo-generator-archive hexo-generator-tag hexo-generator-category \
   hexo-generator-index</code></pre>
       </li>
@@ -1009,7 +1009,7 @@ This option will be **removed** in a future release.
 
     <h3>Table of contents</h3>
     <p>When <code>toc.enabled: true</code> and <code>toc</code> is listed in <code>sidebar.widgets</code>, a sticky Contents widget appears in the post sidebar. It is auto-generated at build time from the post's <code>##</code> and <code>###</code> headings (Hexo assigns <code>id</code> attributes to every heading automatically). Posts with no headings render no widget.</p>
-    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> to highlight the active TOC link as each section scrolls into the top 35% of the viewport. On mobile the widget includes a toggle button that collapses/expands the list. Styles live in <code>_components.styl</code> under <code>.widget-toc__toggle</code>, <code>.toc-list</code>, and <code>.toc-link</code>.</p>
+    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> to highlight the active TOC link as each section scrolls into the top 35% of the viewport. On mobile the widget includes a toggle button that collapses/expands the list. Styles live in <code>_components.scss</code> under <code>.widget-toc__toggle</code>, <code>.toc-list</code>, and <code>.toc-link</code>.</p>
 
     <h3>Reading progress bar</h3>
     <p>When <code>progress_bar: true</code>, a 3px bar is injected at the very top of post pages (above the skip-nav link, <code>z-index: 6</code> — above the sticky navbar). It fills left-to-right as the reader scrolls, reaching 100% at the bottom of the page. The bar has <code>pointer-events: none</code> so it never blocks clicks.</p>
@@ -1017,30 +1017,30 @@ This option will be **removed** in a future release.
 
     <h3>Back-to-top button</h3>
     <p>A circular floating button appears at the bottom-right of every page once the reader scrolls past one viewport height. Clicking it smoothly scrolls back to the top. It is always enabled — no configuration required.</p>
-    <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.styl</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
+    <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.scss</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
 
     <hr>
 
     <!-- CSS pipeline -->
     <h2 id="css">CSS pipeline</h2>
-    <p>All styles are written in <a href="https://stylus-lang.com/">Stylus</a> and compiled by <code>hexo-renderer-stylus</code>. The entry point is <code>themes/coldnight/source/css/style.styl</code>, which imports the others in dependency order:</p>
+    <p>All styles are written in SCSS and compiled by <code>hexo-renderer-dartsass</code> (Dart Sass). The entry point is <code>themes/coldnight/source/css/style.scss</code>, which <code>@use</code>s the partials in dependency order. Each partial declares its own variable dependency via <code>@use 'variables' as *;</code> at the top.</p>
 
     <table>
       <thead><tr><th>File</th><th>Contents</th></tr></thead>
       <tbody>
-        <tr><td class="opt-key">_variables.styl</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site.</td></tr>
-        <tr><td class="opt-key">_base.styl</td><td>CSS reset, body defaults, scrollbar</td></tr>
-        <tr><td class="opt-key">_typography.styl</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
-        <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar, <code>.post-cover</code> image</td></tr>
-        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget</td></tr>
-        <tr><td class="opt-key">_code.styl</td><td>Code block toolbar, language label, copy button</td></tr>
-        <tr><td class="opt-key">_lightgallery.styl</td><td>LightGallery overrides to match the dark theme</td></tr>
+        <tr><td class="opt-key">_variables.scss</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site.</td></tr>
+        <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar</td></tr>
+        <tr><td class="opt-key">_typography.scss</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
+        <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar, <code>.post-cover</code> image</td></tr>
+        <tr><td class="opt-key">_components.scss</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget</td></tr>
+        <tr><td class="opt-key">_code.scss</td><td>Code block toolbar, language label, copy button</td></tr>
+        <tr><td class="opt-key">_lightgallery.scss</td><td>LightGallery overrides to match the dark theme</td></tr>
       </tbody>
     </table>
 
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>
-      <p>Never hardcode color values in partials — always reference a variable from <code>_variables.styl</code>. This ensures a single edit recolors the whole theme.</p>
+      <p>Never hardcode color values in partials — always reference a variable from <code>_variables.scss</code>. This ensures a single edit recolors the whole theme.</p>
     </div>
 
     <hr>
