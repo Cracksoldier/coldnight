@@ -121,15 +121,19 @@ search:
 ```
 
 `search.js` behaviour:
-- Index is fetched **lazily** on the first `focus` event of `#search-input` (avoids blocking page load)
-- `hexo-generator-search` v2.4 emits a top-level JSON array; the script handles both `Array` and `{ posts: [] }` formats for forward-compatibility
-- 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags
-- Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet
-- `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output to prevent XSS
-- Keyboard: `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes and returns focus to input; `ArrowUp` at the first result returns focus to the input field
-- Outside click closes the dropdown
+- The script reads the index URL from `data-search-url` on its own `<script>` tag (set by `footer.ejs` via `url_for`), falling back to `/search.json`. This keeps the path correct for subdirectory deployments.
+- Index is fetched **lazily** on the first `focus` of either search input. The fetch is a single shared promise (`loadPromise`) so focusing the mobile input while a desktop-triggered fetch is in-flight does not start a second request.
+- Once the fetch resolves, if the input already has a query, `runSearch()` fires immediately (handles the race where the user types before the network responds).
+- `hexo-generator-search` v2.4 emits a top-level JSON array; the script handles both `Array` and `{ posts: [] }` formats for forward-compatibility.
+- 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags.
+- Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet.
+- `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output to prevent XSS.
+- Keyboard: `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes and returns focus to input; `ArrowUp` at the first result returns focus to the input field.
+- Outside click closes the dropdown.
 
-Styles live in `_components.scss` under `// ─── Search`. The navbar-specific width (`200px`) and mobile hiding are in `.navbar__search`.
+Two instances are initialised — `init('search-input', 'search-wrap', 'search-results')` for the desktop navbar and `init('search-input-mobile', 'search-wrap-mobile', 'search-results-mobile')` for the mobile nav drawer — both sharing the same data cache.
+
+The mobile search input lives at the top of `#mobile-nav` in `header.ejs`, wrapped in `.mobile-nav__search` (padded row with a bottom border). Styles live in `_components.scss` under `// ─── Search`. The navbar-specific width (`200px`) and mobile hiding are in `.navbar__search`.
 
 ### Back-to-top button
 
@@ -142,14 +146,19 @@ All meta computation runs in a single `<% %>` block at the top of `head.ejs` (be
 ```js
 const ogImage    = page.cover_image || theme.cover.default || ''
 const ogImageAbs = ogImage ? config.url + url_for(ogImage) : ''
-const rawExcerpt = page.excerpt ? page.excerpt.replace(/<[^>]+>/g, '').trim() : ''
-const metaDesc   = page.description || rawExcerpt || config.description || ''
+const rawExcerpt = page.excerpt
+  ? page.excerpt
+      .replace(/<[^>]+>/g, '')                          // strip HTML tags
+      .replace(/&amp;/g, '&').replace(/&lt;/g, '<')...  // decode common entities
+      .replace(/\s+/g, ' ').trim()
+  : ''
+const metaDesc   = (page.description || rawExcerpt || config.description || '').slice(0, 160)
 const metaKeywords = (page.tags?.length
   ? page.tags.map(t => t.name).join(', ')
   : '') || config.keywords || ''
 ```
 
-`metaDesc` is used for all three description tags: `<meta name="description">`, `og:description`, and `twitter:description`. The `rawExcerpt` fallback means posts using `<!-- more -->` get a populated OG description even without a front-matter `description:` field.
+`rawExcerpt` strips HTML tags then decodes `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;` so entities from Markdown rendering don't bleed into the OG description. `metaDesc` is capped at 160 characters. It is used for all three description tags: `<meta name="description">`, `og:description`, and `twitter:description`. The `rawExcerpt` fallback means posts using `<!-- more -->` get a populated OG description even without a front-matter `description:` field.
 
 Tags emitted:
 - `<meta name="description">` / `<meta name="keywords">` (keywords gated on non-empty value)
