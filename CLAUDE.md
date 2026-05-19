@@ -201,6 +201,19 @@ The scoring runs entirely at build time in the top `<% %>` block of `post.ejs`:
 
 Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The heading is `<h3>` (not `<h2>`) to avoid conflicting with post body `##` headings at the same outline level. The grid reuses the existing `.post-grid` with fixed inline custom properties `--post-grid-cols: 2; --post-grid-cols-md: 2` — 2 columns fits comfortably within the post body width (~700px); 3 columns produces cards too narrow (~217px).
 
+### Series posts (`post.ejs`)
+
+A post with `series: "Series Name"` in its front-matter shows a numbered nav strip above the post body. Toggled by `theme.series`.
+
+Series detection runs entirely at build time in the top `<% %>` block of `post.ejs`, alongside the related-posts scoring:
+- `site.posts.each()` collects all posts whose `p.series` equals the current post's series name into `_seriesCandidates`
+- The candidates array is sorted ascending by `date` (oldest = Part 1)
+- `seriesIndex` is the 1-based position of the current post in that sorted array
+- The strip renders only when `seriesPosts.length > 1` (a series of one is not shown)
+- The current post renders as a `<span>` (not a `<a>`) so it is visually highlighted and not a self-link
+
+Styles live in `_components.scss` under `// ─── Series nav` (`.series-nav`, `.series-nav__badge`, `.series-nav__name`, `.series-nav__progress`, `.series-nav__list`, `.series-nav__item`). The left accent border and pill badge reuse the same `$accent` / `$accent-glow` tokens as other callout-style components.
+
 ### Featured / Pinned Post (`index.ejs`, `_partial/pinned-post.ejs`)
 
 A post with `pinned: true` in its front-matter is promoted to a full-width hero card above the grid on index page 1. If no post is pinned, the index page is unchanged.
@@ -227,6 +240,7 @@ tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
 excerpt: "Override the auto-excerpt shown on post cards."
 pinned: true                     # optional; promotes post to featured hero on the index page
+series: My Series Name           # optional; groups post into a numbered series nav strip
 ---
 ```
 
@@ -247,3 +261,5 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `progress_bar: false` — removes the reading progress bar from post pages
 - `search.enabled: false` — removes the search box from the navbar and skips loading `search.js`
 - `related_posts: false` — hides the "You might also like" section at the bottom of post pages
+- `permalink_button: false` — removes the copy-permalink icon from the post metadata row
+- `series: false` — disables the series navigation strip on all post pages
