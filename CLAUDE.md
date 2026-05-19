@@ -26,7 +26,7 @@ After `hexo clean`, always run `hexo generate` or `hexo server` before inspectin
 
 ## Architecture
 
-This is a Hexo static site using the custom **coldnight** theme located at `themes/coldnight/`. The Hexo CLI renders Markdown posts from `source/_posts/` through EJS templates, compiles Stylus to CSS, and writes static HTML to `public/`.
+This is a Hexo static site using the custom **coldnight** theme located at `themes/coldnight/`. The Hexo CLI renders Markdown posts from `source/_posts/` through EJS templates, compiles SCSS to CSS, and writes static HTML to `public/`.
 
 ### Theme structure
 
@@ -38,7 +38,7 @@ themes/coldnight/
 │   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive, about, toc)
 │   └── *.ejs            ← one file per Hexo page type
 ├── source/
-│   ├── css/             ← Stylus source; compiled by hexo-renderer-stylus
+│   ├── css/             ← SCSS source; compiled by hexo-renderer-dartsass
 │   └── js/              ← vanilla JS; copied verbatim to public/js/
 └── scripts/
     └── helpers.js       ← Hexo helper + tag plugin registrations
@@ -46,7 +46,7 @@ themes/coldnight/
 
 ### CSS pipeline
 
-All Stylus variables (colors, spacing, typography, breakpoints) are declared in `source/css/_variables.styl` and used by every other stylesheet. The entry point is `style.styl`, which `@import`s the others in dependency order. Never hardcode color values in partials — always reference a variable from `_variables.styl`.
+All design tokens (colors, spacing, typography, breakpoints) are declared as Sass variables in `source/css/_variables.scss` and consumed by every other partial via `@use 'variables' as *;` at the top of each file. The entry point is `style.scss`, which `@use`s the partials in dependency order. Never hardcode color values in partials — always reference a variable from `_variables.scss`.
 
 ### Page layouts
 
