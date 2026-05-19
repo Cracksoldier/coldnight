@@ -460,6 +460,8 @@
       <a href="#config-grid">Post grid</a>
       <a href="#config-toc">Table of contents</a>
       <a href="#config-misc">Misc toggles</a>
+      <a href="#config-search">Search</a>
+      <a href="#config-og">Open Graph / SEO</a>
     </div>
 
     <div class="nav-section">
@@ -473,7 +475,7 @@
       <div class="nav-section-label">Layouts &amp; structure</div>
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
-      <a href="#ui-features">UI features (TOC, progress bar, back-to-top)</a>
+      <a href="#ui-features">UI features (TOC, progress bar, search, back-to-top)</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -547,6 +549,16 @@
         <h4>Reading progress bar</h4>
         <p>3px accent-colored bar fixed to the top of the viewport. Fills as the reader scrolls through a post.</p>
       </div>
+      <div class="feature-card">
+        <div class="icon">🔍</div>
+        <h4>Full-text search</h4>
+        <p>Instant search dropdown in the navbar. Matches titles, content, and tags. Keyboard-navigable with highlight marks on matches.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔗</div>
+        <h4>Open Graph &amp; SEO</h4>
+        <p>Canonical tag, <code>og:*</code>, <code>twitter:card</code>, <code>article:published_time</code>, and keywords — all wired from post front-matter.</p>
+      </div>
     </div>
 
     <hr>
@@ -565,6 +577,7 @@
           <li><code>hexo-generator-tag</code> ^2.0</li>
           <li><code>hexo-generator-category</code> ^2.0</li>
           <li><code>hexo-generator-index</code> ^4.0</li>
+          <li><code>hexo-generator-search</code> ^2.4 (required for search feature)</li>
         </ul>
       </li>
     </ul>
@@ -593,7 +606,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
         <strong>Install required renderers</strong> (if not already present):
 <pre><code>npm install hexo-renderer-ejs hexo-renderer-dartsass hexo-renderer-marked \
   hexo-generator-archive hexo-generator-tag hexo-generator-category \
-  hexo-generator-index</code></pre>
+  hexo-generator-index hexo-generator-search</code></pre>
       </li>
       <li>
         <strong>Enable the theme</strong> in your site's <code>_config.yml</code>:
@@ -877,6 +890,52 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
       </tbody>
     </table>
 
+    <h2 id="config-search">Search</h2>
+
+    <p>Full-text search of post titles, content, and tags via a dropdown in the navbar. Requires <code>hexo-generator-search</code> and a <code>search:</code> block in the site <code>_config.yml</code>.</p>
+
+    <p>Add to the site-level <code>_config.yml</code>:</p>
+<pre><code><span class="nb">search</span><span class="pn">:</span>
+  <span class="nb">path</span><span class="pn">:</span>    <span class="str">search.json</span>
+  <span class="nb">field</span><span class="pn">:</span>   <span class="str">post</span>
+  <span class="nb">content</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">search.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the search input in the navbar. Set to <code>false</code> to hide it and skip loading <code>search.js</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="config-og">Open Graph / SEO</h2>
+
+    <p>All Open Graph, Twitter Card, and SEO meta tags are emitted from <code>_partial/head.ejs</code> automatically — no extra configuration is required. The following fields are populated from post front-matter and site config:</p>
+
+    <table>
+      <thead><tr><th>Meta tag</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">og:title / twitter:title</td><td><code>page.title</code>, falls back to <code>config.title</code></td></tr>
+        <tr><td class="opt-key">og:description / twitter:description / meta description</td><td><code>page.description</code> → <code>page.excerpt</code> (strips HTML) → <code>config.description</code></td></tr>
+        <tr><td class="opt-key">og:image / twitter:image</td><td><code>cover_image</code> front-matter → <code>theme.cover.default</code>; resolved to an absolute URL using <code>config.url</code></td></tr>
+        <tr><td class="opt-key">og:type</td><td><code>article</code> on post pages, <code>website</code> everywhere else</td></tr>
+        <tr><td class="opt-key">og:site_name</td><td><code>config.title</code></td></tr>
+        <tr><td class="opt-key">canonical</td><td><code>page.permalink</code></td></tr>
+        <tr><td class="opt-key">article:published_time / article:author</td><td><code>page.date</code> / <code>config.author</code> — post pages only</td></tr>
+        <tr><td class="opt-key">twitter:site</td><td><code>theme.social.twitter</code> (prefixed with <code>@</code>); omitted when blank</td></tr>
+        <tr><td class="opt-key">meta keywords</td><td>Post tags joined by comma, falls back to <code>config.keywords</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Set <code>url:</code> in the site <code>_config.yml</code> to your production domain (e.g. <code>https://example.com</code>) so that <code>og:image</code> and <code>canonical</code> links are absolute.</p>
+    </div>
+
     <hr>
 
     <!-- Front-matter -->
@@ -1018,6 +1077,10 @@ This option will be **removed** in a future release.
     <h3>Back-to-top button</h3>
     <p>A circular floating button appears at the bottom-right of every page once the reader scrolls past one viewport height. Clicking it smoothly scrolls back to the top. It is always enabled — no configuration required.</p>
     <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.scss</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
+
+    <h3>Search</h3>
+    <p>When <code>search.enabled: true</code>, a 200px search input appears in the navbar (hidden on mobile). On first focus, <code>source/js/search.js</code> lazily fetches <code>/search.json</code> (generated by <code>hexo-generator-search</code>) and builds an in-memory index. Results appear in an absolute-positioned dropdown below the input with up to 8 matches.</p>
+    <p>Matching is multi-term: all space-separated words must appear somewhere in the post's title, content, or tags. Matched substrings are wrapped in <code>&lt;mark&gt;</code> for visual highlighting. Keyboard navigation: <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result links; <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Clicking outside also closes it. Styles live in <code>_components.scss</code> under <code>.search-wrap</code>, <code>.search-input</code>, <code>.search-results</code>, and <code>.search-result-item</code>.</p>
 
     <hr>
 
