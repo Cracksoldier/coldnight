@@ -712,7 +712,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">code.copy_button</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
-          <td>Show a copy-to-clipboard button in the code block toolbar. Excludes line numbers from the copied text.</td>
+          <td>Show a copy-to-clipboard button in the code block toolbar. Excludes line numbers from the copied text. Uses <code>navigator.clipboard</code> with an <code>execCommand</code> fallback for non-HTTPS contexts.</td>
         </tr>
         <tr>
           <td class="opt-key">code.language_label</td>
@@ -729,7 +729,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
     </div>
 
     <h2 id="config-lightgallery">LightGallery</h2>
-    <p>LightGallery v2 is loaded via jsDelivr CDN <strong>only on post pages</strong> when enabled.</p>
+    <p>LightGallery v2 JS <em>and</em> CSS are loaded via jsDelivr CDN <strong>only on post pages</strong> when enabled — no CDN requests on index, archive, tag, or category pages.</p>
 
     <table>
       <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
@@ -744,7 +744,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">lightgallery.auto_mount</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
-          <td>Auto-wrap every <code>.post-body img</code> (not tagged <code>.no-gallery</code>) as a lightbox item on click.</td>
+          <td>Auto-wrap every <code>.post-body img</code> (not tagged <code>.no-gallery</code>) as a lightbox item on click. A single LightGallery instance is created on page load; clicking an image opens it at the correct index.</td>
         </tr>
         <tr>
           <td class="opt-key">lightgallery.zoom</td>
@@ -806,7 +806,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">reading_time</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
-          <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm.</td>
+          <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm. Code blocks are excluded from the word count so they don't inflate the estimate.</td>
         </tr>
         <tr>
           <td class="opt-key">sponsor.enabled</td>
@@ -869,7 +869,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">cols</td>
           <td class="opt-type">number</td>
           <td class="opt-default">3</td>
-          <td>Number of columns in the photo grid (1–6 recommended).</td>
+          <td>Number of columns in the photo grid. Supported values: <strong>1–6</strong>. Each value maps to a dedicated CSS grid rule.</td>
         </tr>
       </tbody>
     </table>
@@ -975,7 +975,7 @@ This option will be **removed** in a future release.
         <tr><td class="opt-key">_variables.styl</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site.</td></tr>
         <tr><td class="opt-key">_base.styl</td><td>CSS reset, body defaults, scrollbar</td></tr>
         <tr><td class="opt-key">_typography.styl</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
-        <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar</td></tr>
+        <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar, <code>.post-cover</code> image</td></tr>
         <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button</td></tr>
         <tr><td class="opt-key">_code.styl</td><td>Code block toolbar, language label, copy button</td></tr>
         <tr><td class="opt-key">_lightgallery.styl</td><td>LightGallery overrides to match the dark theme</td></tr>

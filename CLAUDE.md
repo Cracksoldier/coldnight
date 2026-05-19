@@ -35,7 +35,7 @@ themes/coldnight/
 ├── _config.yml          ← theme settings (all user-facing knobs live here)
 ├── layout/
 │   ├── _partial/        ← reusable fragments included via partial()
-│   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive)
+│   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive, about)
 │   └── *.ejs            ← one file per Hexo page type
 ├── source/
 │   ├── css/             ← Stylus source; compiled by hexo-renderer-stylus
@@ -83,7 +83,7 @@ Five extensions are registered:
 
 | Name | Type | Usage |
 |------|------|-------|
-| `reading_time(content)` | helper | `<%= reading_time(post.content) %>` in EJS |
+| `reading_time(content)` | helper | `<%= reading_time(post.content) %>` in EJS — strips `<pre>`/`<figure>` blocks before counting so code doesn't inflate the estimate |
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box |
 | `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
@@ -93,7 +93,7 @@ Five extensions are registered:
 
 Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name.
 
-`source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover.
+`source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover. Clipboard writes use `navigator.clipboard` with an `execCommand('copy')` fallback for non-HTTPS contexts.
 
 ### Back-to-top button
 
@@ -101,10 +101,10 @@ Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<
 
 ### LightGallery integration
 
-LightGallery v2 is loaded from jsDelivr CDN **only on post pages** (controlled by `theme.lightgallery.enabled`). `source/js/gallery.js` handles two cases:
+LightGallery v2 JS and CSS are loaded from jsDelivr CDN **only on post pages** (gated by `page.layout === 'post'` in `_partial/head.ejs` and `layout/post.ejs`). `source/js/gallery.js` handles two cases:
 
-1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): clicking any `.post-body img` not tagged `.no-gallery` opens a full-screen lightbox.
-2. **Explicit galleries**: `{% gallery %}` tag renders a `.lg-gallery` div; `gallery.js` mounts LightGallery on each one.
+1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): a single LightGallery instance is created on page load for all `.post-body img` elements (excluding `.no-gallery`). Clicking an image calls `instance.openGallery(idx)` — no new instance per click.
+2. **Explicit galleries**: `{% gallery [cols] %}` tag renders a `.lg-gallery` div with a `data-cols` attribute (1–6); `gallery.js` mounts a separate LightGallery instance on each one. CSS for all column counts is generated via a Stylus loop in `_components.styl`.
 
 ### Post grid (index page only)
 
