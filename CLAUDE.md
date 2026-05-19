@@ -199,7 +199,7 @@ The scoring runs entirely at build time in the top `<% %>` block of `post.ejs`:
 
 `site.posts.each()` iterates all posts via the Warehouse collection API. The related-posts section is only rendered when at least one candidate scores > 0.
 
-Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The grid reuses the existing `.post-grid` with fixed inline custom properties `--post-grid-cols: 3; --post-grid-cols-md: 2`.
+Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The heading is `<h3>` (not `<h2>`) to avoid conflicting with post body `##` headings at the same outline level. The grid reuses the existing `.post-grid` with fixed inline custom properties `--post-grid-cols: 2; --post-grid-cols-md: 2` — 2 columns fits comfortably within the post body width (~700px); 3 columns produces cards too narrow (~217px).
 
 ### Featured / Pinned Post (`index.ejs`, `_partial/pinned-post.ejs`)
 
@@ -214,7 +214,7 @@ const showHero   = !!pinnedPost && (page.current === 1 || !page.current)
 
 When `showHero` is true the grid loop skips the pinned post (`if (showHero && post.path === pinnedPost.path) return`) so it does not appear twice on page 1. On page 2+ the hero is suppressed and the post occupies its chronological grid slot.
 
-The partial `_partial/pinned-post.ejs` uses the same data as `post-card.ejs` (cover image, category, read time, excerpt) and reuses `.post-card__category` and `.post-card__read-more`. Styles live in `_components.scss` under `// ─── Pinned / Featured post`. Key visual details: blue `$border-focus` border, 45%-wide cover panel on the left (stacks on mobile), `.pinned-badge` label in accent colour.
+The partial `_partial/pinned-post.ejs` uses the same data as `post-card.ejs` (cover image, category, read time, excerpt) and reuses `.post-card__category` and `.post-card__read-more`. Styles live in `_components.scss` under `// ─── Pinned / Featured post`. Key visual details: blue `$border-focus` border, 45%-wide cover panel on the left (stacks on mobile), `.pinned-badge` label in accent colour, `min-height: 200px` on `.pinned-post` to guarantee hero visual weight with minimal content and to anchor the cover panel height via flex stretch.
 
 ## Post front-matter
 
