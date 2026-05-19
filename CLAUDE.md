@@ -98,6 +98,24 @@ Uses the `hidden` attribute (not `display:none`) for accessible, style-decoupled
 
 **Styles** — `.archive-filters` and `.archive-filter-chip` live in `_layout.scss` under `// ─── Archive filter chips`. The active chip uses `$accent` background; chips have a `:focus-visible` outline for keyboard accessibility.
 
+### External link indicator
+
+When `external_links: true` (default), every author-written link in a post body that points to an external domain automatically receives `target="_blank"` and `rel="noopener noreferrer"`, and a small `↗` icon appears after the link text.
+
+**Hook: `after_post_render`** — the filter is registered with `hexo.extend.filter.register('after_post_render', ...)` rather than `after_render:html`. The `after_post_render` hook receives only `data.content` (the rendered Markdown fragment before layout injection), so no theme-owned external links (social icons, sponsor button, footer links — all of which already carry their own `target`/`rel` in the EJS) are ever touched.
+
+**Filter logic** — a regex replaces opening `<a href="https?://...">` tags. Three skip conditions (checked in order):
+1. Link already has a `target=` attribute — author-configured, leave untouched.
+2. Link has a `download` attribute — `{% download %}` tag output, not a navigation link.
+3. The link's hostname matches `hexo.config.url` — internal absolute URL.
+
+**Icon** — rendered purely via CSS in `_typography.scss` inside `.post-body, .prose`:
+```scss
+a[target="_blank"]::after { content: " ↗"; font-size: 0.75em; opacity: 0.6; }
+.lg-gallery a[target="_blank"]::after { content: none; }
+```
+The `.lg-gallery` override suppresses the icon on `{% gallery %}` thumbnail anchors (which have external image URLs but trigger LightGallery, not navigation). The icon inherits `$accent-light` color from the parent `a` rule automatically.
+
 ### Static pages
 
 `layout/page.ejs` renders static Hexo pages (created with `hexo new page`). It uses the full-width shell with no post metadata. The only static page currently in `source/` is `source/about/index.md`.
