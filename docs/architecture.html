@@ -51,6 +51,8 @@
       <a href="writing.html#footnotes">Footnotes</a>
       <a href="writing.html#tag-gallery">{% gallery %}</a>
       <a href="writing.html#tag-note">{% note %}</a>
+      <a href="writing.html#tag-tabs">{% tabs %}</a>
+      <a href="writing.html#image-captions">Image captions</a>
     </div>
 
     <div class="nav-section nav-section--active">
@@ -120,8 +122,8 @@
     <p>The following features are implemented as client-side JavaScript loaded on the appropriate page types. All scripts are plain vanilla JS with no dependencies — no framework, no bundler.</p>
 
     <h3 id="ui-toc">Table of contents</h3>
-    <p>When <code>toc.enabled: true</code> and <code>toc</code> is listed in <code>sidebar.widgets</code>, a sticky Contents widget appears in the post sidebar. It is built from the post's <code>##</code> and <code>###</code> headings at build time via the <code>render_toc()</code> helper. Posts with no qualifying headings render no widget at all — the helper returns an empty string.</p>
-    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code> to fire when a heading enters the top 35% of the viewport, toggling the <code>active</code> class on the matching <code>.toc-link</code>. The widget's collapse/expand toggle sets the <code>hidden</code> attribute on the list container and flips <code>aria-expanded</code> — no class toggling, no inline style. The CSS chevron rotation is handled purely by <code>[aria-expanded="false"] svg { transform: rotate(180deg) }</code>. See <a href="configuration.html#config-toc">TOC configuration</a> for the full implementation detail.</p>
+    <p>When <code>toc.enabled: true</code> and <code>toc</code> is listed in <code>sidebar.widgets</code>, a sticky Contents widget appears in the post sidebar. It is built from the post's <code>##</code> and <code>###</code> headings at build time via the <code>render_toc()</code> helper. Heading text and IDs are HTML-escaped before output so titles containing <code>&lt;</code>, <code>&gt;</code>, or <code>&amp;</code> render correctly. Posts with no qualifying headings render no widget at all — the helper returns an empty string.</p>
+    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code> to fire when a heading enters the top 35% of the viewport, toggling the <code>active</code> class on the matching <code>.toc-link</code>. The active link uses <code>$accent-light</code> (not <code>$accent</code>) to meet WCAG AA contrast on the dark sidebar background. The widget's collapse/expand toggle sets the <code>hidden</code> attribute on the list container and flips <code>aria-expanded</code> — no class toggling, no inline style. The CSS chevron rotation is handled purely by <code>[aria-expanded="false"] svg { transform: rotate(180deg) }</code>. See <a href="configuration.html#config-toc">TOC configuration</a> for the full implementation detail.</p>
 
     <h3 id="ui-progress">Reading progress bar</h3>
     <p>When <code>progress_bar: true</code>, a 3px accent-colored bar is fixed to the very top of the viewport on post pages. It fills left-to-right as the reader scrolls, reaching 100% at the bottom of the content.</p>
@@ -137,7 +139,7 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
     <p><strong>Implementation</strong> — <code>source/js/back-to-top.js</code> is loaded via <code>_partial/footer.ejs</code> on every page. It attaches a passive scroll listener on <code>window</code> that toggles the <code>back-to-top--visible</code> modifier class on <code>#back-to-top</code> once <code>scrollY &gt; window.innerHeight</code>. The button uses <code>opacity</code> + <code>visibility: hidden</code> (not <code>display: none</code>) when invisible — this keeps it in the layout flow and, crucially, excludes it from the keyboard tab order when hidden (a <code>visibility: hidden</code> element cannot receive focus). Styles live in <code>_components.scss</code> under <code>.back-to-top</code>.</p>
 
     <h3 id="ui-search">Search</h3>
-    <p>A 200px text input in the navbar (and a full-width input in the mobile drawer) provides instant full-text search across all post titles, content, and tags. Results appear in an absolute-positioned dropdown below the input with up to 8 matches, highlighted with <code>&lt;mark&gt;</code> spans. See <a href="configuration.html#config-search">Search configuration</a> for the complete implementation detail including lazy fetch, factory pattern, XSS safety, and keyboard navigation.</p>
+    <p>A 200px text input in the navbar (and a full-width input in the mobile drawer) provides instant full-text search across all post titles, content, and tags. Results appear in an absolute-positioned dropdown below the input with up to 8 matches, highlighted with <code>&lt;mark&gt;</code> spans. All output — including result anchor <code>href</code> attributes — is passed through <code>esc()</code> to prevent XSS. The mobile drawer (<code>#mobile-nav</code>) starts with <code>aria-hidden="true"</code>; <code>nav.js</code> flips it on open/close so screen readers never traverse a closed drawer. See <a href="configuration.html#config-search">Search configuration</a> for the complete implementation detail including lazy fetch, factory pattern, and keyboard navigation.</p>
 
     <h3 id="ui-related">Related posts</h3>
     <p>A "You might also like" row of up to 3 post cards appears at the bottom of every post page. The candidates are selected and scored entirely at build time — no runtime JS is involved. See <a href="configuration.html#config-related-posts">Related posts configuration</a> for the scoring algorithm and implementation detail.</p>
@@ -154,8 +156,8 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
     <table>
       <thead><tr><th>File</th><th>Contents</th></tr></thead>
       <tbody>
-        <tr><td class="opt-key">_variables.scss</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site — every other partial reads from it.</td></tr>
-        <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar styling</td></tr>
+        <tr><td class="opt-key">_variables.scss</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site — every other partial reads from it. Font-stack variables (<code>$font-sans</code>, <code>$font-mono</code>) are <strong>unquoted SCSS lists</strong> — keep them unquoted or the compiler will treat the entire value as one unknown font name.</td></tr>
+        <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar styling, reduced-motion overrides (<code>scroll-behavior: auto</code> and <code>animation: none</code> under <code>prefers-reduced-motion: reduce</code>)</td></tr>
         <tr><td class="opt-key">_typography.scss</td><td>Post body typography — headings, lists, blockquotes, tables, inline code</td></tr>
         <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar layout, <code>.post-cover</code> image, related-posts wrapper</td></tr>
         <tr><td class="opt-key">_components.scss</td><td>Navbar, footer, post cards, pinned hero, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget, search dropdown</td></tr>

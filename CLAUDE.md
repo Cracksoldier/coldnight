@@ -48,6 +48,8 @@ themes/coldnight/
 
 All design tokens (colors, spacing, typography, breakpoints) are declared as Sass variables in `source/css/_variables.scss` and consumed by every other partial via `@use 'variables' as *;` at the top of each file. The entry point is `style.scss`, which `@use`s the partials in dependency order. Never hardcode color values in partials — always reference a variable from `_variables.scss`.
 
+**Font stacks**: `$font-sans` and `$font-mono` are unquoted SCSS lists, not quoted strings. Wrapping them in quotes would make the entire comma-separated value a single SCSS string, causing the CSS compiler to output it with quotes — which browsers treat as one unrecognised font name and fall back to defaults. Always keep these values unquoted when modifying them.
+
 ### Page layouts
 
 Two distinct page shells are used:
@@ -79,16 +81,18 @@ Pagination is disabled for all three via `_config.yml`:
 
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 
-Six extensions are registered:
+Eight extensions are registered. Two module-level utilities are defined at the top and shared by all handlers: `stripHtml` (removes `<pre>`/`<figure>` blocks then all tags) and `escHtml` (HTML-escapes `&`, `<`, `>`, `"`).
 
 | Name | Type | Usage |
 |------|------|-------|
 | `reading_time(content)` | helper | `<%= reading_time(post.content) %>` in EJS — strips `<pre>`/`<figure>` blocks before counting so code doesn't inflate the estimate |
-| `render_toc(content)` | helper | `<%- render_toc(page.content) %>` in EJS — parses `<h2>`/`<h3>` with `id` attributes from rendered HTML and returns a flat `<ol class="toc-list">`. Returns `""` if no headings found. Respects `theme.toc.max_depth` (2 = h2 only, 3 = h2+h3). |
-| `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid |
-| `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box |
-| `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
-| `before_generate` filter | filter | Auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
+| `word_count(content)` | helper | `<%= word_count(post.content) %>` in EJS — returns formatted word count (e.g. `"1,234 words"`) excluding code blocks |
+| `render_toc(content)` | helper | `<%- render_toc(page.content) %>` in EJS — parses `<h2>`/`<h3>` with `id` attributes from rendered HTML; heading text and ids are HTML-escaped via `escHtml` before output. Returns `""` if no headings found. Respects `theme.toc.max_depth` (2 = h2 only, 3 = h2+h3). |
+| `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid. `alt` and `src` values are HTML-escaped via `escHtml` before insertion into attributes. |
+| `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box. Body is rendered via `renderSync`; falls back to `<pre>`-escaped content if the Markdown engine throws. |
+| `{% tabs %}` | tag (block) | Multi-tab content block using CSS-only radio toggle. Each panel rendered via `renderSync` with the same try/catch safety as `{% note %}`. Supports up to 10 tabs. |
+| `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
+| `before_generate` filter | filter | Resets tab counter and auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 
 ### Footnotes
 
@@ -139,13 +143,15 @@ search:
 - `hexo-generator-search` v2.4 emits a top-level JSON array; the script handles both `Array` and `{ posts: [] }` formats for forward-compatibility.
 - 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags.
 - Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet.
-- `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output to prevent XSS.
+- `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output — including `post.url` in result anchor `href` attributes — to prevent XSS.
 - Keyboard: `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes and returns focus to input; `ArrowUp` at the first result returns focus to the input field.
 - Outside click closes the dropdown.
 
 Two instances are initialised — `init('search-input', 'search-wrap', 'search-results')` for the desktop navbar and `init('search-input-mobile', 'search-wrap-mobile', 'search-results-mobile')` for the mobile nav drawer — both sharing the same data cache.
 
 The mobile search input lives at the top of `#mobile-nav` in `header.ejs`, wrapped in `.mobile-nav__search` (padded row with a bottom border). Styles live in `_components.scss` under `// ─── Search`. The navbar-specific width (`200px`) and mobile hiding are in `.navbar__search`.
+
+The `#mobile-nav` drawer carries `aria-hidden="true"` in its initial (closed) state. `nav.js` sets `aria-hidden="false"` in `openNav()` and `aria-hidden="true"` in `closeNav()` so screen readers never traverse the drawer's content while it is visually hidden.
 
 ### Back-to-top button
 
@@ -221,7 +227,7 @@ Series detection runs entirely at build time in the top `<% %>` block of `post.e
 - `site.posts.each()` collects all posts whose `p.series` equals the current post's series name into `_seriesCandidates`
 - The candidates array is sorted ascending by `date` (oldest = Part 1)
 - `seriesIndex` is the 1-based position of the current post in that sorted array
-- The strip renders only when `seriesPosts.length > 1` (a series of one is not shown)
+- The strip renders only when `seriesPosts.length > 1 && seriesIndex > 0` — the second guard prevents a "Part 0 of N" display if `findIndex` returns `-1` due to a path inconsistency between the current page and the series candidate list
 - The current post renders as a `<span>` (not a `<a>`) so it is visually highlighted and not a self-link
 
 Styles live in `_components.scss` under `// ─── Series nav` (`.series-nav`, `.series-nav__badge`, `.series-nav__name`, `.series-nav__progress`, `.series-nav__list`, `.series-nav__item`). The left accent border and pill badge reuse the same `$accent` / `$accent-glow` tokens as other callout-style components.

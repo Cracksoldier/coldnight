@@ -49,6 +49,8 @@
       <a href="#footnotes">Footnotes</a>
       <a href="#tag-gallery">{% gallery %}</a>
       <a href="#tag-note">{% note %}</a>
+      <a href="#tag-tabs">{% tabs %}</a>
+      <a href="#image-captions">Image captions</a>
     </div>
 
     <div class="nav-section">
@@ -233,6 +235,73 @@ This option will be **removed** in a future release.
 <span class="kw">&lt;/div&gt;</span></code></pre>
 
     <p>Each type has its own color scheme defined in <code>_components.scss</code>. <code>note-tip</code> uses green (<code>$success</code> / <code>$success-bg</code>), <code>note-info</code> uses blue (<code>$accent</code> / <code>$info-bg</code>), <code>note-warning</code> uses amber (<code>$amber</code> / <code>$amber-bg</code>), and <code>note-danger</code> uses red (<code>$danger</code> / <code>$danger-bg</code>). All color values are SCSS variables from <code>_variables.scss</code> — never hardcoded.</p>
+
+    <hr>
+
+    <!-- Tag: tabs -->
+    <h2 id="tag-tabs">{% tabs %} tag</h2>
+    <p>Renders a multi-tab content block. Switching between tabs is handled by pure CSS (no JavaScript) using hidden radio inputs. Markdown is fully supported inside each tab panel.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">tabs</span> <span class="pn">%}</span>
+<span class="cm">&lt;!-- tab Tab name --&gt;</span>
+Content for the first tab. **Markdown** is _supported_.
+<span class="cm">&lt;!-- endtab --&gt;</span>
+<span class="cm">&lt;!-- tab Another tab --&gt;</span>
+Content for the second tab.
+<span class="cm">&lt;!-- endtab --&gt;</span>
+<span class="pn">{%</span> <span class="kw">endtabs</span> <span class="pn">%}</span></code></pre>
+
+    <h3>Example — code in multiple languages</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">tabs</span> <span class="pn">%}</span>
+<span class="cm">&lt;!-- tab JavaScript --&gt;</span>
+```js
+console.log('hello world')
+```
+<span class="cm">&lt;!-- endtab --&gt;</span>
+<span class="cm">&lt;!-- tab Python --&gt;</span>
+```py
+print('hello world')
+```
+<span class="cm">&lt;!-- endtab --&gt;</span>
+<span class="cm">&lt;!-- tab Rust --&gt;</span>
+```rust
+println!("hello world");
+```
+<span class="cm">&lt;!-- endtab --&gt;</span>
+<span class="pn">{%</span> <span class="kw">endtabs</span> <span class="pn">%}</span></code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Up to <strong>10 tabs</strong> are supported per block. Tab names can contain spaces but must not contain <code>--&gt;</code>.</p>
+    </div>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>tabs</code> as a Hexo block tag plugin. It parses <code>&lt;!-- tab Name --&gt; … &lt;!-- endtab --&gt;</code> markers to split the block into named panels. For each tab it emits a hidden <code>&lt;input type="radio"&gt;</code> with a unique ID, a matching <code>&lt;label&gt;</code> in the tab nav bar, and a <code>&lt;div class="tabs__panel"&gt;</code> for the content. Each panel body is passed through Hexo's synchronous Markdown renderer so fenced code blocks and other syntax work normally.</p>
+
+    <p>The "active tab" state is driven entirely by CSS: the checked radio input selects both the active label (via <code>:checked ~ .tabs__nav .tabs__label:nth-child(N)</code>) and the active panel (via <code>:checked ~ .tabs__panels .tabs__panel:nth-child(N)</code>). All non-active panels are <code>display: none</code>. Styles live in <code>_components.scss</code> under <code>// ─── Tabs</code>.</p>
+
+    <hr>
+
+    <!-- Image captions -->
+    <h2 id="image-captions">Image captions</h2>
+    <p>When <code>image_captions: true</code> in the theme config (enabled by default), images written as standalone paragraphs are automatically upgraded to <code>&lt;figure&gt;</code> + <code>&lt;figcaption&gt;</code> elements at build time. The caption text is taken from the Markdown <code>alt</code> attribute.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">!</span><span class="pn">[</span><span class="str">This text becomes the caption</span><span class="pn">](</span><span class="str">/images/photo.jpg</span><span class="pn">)</span></code></pre>
+
+    <p>Renders as:</p>
+<pre><code><span class="kw">&lt;figure&gt;</span>
+  <span class="kw">&lt;img</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/images/photo.jpg"</span> <span class="nb">alt</span><span class="pn">=</span><span class="str">"This text becomes the caption"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;figcaption&gt;</span>This text becomes the caption<span class="kw">&lt;/figcaption&gt;</span>
+<span class="kw">&lt;/figure&gt;</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Images with an empty alt attribute (<code>![](/images/photo.jpg)</code>) are left as plain <code>&lt;img&gt;</code> elements — no caption is added. This is useful for decorative images that shouldn't have a caption.</p>
+    </div>
+
+    <p>The conversion is applied by the <code>after_render:html</code> filter in <code>scripts/helpers.js</code> — it runs on every page after HTML rendering. Set <code>image_captions: false</code> in the theme config to disable it.</p>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
       coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
