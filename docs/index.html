@@ -733,7 +733,7 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
     </table>
 
     <h2 id="config-grid">Post grid</h2>
-    <p>Controls the layout of the index page. <code>per_page</code> is automatically set to <code>columns × rows</code> — no need to change it in the site's <code>_config.yml</code>.</p>
+    <p>Controls the layout of the index page. In grid mode, <code>per_page</code> is automatically set to <code>columns × rows</code>. In list mode (<code>columns: 1</code>), <code>per_page</code> is left untouched so the value in the site's <code>_config.yml</code> applies.</p>
 
     <table>
       <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
@@ -748,14 +748,14 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-key">grid.rows</td>
           <td class="opt-type">number</td>
           <td class="opt-default">3</td>
-          <td>Number of rows per page. Combined with <code>columns</code>, determines how many posts appear before pagination. e.g. <code>columns: 2, rows: 4</code> → 8 posts per page.</td>
+          <td>Grid mode only. Rows per page; <code>per_page</code> is auto-set to <code>columns × rows</code>. e.g. <code>columns: 2, rows: 4</code> → 8 posts per page. Ignored in list mode — set <code>per_page</code> in the site's <code>_config.yml</code> instead.</td>
         </tr>
       </tbody>
     </table>
 
 <pre><code><span class="nb">grid</span><span class="pn">:</span>
   <span class="nb">columns</span><span class="pn">:</span> <span class="val">3</span>   <span class="cm"># 1 = list view, 2–6 = grid</span>
-  <span class="nb">rows</span><span class="pn">:</span>    <span class="val">3</span>   <span class="cm"># per_page auto-set to columns × rows</span></code></pre>
+  <span class="nb">rows</span><span class="pn">:</span>    <span class="val">3</span>   <span class="cm"># grid only: per_page = columns × rows; ignored in list mode</span></code></pre>
 
     <table>
       <thead><tr><th><code>columns</code></th><th>Desktop</th><th>Tablet (≤1024px)</th><th>Mobile (≤640px)</th></tr></thead>
