@@ -428,7 +428,7 @@
 
     <p><strong>Matching</strong> — queries are debounced 180 ms. Each query is split on whitespace and all terms must match somewhere in the post's <code>title</code>, first 800 characters of <code>content</code>, or <code>tags</code> (AND logic). Results are capped at 8. <code>esc()</code> HTML-escapes all user-derived strings before insertion to prevent XSS. <code>mark()</code> wraps matched substrings in <code>&lt;mark&gt;</code> after escaping.</p>
 
-    <p><strong>Keyboard navigation</strong> — <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result <code>&lt;a&gt;</code> links. <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Pressing <kbd>↑</kbd> while on the first result also returns focus to the input. Clicking outside the search wrapper closes the dropdown.</p>
+    <p><strong>Keyboard navigation</strong> — Press <kbd>/</kbd> on any page to instantly focus the search input (no-op if an input, textarea, or contenteditable already has focus). <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result <code>&lt;a&gt;</code> links. <kbd>Escape</kbd> closes the dropdown and blurs the input. Pressing <kbd>↑</kbd> while on the first result returns focus to the input. Clicking outside the search wrapper closes the dropdown.</p>
 
     <hr>
 

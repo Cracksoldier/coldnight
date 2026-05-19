@@ -144,7 +144,7 @@ search:
 - 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags.
 - Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet.
 - `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output — including `post.url` in result anchor `href` attributes — to prevent XSS.
-- Keyboard: `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes and returns focus to input; `ArrowUp` at the first result returns focus to the input field.
+- Keyboard: `/` pressed outside any text field focuses the desktop search input and selects any existing text; `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes the dropdown and blurs the input; `ArrowUp` at the first result returns focus to the input field.
 - Outside click closes the dropdown.
 
 Two instances are initialised — `init('search-input', 'search-wrap', 'search-results')` for the desktop navbar and `init('search-input-mobile', 'search-wrap-mobile', 'search-results-mobile')` for the mobile nav drawer — both sharing the same data cache.
