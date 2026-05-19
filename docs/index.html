@@ -429,6 +429,7 @@
       <a href="#config-cover">Cover images</a>
       <a href="#config-code">Code blocks</a>
       <a href="#config-lightgallery">LightGallery</a>
+      <a href="#config-grid">Post grid</a>
       <a href="#config-misc">Misc toggles</a>
     </div>
 
@@ -728,6 +729,42 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
           <td class="opt-default">true</td>
           <td>Enable the thumbnail strip plugin at the bottom of the lightbox.</td>
         </tr>
+      </tbody>
+    </table>
+
+    <h2 id="config-grid">Post grid</h2>
+    <p>Controls the layout of the index page. <code>per_page</code> is automatically set to <code>columns × rows</code> — no need to change it in the site's <code>_config.yml</code>.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">grid.columns</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Number of columns on the index page. Set to <code>1</code> to switch to a horizontal list view with thumbnails. Responsive: tablet uses <code>ceil(columns/2)</code>, mobile always collapses to 1.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">grid.rows</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Number of rows per page. Combined with <code>columns</code>, determines how many posts appear before pagination. e.g. <code>columns: 2, rows: 4</code> → 8 posts per page.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">grid</span><span class="pn">:</span>
+  <span class="nb">columns</span><span class="pn">:</span> <span class="val">3</span>   <span class="cm"># 1 = list view, 2–6 = grid</span>
+  <span class="nb">rows</span><span class="pn">:</span>    <span class="val">3</span>   <span class="cm"># per_page auto-set to columns × rows</span></code></pre>
+
+    <table>
+      <thead><tr><th><code>columns</code></th><th>Desktop</th><th>Tablet (≤1024px)</th><th>Mobile (≤640px)</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">1</td><td>1 (list)</td><td>1 (list)</td><td>1 stacked</td></tr>
+        <tr><td class="opt-key">2</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td class="opt-key">3</td><td>3</td><td>2</td><td>1</td></tr>
+        <tr><td class="opt-key">4</td><td>4</td><td>2</td><td>1</td></tr>
+        <tr><td class="opt-key">5</td><td>5</td><td>3</td><td>1</td></tr>
       </tbody>
     </table>
 
