@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration — coldnight docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="index.html">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Getting started</div>
+      <a href="index.html#overview">Overview</a>
+      <a href="index.html#requirements">Requirements</a>
+      <a href="index.html#installation">Installation</a>
+      <a href="index.html#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section nav-section--active">
+      <div class="nav-section-label">Configuration</div>
+      <a href="#config-navbar">Navbar</a>
+      <a href="#config-sidebar">Sidebar</a>
+      <a href="#config-social">Social links</a>
+      <a href="#config-cover">Cover images</a>
+      <a href="#config-code">Code blocks</a>
+      <a href="#config-lightgallery">LightGallery</a>
+      <a href="#config-grid">Post grid</a>
+      <a href="#config-toc">Table of contents</a>
+      <a href="#config-misc">Misc toggles</a>
+      <a href="#config-search">Search</a>
+      <a href="#config-og">Open Graph / SEO</a>
+      <a href="#config-related-posts">Related posts</a>
+      <a href="#config-pinned">Featured post</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Writing</div>
+      <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#tag-gallery">{% gallery %}</a>
+      <a href="writing.html#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="architecture.html#layouts">Page layouts</a>
+      <a href="architecture.html#static-pages">Static pages</a>
+      <a href="architecture.html#ui-features">UI features</a>
+      <a href="architecture.html#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Deployment</div>
+      <a href="deployment.html#deploy-github">GitHub Pages</a>
+      <a href="deployment.html#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <h1>Configuration</h1>
+    <p>All user-facing settings live in <code>themes/coldnight/_config.yml</code>. Changes take effect after <code>hexo generate</code> or a dev-server restart.</p>
+
+    <!-- Navbar -->
+    <h2 id="config-navbar">Navbar</h2>
+    <p>Controls the top navigation bar. Links accept any absolute path or external URL.</p>
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>        <span class="cm"># site name shown left of the navbar</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/archives</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">About</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/about</span></code></pre>
+
+    <hr>
+
+    <!-- Sidebar -->
+    <h2 id="config-sidebar">Sidebar</h2>
+    <p>The sidebar appears only on the two-column layout (index and post pages).</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">sidebar.position</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">right</td>
+          <td><code>left</code> | <code>right</code> | <code>hidden</code>. Use <code>hidden</code> to give the post body the full width.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sidebar.widgets</td>
+          <td class="opt-type">array</td>
+          <td class="opt-default">—</td>
+          <td>Ordered list of widget names to render. Available: <code>toc</code>, <code>recent_posts</code>, <code>tags</code>, <code>archives</code>, <code>about</code>. The <code>toc</code> widget only renders on post pages and is hidden when the post has no headings.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">sidebar</span><span class="pn">:</span>
+  <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>   <span class="cm"># left | right | hidden</span>
+  <span class="nb">widgets</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">toc</span>           <span class="cm"># Table of contents (post pages only)</span>
+    <span class="pn">-</span> <span class="val">recent_posts</span>
+    <span class="pn">-</span> <span class="val">tags</span>
+    <span class="pn">-</span> <span class="val">archives</span></code></pre>
+
+    <hr>
+
+    <!-- Social links -->
+    <h2 id="config-social">Social links</h2>
+    <p>Displayed in the footer. Leave a value empty to hide that icon.</p>
+<pre><code><span class="nb">social</span><span class="pn">:</span>
+  <span class="nb">github</span><span class="pn">:</span>  <span class="str">"your-username"</span>   <span class="cm"># → https://github.com/your-username</span>
+  <span class="nb">twitter</span><span class="pn">:</span> <span class="str">"your-handle"</span>     <span class="cm"># → https://twitter.com/your-handle</span>
+  <span class="nb">rss</span><span class="pn">:</span>     <span class="val">true</span>              <span class="cm"># show RSS feed link (/atom.xml)</span></code></pre>
+
+    <hr>
+
+    <!-- Cover images -->
+    <h2 id="config-cover">Cover images</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">cover.default</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Absolute path to a fallback image used when a post has no <code>cover_image</code> in its front-matter.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">cover.aspect_ratio</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">"16/9"</td>
+          <td>CSS <code>aspect-ratio</code> value applied to post-card thumbnails.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">cover</span><span class="pn">:</span>
+  <span class="nb">default</span><span class="pn">:</span>      <span class="str">"/images/default-cover.jpg"</span>
+  <span class="nb">aspect_ratio</span><span class="pn">:</span> <span class="str">"16/9"</span></code></pre>
+
+    <hr>
+
+    <!-- Code blocks -->
+    <h2 id="config-code">Code blocks</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">code.copy_button</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a copy-to-clipboard button in the code block toolbar. Excludes line numbers from the copied text.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">code.language_label</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Display the detected language name in the top-right corner of each code block.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>Code block enhancement is a two-part pipeline — a build-time filter and a client-side script — that work together to inject the toolbar without touching the Hexo renderer output.</p>
+
+    <p><strong>Build time</strong> — <code>scripts/helpers.js</code> registers an <code>after_render:html</code> filter that runs on every generated HTML page after Hexo's renderer finishes. It scans for <code>&lt;figure class="highlight lang"&gt;</code> elements (the standard Hexo highlight output) and injects a <code>data-lang="lang"</code> attribute onto each one. This attribute is what makes the language label possible in CSS using <code>attr()</code>, and it also gives the JS a reliable hook to read the language name.</p>
+
+    <p><strong>Client side</strong> — <code>source/js/copy-code.js</code> runs on <code>DOMContentLoaded</code> and queries every <code>figure.highlight</code>. For each one it injects a <code>.code-toolbar</code> flex div into the top-right corner containing a language label (reads <code>data-lang</code>) and a copy button. The copy handler targets <code>td.code</code> specifically — not the entire figure — to exclude the gutter line-number column from the copied text.</p>
+
+    <p>The clipboard write uses <code>navigator.clipboard.writeText()</code> as the primary path. For non-HTTPS contexts (local preview over HTTP) where the Clipboard API is unavailable, it falls back to <code>document.execCommand('copy')</code> via a hidden <code>&lt;textarea&gt;</code>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>The site's <code>_config.yml</code> must use <code>syntax_highlighter: highlight.js</code> with <code>hljs: true</code> for Hexo to emit the expected <code>&lt;figure class="highlight lang"&gt;</code> structure.</p>
+    </div>
+
+    <hr>
+
+    <!-- LightGallery -->
+    <h2 id="config-lightgallery">LightGallery</h2>
+    <p>LightGallery v2 JS <em>and</em> CSS are loaded via jsDelivr CDN <strong>only on post pages</strong> when enabled — no CDN requests on index, archive, tag, or category pages.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">lightgallery.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Include LightGallery CDN assets. Disable for sites with no images or that need no external requests.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.auto_mount</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Auto-wrap every <code>.post-body img</code> (not tagged <code>.no-gallery</code>) as a lightbox item on click. A single LightGallery instance is created on page load; clicking an image opens it at the correct index.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.zoom</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the LightGallery zoom plugin.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.thumbnail</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the thumbnail strip plugin at the bottom of the lightbox.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>LightGallery CDN assets (JS and CSS) are gated by <code>page.layout === 'post'</code> in two places: the CSS <code>&lt;link&gt;</code> in <code>_partial/head.ejs</code> and the JS <code>&lt;script&gt;</code> tags in <code>layout/post.ejs</code>. This means zero CDN requests on any non-post page.</p>
+
+    <p>There are two mounting modes, both handled by <code>source/js/gallery.js</code>:</p>
+
+    <ul>
+      <li><strong>Auto-mount</strong> (<code>auto_mount: true</code>): On page load, <code>gallery.js</code> creates a single LightGallery instance targeting all <code>.post-body img</code> elements (excluding any with class <code>.no-gallery</code>). When the reader clicks an image, the handler calls <code>instance.openGallery(idx)</code> with the image's index — it reuses the existing instance rather than creating a new one on every click. This avoids the overhead of re-mounting LG per click and keeps memory usage flat regardless of how many images the post has.</li>
+      <li><strong>Explicit <code>{% gallery %}</code> blocks</strong>: The tag plugin emits a <code>&lt;div class="lg-gallery" data-cols="N"&gt;</code> wrapper. <code>gallery.js</code> queries all <code>.lg-gallery</code> elements and mounts a separate <code>lightGallery(el, { plugins: [...] })</code> instance on each one. Each block is fully independent.</li>
+    </ul>
+
+    <p>The <code>data-cols</code> attribute (values 1–6) drives the CSS grid column count. A SCSS <code>@for</code> loop in <code>_components.scss</code> generates a rule for each value: <code>.lg-gallery[data-cols="N"] { grid-template-columns: repeat(N, 1fr) }</code>. Optionally enabled plugins (zoom, thumbnail) are only loaded when their respective config flags are true — the <code>&lt;script&gt;</code> tags for each plugin are conditionally rendered in <code>post.ejs</code>.</p>
+
+    <hr>
+
+    <!-- Post grid -->
+    <h2 id="config-grid">Post grid</h2>
+    <p>Controls the layout of the index page. In grid mode, <code>per_page</code> is automatically set to <code>columns × rows</code>. In list mode (<code>columns: 1</code>), <code>per_page</code> is left untouched so the value in the site's <code>_config.yml</code> applies.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">grid.columns</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Number of columns on the index page. Set to <code>1</code> to switch to a horizontal list view with thumbnails. Responsive: tablet uses <code>ceil(columns/2)</code>, mobile always collapses to 1.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">grid.rows</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Grid mode only. Rows per page; <code>per_page</code> is auto-set to <code>columns × rows</code>. e.g. <code>columns: 2, rows: 4</code> → 8 posts per page. Ignored in list mode — set <code>per_page</code> in the site's <code>_config.yml</code> instead.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">grid</span><span class="pn">:</span>
+  <span class="nb">columns</span><span class="pn">:</span> <span class="val">3</span>   <span class="cm"># 1 = list view, 2–6 = grid</span>
+  <span class="nb">rows</span><span class="pn">:</span>    <span class="val">3</span>   <span class="cm"># grid only: per_page = columns × rows; ignored in list mode</span></code></pre>
+
+    <table>
+      <thead><tr><th><code>columns</code></th><th>Desktop</th><th>Tablet (≤1024px)</th><th>Mobile (≤640px)</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">1</td><td>1 (list)</td><td>1 (list)</td><td>1 stacked</td></tr>
+        <tr><td class="opt-key">2</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td class="opt-key">3</td><td>3</td><td>2</td><td>1</td></tr>
+        <tr><td class="opt-key">4</td><td>4</td><td>2</td><td>1</td></tr>
+        <tr><td class="opt-key">5</td><td>5</td><td>3</td><td>1</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>Column count needs to be known at two points: pagination (how many posts per page) and CSS layout (how wide each column is). The theme resolves both without requiring the user to set the same number in multiple places.</p>
+
+    <p><strong>Pagination</strong> — <code>scripts/helpers.js</code> registers a <code>before_generate</code> filter that runs before Hexo builds any pages. It reads <code>theme.grid.columns</code> and <code>theme.grid.rows</code> and auto-sets <code>config.index_generator.per_page = columns × rows</code>. This ensures the index page always fills the grid exactly. In list mode (<code>columns === 1</code>) the filter leaves <code>per_page</code> untouched, so the site-level value applies.</p>
+
+    <p><strong>CSS layout</strong> — Rather than hardcoding column counts in SCSS (which would require recompilation on every change), <code>index.ejs</code> injects the column count as inline CSS custom properties on the <code>.post-grid</code> element at render time:</p>
+
+<pre><code><span class="kw">&lt;div</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"post-grid"</span>
+     <span class="nb">style</span><span class="pn">=</span><span class="str">"--post-grid-cols: 3; --post-grid-cols-md: 2;"</span><span class="kw">&gt;</span></code></pre>
+
+    <p>The SCSS rule in <code>_layout.scss</code> reads these via <code>var()</code>: <code>grid-template-columns: repeat(var(--post-grid-cols), 1fr)</code>. Since CSS custom properties cascade, each <code>.post-grid</code> uses only its own values. The media-query breakpoints in SCSS switch to <code>--post-grid-cols-md</code> at tablet width and hard-code 1 column at mobile.</p>
+
+    <p>When <code>grid.columns === 1</code>, <code>index.ejs</code> also adds the <code>post-grid--list</code> modifier class, which overrides each <code>.post-card</code> to <code>flex-direction: row</code> with a fixed 180px thumbnail panel on the left.</p>
+
+    <hr>
+
+    <!-- Table of contents -->
+    <h2 id="config-toc">Table of contents</h2>
+    <p>Auto-generates a sticky TOC in the sidebar from post headings. Add <code>toc</code> to <code>sidebar.widgets</code> to display it. The widget silently renders nothing on posts with no headings.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">toc.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the TOC widget and load <code>toc.js</code> on post pages. Set to <code>false</code> to disable both.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">toc.max_depth</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Maximum heading level to include. <code>2</code> = <code>##</code> headings only; <code>3</code> = <code>##</code> and <code>###</code>. H3 entries are indented in the list.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">toc</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span>   <span class="val">true</span>
+  <span class="nb">max_depth</span><span class="pn">:</span> <span class="val">3</span>   <span class="cm"># 2 = h2 only, 3 = h2 + h3</span></code></pre>
+
+    <h3>How it works</h3>
+    <p>The TOC is built in two stages: a build-time helper generates the HTML list, and a client-side script handles scroll-spy active highlighting.</p>
+
+    <p><strong>Build time</strong> — <code>scripts/helpers.js</code> registers a <code>render_toc(content)</code> Hexo helper. When the sidebar widget calls <code>&lt;%- render_toc(page.content) %&gt;</code>, the helper receives the already-rendered HTML of the post, scans it for <code>&lt;h2&gt;</code> and <code>&lt;h3&gt;</code> elements that have <code>id</code> attributes (Hexo's renderer assigns these automatically), and returns a flat <code>&lt;ol class="toc-list"&gt;</code> with one <code>&lt;li class="toc-item"&gt;&lt;a class="toc-link" href="#id"&gt;</code> per heading. H3 entries get an additional <code>toc-item--h3</code> class which adds left padding in CSS. If no qualifying headings are found, the helper returns an empty string and the widget renders nothing.</p>
+
+    <p><strong>Client side</strong> — <code>source/js/toc.js</code> is loaded on post pages only when <code>theme.toc.enabled</code> is true and the sidebar is not hidden. It uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code>. This rootMargin shrinks the observable area to the top 35% of the viewport — a heading is considered "active" the moment it enters that zone. When the observer fires, it reads the heading's <code>id</code>, finds the matching <code>.toc-link</code> by comparing <code>href</code> attributes, and toggles the <code>active</code> class (which applies an accent-colored left border).</p>
+
+    <p>The toggle button in the widget sets or removes the <code>hidden</code> attribute on <code>&lt;nav id="toc-list"&gt;</code> and flips <code>aria-expanded</code> on the button. The CSS chevron rotation is handled entirely via the selector <code>[aria-expanded="false"] svg { transform: rotate(180deg) }</code> — no JS class toggling needed.</p>
+
+    <hr>
+
+    <!-- Misc toggles -->
+    <h2 id="config-misc">Misc toggles</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">reading_time</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm. Code blocks are excluded from the word count so they don't inflate the estimate.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">progress_bar</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a 3px accent-colored reading progress bar fixed to the top of the viewport on post pages. Fills left-to-right as the reader scrolls. No effect on other page types.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">related_posts</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a "You might also like" section of up to 3 post cards at the bottom of each post page. Posts are scored by shared tags (+2 pts each) and the same primary category (+1 pt). Set to <code>false</code> to hide the section on all posts.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Show a sponsor / "Buy me a coffee" link in the post footer.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.label</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">"Buy me a coffee"</td>
+          <td>Button label text.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.url</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Link destination (Ko-fi, GitHub Sponsors, etc.).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Search -->
+    <h2 id="config-search">Search</h2>
+
+    <p>Full-text search of post titles, content, and tags via a dropdown in the navbar. Requires <code>hexo-generator-search</code> and a <code>search:</code> block in the site <code>_config.yml</code>.</p>
+
+    <p>Add to the site-level <code>_config.yml</code>:</p>
+<pre><code><span class="nb">search</span><span class="pn">:</span>
+  <span class="nb">path</span><span class="pn">:</span>    <span class="str">search.json</span>
+  <span class="nb">field</span><span class="pn">:</span>   <span class="str">post</span>
+  <span class="nb">content</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">search.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the search input in the navbar. Set to <code>false</code> to hide it and skip loading <code>search.js</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p><code>hexo-generator-search</code> emits <code>public/search.json</code> at build time — a flat JSON array of post objects with <code>title</code>, <code>content</code>, <code>url</code>, and <code>tags</code> fields. <code>source/js/search.js</code> is loaded via <code>_partial/footer.ejs</code> on every page when search is enabled.</p>
+
+    <p><strong>Subdirectory-safe URL</strong> — the <code>&lt;script&gt;</code> tag for <code>search.js</code> carries a <code>data-search-url</code> attribute set by <code>footer.ejs</code> via <code>url_for('/search.json')</code>. On startup, <code>search.js</code> reads this attribute from its own script element (<code>document.querySelector('script[data-search-url]')</code>) rather than hardcoding the path. This keeps the path correct for sites deployed in a subdirectory (e.g. <code>https://user.github.io/repo/search.json</code>).</p>
+
+    <p><strong>Lazy fetch with shared promise</strong> — the JSON index is only fetched on the first <code>focus</code> event on either search input. The promise is stored in a module-level <code>loadPromise</code> variable. If the mobile drawer input is focused while the desktop-triggered fetch is in-flight, the second focus handler reuses <code>loadPromise</code> instead of starting a second request. After the fetch resolves, if the focused input already contains a query (the user typed before the network responded), <code>runSearch()</code> fires immediately so no keystrokes are lost.</p>
+
+    <p><strong>Factory pattern</strong> — <code>init(inputId, wrapperId, resultsId)</code> is called twice at the bottom of the script: once for the desktop navbar input (<code>search-input</code>, <code>search-wrap</code>, <code>search-results</code>) and once for the mobile drawer input (<code>search-input-mobile</code>, <code>search-wrap-mobile</code>, <code>search-results-mobile</code>). Both instances share the same <code>loadPromise</code> and the same cached <code>searchIndex</code> array.</p>
+
+    <p><strong>Matching</strong> — queries are debounced 180 ms. Each query is split on whitespace and all terms must match somewhere in the post's <code>title</code>, first 800 characters of <code>content</code>, or <code>tags</code> (AND logic). Results are capped at 8. <code>esc()</code> HTML-escapes all user-derived strings before insertion to prevent XSS. <code>mark()</code> wraps matched substrings in <code>&lt;mark&gt;</code> after escaping.</p>
+
+    <p><strong>Keyboard navigation</strong> — <kbd>↓</kbd> / <kbd>↑</kbd> move focus between result <code>&lt;a&gt;</code> links. <kbd>Escape</kbd> closes the dropdown and returns focus to the input. Pressing <kbd>↑</kbd> while on the first result also returns focus to the input. Clicking outside the search wrapper closes the dropdown.</p>
+
+    <hr>
+
+    <!-- Open Graph / SEO -->
+    <h2 id="config-og">Open Graph / SEO</h2>
+
+    <p>All Open Graph, Twitter Card, and SEO meta tags are emitted from <code>_partial/head.ejs</code> automatically — no extra configuration is required. The following fields are populated from post front-matter and site config:</p>
+
+    <table>
+      <thead><tr><th>Meta tag</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">og:title / twitter:title</td><td><code>page.title</code>, falls back to <code>config.title</code></td></tr>
+        <tr><td class="opt-key">og:description / twitter:description / meta description</td><td><code>page.description</code> → <code>page.excerpt</code> (strips HTML + decodes entities) → <code>config.description</code>. Capped at 160 characters.</td></tr>
+        <tr><td class="opt-key">og:image / twitter:image</td><td><code>cover_image</code> front-matter → <code>theme.cover.default</code>; resolved to an absolute URL using <code>config.url</code></td></tr>
+        <tr><td class="opt-key">og:type</td><td><code>article</code> on post pages, <code>website</code> everywhere else</td></tr>
+        <tr><td class="opt-key">og:site_name</td><td><code>config.title</code></td></tr>
+        <tr><td class="opt-key">canonical</td><td><code>page.permalink</code></td></tr>
+        <tr><td class="opt-key">article:published_time / article:author</td><td><code>page.date</code> / <code>config.author</code> — post pages only</td></tr>
+        <tr><td class="opt-key">twitter:site</td><td><code>theme.social.twitter</code> (prefixed with <code>@</code>); omitted when blank</td></tr>
+        <tr><td class="opt-key">meta keywords</td><td>Post tags joined by comma, falls back to <code>config.keywords</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>All meta computation runs in a single <code>&lt;% %&gt;</code> block at the very top of <code>_partial/head.ejs</code>, before any HTML output. EJS templates are executed sequentially, so variables must be fully resolved before the HTML that references them is rendered.</p>
+
+    <p><strong>Description fallback chain</strong> — the theme computes <code>rawExcerpt</code> by taking <code>page.excerpt</code> (set by <code>&lt;!-- more --&gt;</code> in the post or by the front-matter <code>excerpt:</code> field), stripping all HTML tags with a regex, and then decoding the six most common HTML entities: <code>&amp;amp;</code>, <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;quot;</code>, <code>&amp;#39;</code>, and <code>&amp;nbsp;</code>. Multiple whitespace characters are collapsed to a single space and the result is trimmed. This prevents Markdown-rendered HTML entities from leaking into the OG description string as raw text. <code>metaDesc</code> is then built as <code>(page.description || rawExcerpt || config.description || '').slice(0, 160)</code>.</p>
+
+    <p><strong>Conditional meta tags</strong> — <code>og:image</code> and <code>twitter:image</code> are only emitted when a cover image is actually resolved (to avoid serving an empty <code>content=""</code> attribute that some crawlers treat as an error). <code>article:published_time</code>, <code>article:author</code>, and the post-tag keyword list are only emitted on <code>page.layout === 'post'</code> pages. <code>twitter:site</code> is only emitted when <code>theme.social.twitter</code> is non-empty.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Set <code>url:</code> in the site <code>_config.yml</code> to your production domain (e.g. <code>https://example.com</code>) so that <code>og:image</code> and <code>canonical</code> links are absolute URLs.</p>
+    </div>
+
+    <hr>
+
+    <!-- Related posts -->
+    <h2 id="config-related-posts">Related posts</h2>
+    <p>When <code>related_posts: true</code>, a "You might also like" section renders up to 3 post cards at the bottom of every post page (below the post footer, above <code>&lt;/main&gt;</code>). The scoring runs entirely at build time inside <code>post.ejs</code> — no plugin is required.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">related_posts</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the "You might also like" section. Set to <code>false</code> to hide it on all posts.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Scoring algorithm</h3>
+    <p>Every other post is scored against the current post, and the top 3 non-zero scores are shown:</p>
+    <ul>
+      <li><strong>+2 pts</strong> per tag that appears in both posts</li>
+      <li><strong>+1 pt</strong> if both posts share the same primary category</li>
+    </ul>
+    <p>Posts with a score of 0 are excluded. The section is hidden entirely when no candidates score above 0.</p>
+
+    <h3>How it works</h3>
+    <p>The entire scoring process runs at <strong>build time</strong> inside the top <code>&lt;% %&gt;</code> block of <code>layout/post.ejs</code> — there is no runtime JS and no external plugin. Because EJS is executed sequentially during <code>hexo generate</code>, all variables are fully resolved before the HTML template renders.</p>
+
+    <p>The code iterates <code>site.posts</code> using the Warehouse collection API's <code>.each()</code> method, which provides access to all posts and their metadata. To avoid O(n²) tag comparisons, the current post's tags are first loaded into a JavaScript <code>Set</code> via <code>page.tags.each(t =&gt; _relatedTagSet.add(t.name))</code>. The scoring loop can then check membership in O(1) with <code>_relatedTagSet.has(t.name)</code>. All variables use the <code>_related*</code> prefix to avoid collisions with any EJS locals Hexo might inject.</p>
+
+    <p>The related posts section uses a fixed 2-column grid (<code>--post-grid-cols: 2</code>) rather than 3. The reason: the <code>.post-page</code> layout constrains the content column to approximately 700px. With 3 columns and 24px gaps, each card would be roughly (700 − 48) ÷ 3 ≈ 217px wide — too narrow for comfortable card layout. Two columns yields approximately 338px per card, matching the comfortable width seen at the tablet breakpoint on the home page. The section heading is an <code>&lt;h3&gt;</code> (not <code>&lt;h2&gt;</code>) to avoid conflicting with post body <code>##</code> headings at the same document outline level.</p>
+
+    <hr>
+
+    <!-- Pinned post -->
+    <h2 id="config-pinned">Featured / Pinned post</h2>
+    <p>Adding <code>pinned: true</code> to a post's front-matter promotes it to a full-width hero card above the index grid on page 1. No theme config toggle is needed — the feature is active whenever at least one post is pinned, and invisible otherwise.</p>
+
+    <table>
+      <thead><tr><th>Behaviour</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Which post becomes hero?</strong></td><td>The most recently dated post with <code>pinned: true</code>. If several posts are pinned, only the newest is shown as hero; the others appear in the grid normally.</td></tr>
+        <tr><td><strong>Page 1</strong></td><td>Hero card renders above the grid. The pinned post is removed from the grid on this page to avoid duplication.</td></tr>
+        <tr><td><strong>Page 2+</strong></td><td>Hero is hidden. The pinned post reappears in its chronological grid slot.</td></tr>
+        <tr><td><strong>No pinned post</strong></td><td>Index page renders exactly as before — no change.</td></tr>
+      </tbody>
+    </table>
+
+    <p>The hero partial is <code>_partial/pinned-post.ejs</code>. It shows a 45%-wide cover panel on the left, a "Featured" badge, category, reading time, title, excerpt, date, and a "Read more" link. On mobile (&lt;640px) the cover stacks above the content. Styles live in <code>_components.scss</code> under <code>// ─── Pinned / Featured post</code>.</p>
+
+    <h3>How it works</h3>
+    <p>Detection and deduplication both run at build time in <code>layout/index.ejs</code>. The top script block computes:</p>
+
+<pre><code><span class="kw">const</span> <span class="nb">pinnedPost</span> <span class="pn">=</span> site.posts.<span class="nb">sort</span>(<span class="str">'-date'</span>).toArray().find(p <span class="pn">=&gt;</span> p.pinned)
+<span class="kw">const</span> <span class="nb">showHero</span>   <span class="pn">=</span> <span class="pn">!!</span>pinnedPost <span class="pn">&amp;&amp;</span> (page.current <span class="pn">===</span> <span class="val">1</span> <span class="pn">||</span> <span class="pn">!</span>page.current)</code></pre>
+
+    <p><code>site.posts.sort('-date')</code> sorts descending by date before calling <code>.find()</code>. This guarantees that when multiple posts have <code>pinned: true</code>, the most recently dated one becomes the hero — no explicit priority field is needed.</p>
+
+    <p><code>page.current</code> is Hexo's pagination index (1, 2, 3, …). On single-page sites where <code>per_page: 0</code> effectively disables pagination, Hexo sets <code>page.current = undefined</code>. The <code>!page.current</code> branch in <code>showHero</code> handles this case, ensuring the hero still appears on such sites.</p>
+
+    <p>Deduplication is handled inside the grid loop with <code>&lt;% if (showHero &amp;&amp; post.path === pinnedPost.path) return %&gt;</code>. The <code>&amp;&amp;</code> short-circuits: when <code>showHero</code> is <code>false</code> (i.e., no pinned post was found and <code>pinnedPost</code> is <code>null</code>), the right-hand side <code>pinnedPost.path</code> is never evaluated, so there is no null-reference error.</p>
+
+    <p><code>.pinned-post</code> has <code>min-height: 200px</code> for two reasons: (1) it guarantees the hero has visual weight even for posts with only a title and no excerpt; (2) the cover panel is a flex child that stretches to the container's height — without a minimum height the container could collapse to roughly 80px on such posts, making the cover panel effectively invisible.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Give the pinned post a <code>cover_image</code> for the best hero appearance — without a cover the hero displays content-only with a blue accent border.</p>
+    </div>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>

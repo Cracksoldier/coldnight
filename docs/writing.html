@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing — coldnight docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="index.html">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Getting started</div>
+      <a href="index.html#overview">Overview</a>
+      <a href="index.html#requirements">Requirements</a>
+      <a href="index.html#installation">Installation</a>
+      <a href="index.html#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <a href="configuration.html#config-navbar">Navbar</a>
+      <a href="configuration.html#config-sidebar">Sidebar</a>
+      <a href="configuration.html#config-social">Social links</a>
+      <a href="configuration.html#config-cover">Cover images</a>
+      <a href="configuration.html#config-code">Code blocks</a>
+      <a href="configuration.html#config-lightgallery">LightGallery</a>
+      <a href="configuration.html#config-grid">Post grid</a>
+      <a href="configuration.html#config-toc">Table of contents</a>
+      <a href="configuration.html#config-misc">Misc toggles</a>
+      <a href="configuration.html#config-search">Search</a>
+      <a href="configuration.html#config-og">Open Graph / SEO</a>
+      <a href="configuration.html#config-related-posts">Related posts</a>
+      <a href="configuration.html#config-pinned">Featured post</a>
+    </div>
+
+    <div class="nav-section nav-section--active">
+      <div class="nav-section-label">Writing</div>
+      <a href="#front-matter">Post front-matter</a>
+      <a href="#tag-gallery">{% gallery %}</a>
+      <a href="#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="architecture.html#layouts">Page layouts</a>
+      <a href="architecture.html#static-pages">Static pages</a>
+      <a href="architecture.html#ui-features">UI features</a>
+      <a href="architecture.html#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Deployment</div>
+      <a href="deployment.html#deploy-github">GitHub Pages</a>
+      <a href="deployment.html#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <h1>Writing</h1>
+    <p>How to structure posts and use the theme's Markdown extensions.</p>
+
+    <!-- Post front-matter -->
+    <h2 id="front-matter">Post front-matter</h2>
+    <p>All fields except <code>title</code> and <code>date</code> are optional.</p>
+
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>        <span class="str">My Post Title</span>
+<span class="nb">date</span><span class="pn">:</span>         <span class="val">2026-01-15</span>
+<span class="nb">categories</span><span class="pn">:</span>  <span class="pn">[</span><span class="str">Dev</span><span class="pn">]</span>
+<span class="nb">tags</span><span class="pn">:</span>         <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
+<span class="nb">cover_image</span><span class="pn">:</span>  <span class="str">/images/cover.jpg</span>   <span class="cm"># optional; falls back to cover.default</span>
+<span class="nb">excerpt</span><span class="pn">:</span>      <span class="str">"Override the auto-excerpt shown on post cards."</span>
+<span class="nb">pinned</span><span class="pn">:</span>       <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
+<span class="pn">---</span></code></pre>
+
+    <table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">title</td><td><strong>Required.</strong> The post title shown in the header, page <code>&lt;title&gt;</code>, and <code>og:title</code>.</td></tr>
+        <tr><td class="opt-key">date</td><td><strong>Required.</strong> Publication date. Used for archive sorting and <code>article:published_time</code>.</td></tr>
+        <tr><td class="opt-key">categories</td><td>Array of category names. The first is the primary category used in post cards and related-post scoring.</td></tr>
+        <tr><td class="opt-key">tags</td><td>Array of tag names. Used in the tag cloud widget, tag pages, related-post scoring, and OG keywords.</td></tr>
+        <tr><td class="opt-key">cover_image</td><td>Path to the post's cover image. Used on post cards, the post header, the pinned hero, and as <code>og:image</code>. Falls back to <code>theme.cover.default</code> if omitted.</td></tr>
+        <tr><td class="opt-key">excerpt</td><td>Override the auto-excerpt shown on post cards and in <code>og:description</code>. If omitted, Hexo uses the text up to the first <code>&lt;!-- more --&gt;</code> tag, or the start of the post body.</td></tr>
+        <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>You can also use <code>&lt;!-- more --&gt;</code> anywhere in the post body to set the excerpt boundary instead of the front-matter <code>excerpt</code> field.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: gallery -->
+    <h2 id="tag-gallery">{% gallery %} tag</h2>
+    <p>Renders a responsive photo grid powered by LightGallery. Each image opens in full-screen when clicked.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">gallery</span> <span class="pl">[cols]</span> <span class="pn">%}</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Caption text</span><span class="pn">](</span><span class="str">/images/photo1.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Another photo</span><span class="pn">](</span><span class="str">/images/photo2.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="pn">](</span><span class="str">/images/photo3.jpg</span><span class="pn">)</span>          <span class="cm"># caption is optional</span>
+<span class="pn">{%</span> <span class="kw">endgallery</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">cols</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Number of columns in the photo grid. Supported values: <strong>1–6</strong>. Each value maps to a dedicated CSS grid rule generated by a SCSS <code>@for</code> loop.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">gallery</span> 2 <span class="pn">%}</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Sunset over the mountains</span><span class="pn">](</span><span class="str">/images/trip/sunset.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Morning fog in the valley</span><span class="pn">](</span><span class="str">/images/trip/fog.jpg</span><span class="pn">)</span>
+<span class="pn">{%</span> <span class="kw">endgallery</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>gallery</code> as a Hexo block tag plugin. When Hexo encounters <code>{% gallery [cols] %}…{% endgallery %}</code> during rendering, it calls the plugin with the block body as a string. The plugin scans the body for Markdown image syntax (<code>![alt](src)</code>), wraps each image in an anchor tag (<code>&lt;a href="src"&gt;&lt;img src="src" alt="alt"&gt;&lt;/a&gt;</code>), and wraps the entire collection in:</p>
+
+<pre><code><span class="kw">&lt;div</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"lg-gallery"</span> <span class="nb">data-cols</span><span class="pn">=</span><span class="str">"N"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;a</span> <span class="nb">href</span><span class="pn">=</span><span class="str">"/images/photo1.jpg"</span><span class="kw">&gt;&lt;img</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/images/photo1.jpg"</span> <span class="nb">alt</span><span class="pn">=</span><span class="str">"Caption text"</span><span class="kw">&gt;&lt;/a&gt;</span>
+  <span class="cm">...</span>
+<span class="kw">&lt;/div&gt;</span></code></pre>
+
+    <p>The <code>cols</code> argument is clamped to 1–6 by the plugin; values outside that range default to 3. On post pages where LightGallery is enabled, <code>source/js/gallery.js</code> queries all <code>.lg-gallery</code> elements on page load and mounts a separate <code>lightGallery(element, { plugins: [...] })</code> instance on each one. Each gallery block is fully independent — clicking an image in one gallery cannot open images from another.</p>
+
+    <p>The CSS grid column count is driven by the <code>data-cols</code> attribute. <code>_components.scss</code> generates rules for all six values via a SCSS <code>@for</code> loop:</p>
+
+<pre><code><span class="kw">@for</span> <span class="nb">$i</span> <span class="kw">from</span> <span class="val">1</span> <span class="kw">through</span> <span class="val">6</span> <span class="pn">{</span>
+  <span class="kw">&amp;</span><span class="pn">[</span><span class="nb">data-cols</span><span class="pn">=</span><span class="str">"#{$i}"</span><span class="pn">]</span> <span class="pn">{</span> <span class="nb">grid-template-columns</span><span class="pn">:</span> repeat(<span class="pn">#{</span><span class="nb">$i</span><span class="pn">}</span>, 1fr)<span class="pn">;</span> <span class="pn">}</span>
+<span class="pn">}</span></code></pre>
+
+    <p>On mobile (≤640px) the SCSS overrides all data-cols values to 2 columns regardless of what was specified.</p>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p><code>lightgallery.enabled</code> must be <code>true</code> in the theme config for gallery clicks to open the lightbox. The grid will still render without it, but clicking images won't open a full-screen viewer.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: note -->
+    <h2 id="tag-note">{% note %} tag</h2>
+    <p>Renders a styled callout box. Markdown is supported inside the tag body.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">note</span> <span class="pl">type</span> <span class="pn">%}</span>
+Content here. **Markdown** is _supported_.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Type</th><th>Color</th><th>Icon</th><th>When to use</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">tip</td>     <td>Green</td>  <td>✓</td>  <td>Best practices, helpful hints</td></tr>
+        <tr><td class="opt-key">info</td>    <td>Blue</td>   <td>ℹ</td>  <td>Neutral supplementary information</td></tr>
+        <tr><td class="opt-key">warning</td> <td>Yellow</td> <td>⚠</td>  <td>Caveats, deprecated features</td></tr>
+        <tr><td class="opt-key">danger</td>  <td>Red</td>    <td>✕</td>  <td>Breaking changes, data loss risks</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">note</span> tip <span class="pn">%}</span>
+Run `hexo clean` before `hexo generate` to avoid stale cache issues.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span>
+
+<span class="pn">{%</span> <span class="kw">note</span> warning <span class="pn">%}</span>
+This option will be **removed** in a future release.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>note</code> as a Hexo block tag plugin. The first word after <code>note</code> is the type; the plugin validates it against the four allowed values (<code>tip</code>, <code>info</code>, <code>warning</code>, <code>danger</code>) and renders an unknown type as <code>info</code>. The block body is passed to Hexo's built-in Markdown renderer so that bold, italic, inline code, and other Markdown syntax works inside the callout.</p>
+
+    <p>The output is a <code>&lt;div class="note note-{type}"&gt;</code> containing an inline SVG icon (hard-coded per type — no external icon font or image request) and the rendered body wrapped in a <code>&lt;p&gt;</code>:</p>
+
+<pre><code><span class="kw">&lt;div</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"note note-tip"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;svg</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"note-icon"</span> <span class="cm">...&gt;&lt;/svg&gt;</span>
+  <span class="kw">&lt;p&gt;</span>Run <span class="kw">&lt;code&gt;</span>hexo clean<span class="kw">&lt;/code&gt;</span> before ...<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;/div&gt;</span></code></pre>
+
+    <p>Each type has its own color scheme defined in <code>_components.scss</code>. <code>note-tip</code> uses green (<code>$success</code> / <code>$success-bg</code>), <code>note-info</code> uses blue (<code>$accent</code> / <code>$info-bg</code>), <code>note-warning</code> uses amber (<code>$amber</code> / <code>$amber-bg</code>), and <code>note-danger</code> uses red (<code>$danger</code> / <code>$danger-bg</code>). All color values are SCSS variables from <code>_variables.scss</code> — never hardcoded.</p>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deployment — coldnight docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="index.html">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Getting started</div>
+      <a href="index.html#overview">Overview</a>
+      <a href="index.html#requirements">Requirements</a>
+      <a href="index.html#installation">Installation</a>
+      <a href="index.html#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <a href="configuration.html#config-navbar">Navbar</a>
+      <a href="configuration.html#config-sidebar">Sidebar</a>
+      <a href="configuration.html#config-social">Social links</a>
+      <a href="configuration.html#config-cover">Cover images</a>
+      <a href="configuration.html#config-code">Code blocks</a>
+      <a href="configuration.html#config-lightgallery">LightGallery</a>
+      <a href="configuration.html#config-grid">Post grid</a>
+      <a href="configuration.html#config-toc">Table of contents</a>
+      <a href="configuration.html#config-misc">Misc toggles</a>
+      <a href="configuration.html#config-search">Search</a>
+      <a href="configuration.html#config-og">Open Graph / SEO</a>
+      <a href="configuration.html#config-related-posts">Related posts</a>
+      <a href="configuration.html#config-pinned">Featured post</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Writing</div>
+      <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#tag-gallery">{% gallery %}</a>
+      <a href="writing.html#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="architecture.html#layouts">Page layouts</a>
+      <a href="architecture.html#static-pages">Static pages</a>
+      <a href="architecture.html#ui-features">UI features</a>
+      <a href="architecture.html#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section nav-section--active">
+      <div class="nav-section-label">Deployment</div>
+      <a href="#deploy-github">GitHub Pages</a>
+      <a href="#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <h1>Deployment</h1>
+    <p>The site generates to <code>public/</code> via <code>hexo generate</code>. The output is static HTML, CSS, and JS — any static host works.</p>
+
+    <!-- GitHub Pages -->
+    <h2 id="deploy-github">Deploying to GitHub Pages</h2>
+
+    <h3>Option A — GitHub Actions (recommended)</h3>
+    <p>Create <code>.github/workflows/pages.yml</code> in your repository:</p>
+<pre><code><span class="nb">name</span><span class="pn">:</span> <span class="str">Deploy to GitHub Pages</span>
+
+<span class="nb">on</span><span class="pn">:</span>
+  <span class="nb">push</span><span class="pn">:</span>
+    <span class="nb">branches</span><span class="pn">:</span> <span class="pn">[</span><span class="str">main</span><span class="pn">]</span>
+
+<span class="nb">permissions</span><span class="pn">:</span>
+  <span class="nb">contents</span><span class="pn">:</span> <span class="val">read</span>
+  <span class="nb">pages</span><span class="pn">:</span>    <span class="val">write</span>
+  <span class="nb">id-token</span><span class="pn">:</span> <span class="val">write</span>
+
+<span class="nb">jobs</span><span class="pn">:</span>
+  <span class="nb">build</span><span class="pn">:</span>
+    <span class="nb">runs-on</span><span class="pn">:</span> <span class="val">ubuntu-latest</span>
+    <span class="nb">steps</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/checkout@v4</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/setup-node@v4</span>
+        <span class="nb">with</span><span class="pn">:</span>
+          <span class="nb">node-version</span><span class="pn">:</span> <span class="str">"20"</span>
+      <span class="pn">-</span> <span class="nb">run</span><span class="pn">:</span> <span class="val">npm ci</span>
+      <span class="pn">-</span> <span class="nb">run</span><span class="pn">:</span> <span class="val">npx hexo generate</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/upload-pages-artifact@v3</span>
+        <span class="nb">with</span><span class="pn">:</span>
+          <span class="nb">path</span><span class="pn">:</span> <span class="str">public</span>
+
+  <span class="nb">deploy</span><span class="pn">:</span>
+    <span class="nb">needs</span><span class="pn">:</span> <span class="val">build</span>
+    <span class="nb">runs-on</span><span class="pn">:</span> <span class="val">ubuntu-latest</span>
+    <span class="nb">environment</span><span class="pn">:</span>
+      <span class="nb">name</span><span class="pn">:</span>  <span class="val">github-pages</span>
+      <span class="nb">url</span><span class="pn">:</span>   <span class="val">$&#123;&#123; steps.deployment.outputs.page_url &#125;&#125;</span>
+    <span class="nb">steps</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="nb">id</span><span class="pn">:</span> <span class="val">deployment</span>
+        <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/deploy-pages@v4</span></code></pre>
+
+    <p>Then in your repo: <strong>Settings → Pages → Source</strong> → select <em>GitHub Actions</em>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Set <code>url</code> in your site's <code>_config.yml</code> to your Pages URL (<code>https://username.github.io</code> or <code>https://username.github.io/repo-name</code>) so all asset paths resolve correctly.</p>
+    </div>
+
+    <h3>Option B — gh-pages branch (hexo-deployer-git)</h3>
+<pre><code><span class="cm"># Install the deployer plugin</span>
+npm install hexo-deployer-git --save
+
+<span class="cm"># Add to _config.yml</span>
+<span class="nb">deploy</span><span class="pn">:</span>
+  <span class="nb">type</span><span class="pn">:</span>   <span class="val">git</span>
+  <span class="nb">repo</span><span class="pn">:</span>   <span class="str">https://github.com/username/username.github.io.git</span>
+  <span class="nb">branch</span><span class="pn">:</span> <span class="val">gh-pages</span>
+
+<span class="cm"># Deploy</span>
+hexo clean &amp;&amp; hexo deploy</code></pre>
+
+    <hr>
+
+    <!-- GitLab Pages -->
+    <h2 id="deploy-gitlab">Deploying to GitLab Pages</h2>
+    <p>Create <code>.gitlab-ci.yml</code> in the repository root:</p>
+<pre><code><span class="nb">image</span><span class="pn">:</span> <span class="val">node:20-alpine</span>
+
+<span class="nb">pages</span><span class="pn">:</span>
+  <span class="nb">stage</span><span class="pn">:</span> <span class="val">deploy</span>
+  <span class="nb">script</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">npm ci</span>
+    <span class="pn">-</span> <span class="val">npx hexo generate</span>
+    <span class="pn">-</span> <span class="val">mv public public_html</span>    <span class="cm"># GitLab Pages requires this name</span>
+    <span class="pn">-</span> <span class="val">cp -r public_html public</span>  <span class="cm"># keep 'public' for the artifact</span>
+  <span class="nb">artifacts</span><span class="pn">:</span>
+    <span class="nb">paths</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="val">public</span>
+  <span class="nb">only</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">main</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>GitLab Pages serves from the <code>public/</code> artifact path. Hexo already generates into <code>public/</code>, so no extra config is needed beyond the CI file above.</p>
+    </div>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layouts &amp; Structure — coldnight docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="index.html">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Getting started</div>
+      <a href="index.html#overview">Overview</a>
+      <a href="index.html#requirements">Requirements</a>
+      <a href="index.html#installation">Installation</a>
+      <a href="index.html#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <a href="configuration.html#config-navbar">Navbar</a>
+      <a href="configuration.html#config-sidebar">Sidebar</a>
+      <a href="configuration.html#config-social">Social links</a>
+      <a href="configuration.html#config-cover">Cover images</a>
+      <a href="configuration.html#config-code">Code blocks</a>
+      <a href="configuration.html#config-lightgallery">LightGallery</a>
+      <a href="configuration.html#config-grid">Post grid</a>
+      <a href="configuration.html#config-toc">Table of contents</a>
+      <a href="configuration.html#config-misc">Misc toggles</a>
+      <a href="configuration.html#config-search">Search</a>
+      <a href="configuration.html#config-og">Open Graph / SEO</a>
+      <a href="configuration.html#config-related-posts">Related posts</a>
+      <a href="configuration.html#config-pinned">Featured post</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Writing</div>
+      <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#tag-gallery">{% gallery %}</a>
+      <a href="writing.html#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section nav-section--active">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="#layouts">Page layouts</a>
+      <a href="#static-pages">Static pages</a>
+      <a href="#ui-features">UI features</a>
+      <a href="#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Deployment</div>
+      <a href="deployment.html#deploy-github">GitHub Pages</a>
+      <a href="deployment.html#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <h1>Layouts &amp; Structure</h1>
+    <p>How the theme's EJS templates, page shells, and JavaScript features are organized and implemented.</p>
+
+    <!-- Page layouts -->
+    <h2 id="layouts">Page layouts</h2>
+    <p>The theme uses two distinct page shells, each optimized for its content type:</p>
+
+    <h3>Two-column shell</h3>
+    <p>Used by the <strong>index</strong> and <strong>post</strong> pages. A CSS Grid layout (<code>65fr 35fr</code>) places <code>.main-content</code> on the left and <code>.sidebar</code> on the right (or left, or hidden). Setting <code>sidebar.position: hidden</code> in the theme config collapses the sidebar column and gives the body full width. The <code>body</code> element is <code>display: flex; flex-direction: column; min-height: 100vh</code>; the <code>.page-wrapper</code> grid container has <code>flex: 1</code> so it expands to push the footer to the bottom of the viewport.</p>
+
+    <h3>Full-width shell</h3>
+    <p>Used by <strong>archive</strong>, <strong>tag</strong>, <strong>category</strong>, and static <strong>page</strong> layouts. A single <code>.archive-wrapper</code> with <code>width: 100%; max-width: 1100px; margin: 0 auto</code> — no sidebar. Posts are grouped by year, sorted newest-first, in a compact list row showing date, linked title, category pill, and reading time. The <code>.archive-wrapper</code> also has <code>flex: 1</code> for the same footer-pinning reason.</p>
+
+    <h3>Layout files</h3>
+    <table>
+      <thead><tr><th>File</th><th>Shell</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">index.ejs</td><td>Two-column</td><td>Home page with the post grid and optional pinned hero</td></tr>
+        <tr><td class="opt-key">post.ejs</td><td>Two-column</td><td>Individual post with cover image, metadata, body, and related posts</td></tr>
+        <tr><td class="opt-key">archive.ejs</td><td>Full-width</td><td>All posts as a year-grouped list</td></tr>
+        <tr><td class="opt-key">tag.ejs</td><td>Full-width</td><td>Posts filtered by a single tag</td></tr>
+        <tr><td class="opt-key">category.ejs</td><td>Full-width</td><td>Posts filtered by a single category</td></tr>
+        <tr><td class="opt-key">page.ejs</td><td>Full-width</td><td>Static pages (About, etc.) — no post metadata</td></tr>
+        <tr><td class="opt-key">404.ejs</td><td>Full-width</td><td>Custom 404 page</td></tr>
+      </tbody>
+    </table>
+
+    <p>Each layout file is a complete HTML document that includes shared fragments via Hexo's <code>partial()</code> helper: <code>_partial/head</code>, <code>_partial/header</code>, <code>_partial/footer</code>, and so on. The <code>page</code> object (Hexo's built-in page context) and <code>theme</code> (the deserialized <code>themes/coldnight/_config.yml</code>) are available in every template without any extra setup.</p>
+
+    <hr>
+
+    <!-- Static pages -->
+    <h2 id="static-pages">Static pages</h2>
+    <p>Create static pages with <code>hexo new page</code>:</p>
+<pre><code>hexo new page about</code></pre>
+    <p>This creates <code>source/about/index.md</code>. The page is rendered with <code>layout/page.ejs</code> — the full-width shell with no post metadata (no date, author, reading time, tags, or related-posts section). Any Markdown content is valid, including <code>{% note %}</code> callouts and <code>{% gallery %}</code> blocks.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Add the page to <code>navbar.links</code> in the theme config so it appears in the navigation bar.</p>
+    </div>
+
+    <hr>
+
+    <!-- UI features -->
+    <h2 id="ui-features">UI features</h2>
+    <p>The following features are implemented as client-side JavaScript loaded on the appropriate page types. All scripts are plain vanilla JS with no dependencies — no framework, no bundler.</p>
+
+    <h3 id="ui-toc">Table of contents</h3>
+    <p>When <code>toc.enabled: true</code> and <code>toc</code> is listed in <code>sidebar.widgets</code>, a sticky Contents widget appears in the post sidebar. It is built from the post's <code>##</code> and <code>###</code> headings at build time via the <code>render_toc()</code> helper. Posts with no qualifying headings render no widget at all — the helper returns an empty string.</p>
+    <p>On the client side, <code>source/js/toc.js</code> uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code> to fire when a heading enters the top 35% of the viewport, toggling the <code>active</code> class on the matching <code>.toc-link</code>. The widget's collapse/expand toggle sets the <code>hidden</code> attribute on the list container and flips <code>aria-expanded</code> — no class toggling, no inline style. The CSS chevron rotation is handled purely by <code>[aria-expanded="false"] svg { transform: rotate(180deg) }</code>. See <a href="configuration.html#config-toc">TOC configuration</a> for the full implementation detail.</p>
+
+    <h3 id="ui-progress">Reading progress bar</h3>
+    <p>When <code>progress_bar: true</code>, a 3px accent-colored bar is fixed to the very top of the viewport on post pages. It fills left-to-right as the reader scrolls, reaching 100% at the bottom of the content.</p>
+    <p><strong>Implementation</strong> — <code>layout/post.ejs</code> injects a <code>&lt;div id="reading-progress" class="reading-progress"&gt;</code> as the first child of <code>&lt;body&gt;</code>, before the skip-nav link. Its CSS position is <code>fixed; top: 0; z-index: 6</code>, placing it above the sticky navbar (z-index 5). <code>pointer-events: none</code> prevents it from intercepting any clicks. <code>source/js/reading-progress.js</code> attaches a passive <code>scroll</code> listener on <code>window</code> that computes the scroll percentage and sets it as the element's <code>width</code>:</p>
+
+<pre><code><span class="kw">const</span> <span class="nb">pct</span> <span class="pn">=</span> scrollY / (document.body.scrollHeight - window.innerHeight) * 100
+bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str">'%'</span></code></pre>
+
+    <p>The passive event listener flag (<code>{ passive: true }</code>) tells the browser the handler will never call <code>preventDefault()</code>, allowing it to optimize scrolling performance. The script and the bar element are both omitted entirely on non-post pages — they are only emitted by <code>post.ejs</code> when <code>theme.progress_bar</code> is true.</p>
+
+    <h3 id="ui-back-to-top">Back-to-top button</h3>
+    <p>A circular floating button appears at the bottom-right of every page once the reader scrolls past one full viewport height. Clicking it smoothly scrolls back to the top using the native <code>window.scrollTo({ top: 0, behavior: 'smooth' })</code>. It is always enabled — no configuration toggle exists.</p>
+    <p><strong>Implementation</strong> — <code>source/js/back-to-top.js</code> is loaded via <code>_partial/footer.ejs</code> on every page. It attaches a passive scroll listener on <code>window</code> that toggles the <code>back-to-top--visible</code> modifier class on <code>#back-to-top</code> once <code>scrollY &gt; window.innerHeight</code>. The button uses <code>opacity</code> + <code>visibility: hidden</code> (not <code>display: none</code>) when invisible — this keeps it in the layout flow and, crucially, excludes it from the keyboard tab order when hidden (a <code>visibility: hidden</code> element cannot receive focus). Styles live in <code>_components.scss</code> under <code>.back-to-top</code>.</p>
+
+    <h3 id="ui-search">Search</h3>
+    <p>A 200px text input in the navbar (and a full-width input in the mobile drawer) provides instant full-text search across all post titles, content, and tags. Results appear in an absolute-positioned dropdown below the input with up to 8 matches, highlighted with <code>&lt;mark&gt;</code> spans. See <a href="configuration.html#config-search">Search configuration</a> for the complete implementation detail including lazy fetch, factory pattern, XSS safety, and keyboard navigation.</p>
+
+    <h3 id="ui-related">Related posts</h3>
+    <p>A "You might also like" row of up to 3 post cards appears at the bottom of every post page. The candidates are selected and scored entirely at build time — no runtime JS is involved. See <a href="configuration.html#config-related-posts">Related posts configuration</a> for the scoring algorithm and implementation detail.</p>
+
+    <h3 id="ui-pinned">Featured / pinned post hero</h3>
+    <p>A post with <code>pinned: true</code> in its front-matter is promoted to a full-width hero card above the index grid on page 1. The feature is detected and rendered at build time in <code>index.ejs</code>. See <a href="configuration.html#config-pinned">Featured post configuration</a> for the detection, deduplication, and layout implementation.</p>
+
+    <hr>
+
+    <!-- CSS pipeline -->
+    <h2 id="css">CSS pipeline</h2>
+    <p>All styles are written in SCSS and compiled by <code>hexo-renderer-dartsass</code> (Dart Sass). The entry point is <code>themes/coldnight/source/css/style.scss</code>, which <code>@use</code>s the partials in dependency order. Each partial declares its own variable dependency via <code>@use 'variables' as *;</code> at the top — no global imports, no implicit variable scope.</p>
+
+    <table>
+      <thead><tr><th>File</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">_variables.scss</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site — every other partial reads from it.</td></tr>
+        <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar styling</td></tr>
+        <tr><td class="opt-key">_typography.scss</td><td>Post body typography — headings, lists, blockquotes, tables, inline code</td></tr>
+        <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar layout, <code>.post-cover</code> image, related-posts wrapper</td></tr>
+        <tr><td class="opt-key">_components.scss</td><td>Navbar, footer, post cards, pinned hero, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget, search dropdown</td></tr>
+        <tr><td class="opt-key">_code.scss</td><td>Code block toolbar, language label, copy button hover state</td></tr>
+        <tr><td class="opt-key">_lightgallery.scss</td><td>LightGallery overrides to match the dark theme palette</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Never hardcode color values in partials — always reference a variable from <code>_variables.scss</code>. This ensures a single edit in <code>_variables.scss</code> recolors the whole theme consistently.</p>
+    </div>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>
