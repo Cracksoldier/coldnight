@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>coldnight — Hexo Theme Documentation</title>
+  <style>
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --bg-2:      #161b22;
+      --bg-3:      #21262d;
+      --border:    #30363d;
+      --accent:    #58a6ff;
+      --accent-2:  #388bfd;
+      --green:     #3fb950;
+      --yellow:    #d29922;
+      --red:       #f85149;
+      --purple:    #bc8cff;
+      --text:      #e6edf3;
+      --text-2:    #8b949e;
+      --text-3:    #6e7681;
+      --code-bg:   #161b22;
+      --radius:    8px;
+      --nav-w:     260px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar nav ─────────────────────────────────────────── */
+    .sidenav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: var(--nav-w);
+      flex-shrink: 0;
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 1.5rem 0 2rem;
+    }
+
+    .sidenav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .sidenav-brand .logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .sidenav-brand span {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-section {
+      padding: 0.25rem 0 0.75rem;
+    }
+
+    .nav-section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-section a {
+      display: block;
+      padding: 0.3rem 1.2rem;
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .nav-section a:hover {
+      color: var(--text);
+      background: var(--bg-3);
+      border-left-color: var(--accent);
+    }
+
+    /* ── Main content ────────────────────────────────────────── */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 3rem 4rem 6rem;
+      max-width: 900px;
+    }
+
+    @media (max-width: 900px) {
+      .sidenav { display: none; }
+      .content { padding: 2rem 1.5rem 4rem; }
+    }
+
+    /* ── Typography ──────────────────────────────────────────── */
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    h1 { font-size: 2.4rem; margin-bottom: 0.75rem; }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 3.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: 1.1rem; margin-top: 2rem; margin-bottom: 0.6rem; }
+    h4 { font-size: 0.95rem; margin-top: 1.5rem; margin-bottom: 0.4rem; color: var(--text-2); }
+
+    p { margin-bottom: 1rem; color: var(--text-2); }
+    p strong { color: var(--text); }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    ul, ol { padding-left: 1.5rem; color: var(--text-2); margin-bottom: 1rem; }
+    li { margin-bottom: 0.3rem; }
+    li strong { color: var(--text); }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      margin-bottom: 3rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-2);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    .hero p.lead {
+      font-size: 1.1rem;
+      color: var(--text-2);
+      max-width: 600px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .tag-blue  { background: rgba(88,166,255,.15); color: var(--accent); border: 1px solid rgba(88,166,255,.3); }
+    .tag-green { background: rgba(63,185,80,.15);  color: var(--green);  border: 1px solid rgba(63,185,80,.3); }
+    .tag-purple{ background: rgba(188,140,255,.15);color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+    .tag-yellow{ background: rgba(210,153,34,.15); color: var(--yellow); border: 1px solid rgba(210,153,34,.3); }
+
+    /* ── Feature cards ───────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .feature-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+    }
+
+    .feature-card .icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-card h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.82rem;
+      color: var(--text-3);
+      margin: 0;
+    }
+
+    /* ── Code blocks ─────────────────────────────────────────── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    }
+
+    :not(pre) > code {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1em 0.4em;
+      font-size: 0.85em;
+      color: #f0a0a0;
+    }
+
+    /* Syntax highlight colors */
+    .kw  { color: #ff7b72; }   /* keywords */
+    .str { color: #a5d6ff; }   /* strings */
+    .cm  { color: var(--text-3); font-style: italic; } /* comments */
+    .nb  { color: var(--accent); } /* built-ins / keys */
+    .val { color: #79c0ff; }   /* values */
+    .pn  { color: #ffa657; }   /* punctuation / symbols */
+    .pl  { color: var(--purple); } /* placeholders */
+
+    /* ── Tables ──────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: var(--bg-3);
+      color: var(--text);
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+    /* ── Callout / note boxes ────────────────────────────────── */
+    .callout {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius);
+      margin: 1.25rem 0;
+      font-size: 0.875rem;
+      border-left: 3px solid;
+    }
+
+    .callout p { margin: 0; color: inherit; }
+    .callout .callout-icon { flex-shrink: 0; margin-top: 1px; }
+
+    .callout-info    { background: rgba(88,166,255,.08);  border-color: var(--accent);  color: #aac8f8; }
+    .callout-warning { background: rgba(210,153,34,.08);  border-color: var(--yellow);  color: #d4b36a; }
+    .callout-tip     { background: rgba(63,185,80,.08);   border-color: var(--green);   color: #7ec892; }
+
+    /* ── Steps ───────────────────────────────────────────────── */
+    .steps { list-style: none; padding: 0; counter-reset: steps; }
+    .steps li {
+      counter-increment: steps;
+      padding: 1rem 1rem 1rem 3.5rem;
+      position: relative;
+      border-left: 2px solid var(--border);
+      margin-left: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-2);
+    }
+    .steps li::before {
+      content: counter(steps);
+      position: absolute;
+      left: -1.1rem;
+      top: 0.85rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .steps li:last-child { border-left-color: transparent; }
+
+    /* ── Option table helper ─────────────────────────────────── */
+    .opt-key  { color: var(--accent); font-family: monospace; white-space: nowrap; }
+    .opt-type { color: var(--purple); font-family: monospace; font-size: 0.8em; }
+    .opt-default { color: var(--yellow); font-family: monospace; font-size: 0.85em; }
+
+    /* ── Section anchor ──────────────────────────────────────── */
+    h2 > a, h3 > a { color: inherit; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    .anchor { opacity: 0; margin-left: 0.4rem; font-weight: 400; color: var(--text-3); }
+
+    /* ── Demo preview strip ──────────────────────────────────── */
+    .preview-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .preview-box {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .preview-box-header {
+      height: 24px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      gap: 0.4rem;
+    }
+
+    .preview-box-header span {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+
+    .preview-box-body {
+      padding: 0.75rem;
+      font-size: 0.72rem;
+      color: var(--text-3);
+    }
+
+    .mock-title { height: 8px; background: var(--text-3); border-radius: 3px; width: 70%; margin-bottom: 6px; opacity: 0.4; }
+    .mock-line  { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 4px; }
+    .mock-line.short { width: 55%; }
+    .mock-tag { display: inline-block; width: 40px; height: 14px; background: rgba(88,166,255,.2); border-radius: 999px; margin-right: 3px; }
+
+    /* ── Divider ─────────────────────────────────────────────── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="#">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Getting started</div>
+      <a href="#overview">Overview</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#installation">Installation</a>
+      <a href="#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <a href="#config-navbar">Navbar</a>
+      <a href="#config-sidebar">Sidebar</a>
+      <a href="#config-social">Social links</a>
+      <a href="#config-cover">Cover images</a>
+      <a href="#config-code">Code blocks</a>
+      <a href="#config-lightgallery">LightGallery</a>
+      <a href="#config-misc">Misc toggles</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Writing</div>
+      <a href="#front-matter">Post front-matter</a>
+      <a href="#tag-gallery">{% gallery %}</a>
+      <a href="#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="#layouts">Page layouts</a>
+      <a href="#static-pages">Static pages</a>
+      <a href="#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Deployment</div>
+      <a href="#deploy-github">GitHub Pages</a>
+      <a href="#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <section class="hero" id="overview">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Hexo Theme &nbsp;·&nbsp; v1.x
+      </div>
+      <h1>coldnight</h1>
+      <p class="lead">
+        A dark, minimal Hexo theme with a post grid, full-width archive lists, LightGallery integration, and polished code blocks.
+      </p>
+      <div class="hero-tags">
+        <span class="tag tag-blue">Hexo 8</span>
+        <span class="tag tag-green">Dark theme</span>
+        <span class="tag tag-purple">LightGallery v2</span>
+        <span class="tag tag-yellow">EJS + Stylus</span>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">🗃️</div>
+        <h4>3-column post grid</h4>
+        <p>Responsive grid (3 → 2 → 1 cols) with cover images and reading-time estimates.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h4>Archive / tag / category lists</h4>
+        <p>Year-grouped, date-sorted lists — no pagination required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🖼️</div>
+        <h4>LightGallery v2</h4>
+        <p>Full-screen image viewer with zoom and thumbnail strip. Auto-mounted on post images.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">💻</div>
+        <h4>Code blocks</h4>
+        <p>Language label + one-click copy button via highlight.js.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📌</div>
+        <h4>Configurable sidebar</h4>
+        <p>Recent posts, tag cloud, archive widget. Can be left, right, or hidden.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔌</div>
+        <h4>Tag plugins</h4>
+        <p><code>{% gallery %}</code> photo grids and <code>{% note %}</code> callout boxes.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Requirements -->
+    <h2 id="requirements">Requirements</h2>
+    <ul>
+      <li><strong>Node.js</strong> 18 or later</li>
+      <li><strong>Hexo CLI</strong> 8.x (<code>npm install -g hexo-cli</code>)</li>
+      <li>The following Hexo plugins (installed alongside the theme):
+        <ul>
+          <li><code>hexo-renderer-ejs</code> ^2.0</li>
+          <li><code>hexo-renderer-stylus</code> ^3.0</li>
+          <li><code>hexo-renderer-marked</code> ^7.0</li>
+          <li><code>hexo-generator-archive</code> ^2.0</li>
+          <li><code>hexo-generator-tag</code> ^2.0</li>
+          <li><code>hexo-generator-category</code> ^2.0</li>
+          <li><code>hexo-generator-index</code> ^4.0</li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr>
+
+    <!-- Installation -->
+    <h2 id="installation">Installation</h2>
+
+    <ol class="steps">
+      <li>
+        <strong>Scaffold a new Hexo site</strong> (skip if you already have one):
+<pre><code>hexo init my-blog
+cd my-blog
+npm install</code></pre>
+      </li>
+      <li>
+        <strong>Copy the theme</strong> into the <code>themes/</code> directory:
+<pre><code><span class="cm"># Option A — clone directly</span>
+git clone https://github.com/&lt;your-user&gt;/coldnight themes/coldnight
+
+<span class="cm"># Option B — copy the folder manually</span>
+cp -r /path/to/coldnight themes/coldnight</code></pre>
+      </li>
+      <li>
+        <strong>Install required renderers</strong> (if not already present):
+<pre><code>npm install hexo-renderer-ejs hexo-renderer-stylus hexo-renderer-marked \
+  hexo-generator-archive hexo-generator-tag hexo-generator-category \
+  hexo-generator-index</code></pre>
+      </li>
+      <li>
+        <strong>Enable the theme</strong> in your site's <code>_config.yml</code>:
+<pre><code><span class="nb">theme</span><span class="pn">:</span> <span class="val">coldnight</span></code></pre>
+      </li>
+      <li>
+        <strong>Set pagination</strong> in your site's <code>_config.yml</code> so the index grid is full and archive pages show all posts:
+<pre><code><span class="nb">index_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">9</span>       <span class="cm"># 3×3 grid</span>
+
+<span class="nb">archive_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span>       <span class="cm"># no pagination</span>
+
+<span class="nb">tag_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span>
+
+<span class="nb">category_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span></code></pre>
+      </li>
+      <li>
+        <strong>Launch the dev server</strong>:
+<pre><code>hexo server</code></pre>
+        Open <a href="http://localhost:4000">http://localhost:4000</a>.
+      </li>
+    </ol>
+
+    <hr>
+
+    <!-- Quick start -->
+    <h2 id="quick-start">Quick start</h2>
+    <p>Here is the minimal <code>themes/coldnight/_config.yml</code> you need to get a working site:</p>
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+
+<span class="nb">sidebar</span><span class="pn">:</span>
+  <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>
+
+<span class="nb">lightgallery</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>
+
+<span class="nb">code</span><span class="pn">:</span>
+  <span class="nb">copy_button</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <hr>
+
+    <!-- Configuration -->
+    <h2 id="config-navbar">Navbar</h2>
+    <p>Controls the top navigation bar. Links accept any absolute path or external URL.</p>
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>        <span class="cm"># site name shown left of the navbar</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/archives</span>
+    <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">About</span>
+      <span class="nb">url</span><span class="pn">:</span>  <span class="str">/about</span></code></pre>
+
+    <h2 id="config-sidebar">Sidebar</h2>
+    <p>The sidebar appears only on the two-column layout (index and post pages).</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">sidebar.position</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">right</td>
+          <td><code>left</code> | <code>right</code> | <code>hidden</code>. Use <code>hidden</code> to give the post body the full width.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sidebar.widgets</td>
+          <td class="opt-type">array</td>
+          <td class="opt-default">—</td>
+          <td>Ordered list of widget names to render. Available: <code>recent_posts</code>, <code>tags</code>, <code>archives</code>, <code>about</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">sidebar</span><span class="pn">:</span>
+  <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>   <span class="cm"># left | right | hidden</span>
+  <span class="nb">widgets</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">recent_posts</span>
+    <span class="pn">-</span> <span class="val">tags</span>
+    <span class="pn">-</span> <span class="val">archives</span></code></pre>
+
+    <h2 id="config-social">Social links</h2>
+    <p>Displayed in the footer. Leave a value empty to hide that icon.</p>
+<pre><code><span class="nb">social</span><span class="pn">:</span>
+  <span class="nb">github</span><span class="pn">:</span>  <span class="str">"your-username"</span>   <span class="cm"># → https://github.com/your-username</span>
+  <span class="nb">twitter</span><span class="pn">:</span> <span class="str">"your-handle"</span>     <span class="cm"># → https://twitter.com/your-handle</span>
+  <span class="nb">rss</span><span class="pn">:</span>     <span class="val">true</span>              <span class="cm"># show RSS feed link (/atom.xml)</span></code></pre>
+
+    <h2 id="config-cover">Cover images</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">cover.default</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Absolute path to a fallback image used when a post has no <code>cover_image</code> in its front-matter.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">cover.aspect_ratio</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">"16/9"</td>
+          <td>CSS <code>aspect-ratio</code> value applied to post-card thumbnails.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">cover</span><span class="pn">:</span>
+  <span class="nb">default</span><span class="pn">:</span>      <span class="str">"/images/default-cover.jpg"</span>
+  <span class="nb">aspect_ratio</span><span class="pn">:</span> <span class="str">"16/9"</span></code></pre>
+
+    <h2 id="config-code">Code blocks</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">code.copy_button</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show a copy-to-clipboard button in the code block toolbar. Excludes line numbers from the copied text.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">code.language_label</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Display the detected language name in the top-right corner of each code block.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>The site's <code>_config.yml</code> must use <code>syntax_highlighter: highlight.js</code> with <code>hljs: true</code>. The copy button targets <code>td.code</code> specifically to avoid copying gutter line numbers.</p>
+    </div>
+
+    <h2 id="config-lightgallery">LightGallery</h2>
+    <p>LightGallery v2 is loaded via jsDelivr CDN <strong>only on post pages</strong> when enabled.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">lightgallery.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Include LightGallery CDN assets. Disable for sites with no images or that need no external requests.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.auto_mount</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Auto-wrap every <code>.post-body img</code> (not tagged <code>.no-gallery</code>) as a lightbox item on click.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.zoom</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the LightGallery zoom plugin.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">lightgallery.thumbnail</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the thumbnail strip plugin at the bottom of the lightbox.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="config-misc">Misc toggles</h2>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">reading_time</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Show a sponsor / "Buy me a coffee" link in the post footer.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.label</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">"Buy me a coffee"</td>
+          <td>Button label text.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">sponsor.url</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Link destination (Ko-fi, GitHub Sponsors, etc.).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Front-matter -->
+    <h2 id="front-matter">Post front-matter</h2>
+    <p>All fields except <code>title</code> and <code>date</code> are optional.</p>
+
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>        <span class="str">My Post Title</span>
+<span class="nb">date</span><span class="pn">:</span>         <span class="val">2026-01-15</span>
+<span class="nb">categories</span><span class="pn">:</span>  <span class="pn">[</span><span class="str">Dev</span><span class="pn">]</span>
+<span class="nb">tags</span><span class="pn">:</span>         <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
+<span class="nb">cover_image</span><span class="pn">:</span>  <span class="str">/images/cover.jpg</span>   <span class="cm"># optional; falls back to cover.default</span>
+<span class="nb">excerpt</span><span class="pn">:</span>      <span class="str">"Override the auto-excerpt shown on post cards."</span>
+<span class="pn">---</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>You can also use <code>&lt;!-- more --&gt;</code> anywhere in the post body to set the excerpt boundary instead of the front-matter <code>excerpt</code> field.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: gallery -->
+    <h2 id="tag-gallery">{% gallery %} tag</h2>
+    <p>Renders a responsive photo grid powered by LightGallery. Each image opens in full-screen when clicked.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">gallery</span> <span class="pl">[cols]</span> <span class="pn">%}</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Caption text</span><span class="pn">](</span><span class="str">/images/photo1.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Another photo</span><span class="pn">](</span><span class="str">/images/photo2.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="pn">](</span><span class="str">/images/photo3.jpg</span><span class="pn">)</span>          <span class="cm"># caption is optional</span>
+<span class="pn">{%</span> <span class="kw">endgallery</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">cols</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">3</td>
+          <td>Number of columns in the photo grid (1–6 recommended).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Example</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">gallery</span> 2 <span class="pn">%}</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Sunset over the mountains</span><span class="pn">](</span><span class="str">/images/trip/sunset.jpg</span><span class="pn">)</span>
+<span class="pn">!</span><span class="pn">[</span><span class="str">Morning fog in the valley</span><span class="pn">](</span><span class="str">/images/trip/fog.jpg</span><span class="pn">)</span>
+<span class="pn">{%</span> <span class="kw">endgallery</span> <span class="pn">%}</span></code></pre>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p><code>lightgallery.enabled</code> must be <code>true</code> in the theme config for gallery clicks to open the lightbox. The grid will still render without it, but clicking images won't open a full-screen viewer.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: note -->
+    <h2 id="tag-note">{% note %} tag</h2>
+    <p>Renders a styled callout box. Markdown is supported inside the tag body.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">note</span> <span class="pl">type</span> <span class="pn">%}</span>
+Content here. **Markdown** is _supported_.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Type</th><th>Color</th><th>Icon</th><th>When to use</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">tip</td>     <td>Green</td>  <td>✓</td>  <td>Best practices, helpful hints</td></tr>
+        <tr><td class="opt-key">info</td>    <td>Blue</td>   <td>ℹ</td>  <td>Neutral supplementary information</td></tr>
+        <tr><td class="opt-key">warning</td> <td>Yellow</td> <td>⚠</td>  <td>Caveats, deprecated features</td></tr>
+        <tr><td class="opt-key">danger</td>  <td>Red</td>    <td>✕</td>  <td>Breaking changes, data loss risks</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">note</span> tip <span class="pn">%}</span>
+Run `hexo clean` before `hexo generate` to avoid stale cache issues.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span>
+
+<span class="pn">{%</span> <span class="kw">note</span> warning <span class="pn">%}</span>
+This option will be **removed** in a future release.
+<span class="pn">{%</span> <span class="kw">endnote</span> <span class="pn">%}</span></code></pre>
+
+    <hr>
+
+    <!-- Layouts -->
+    <h2 id="layouts">Page layouts</h2>
+    <p>The theme uses two distinct page shells:</p>
+
+    <h3>Two-column shell</h3>
+    <p>Used by the <strong>index</strong> and <strong>post</strong> pages. A CSS Grid layout (<code>65fr 35fr</code>) with <code>.main-content</code> and <code>.sidebar</code>. Setting <code>sidebar.position: hidden</code> collapses the sidebar and gives the body the full width.</p>
+
+    <h3>Full-width shell</h3>
+    <p>Used by <strong>archive</strong>, <strong>tag</strong>, <strong>category</strong>, and static <strong>page</strong> layouts. A single <code>.archive-wrapper</code> centered at <code>max-width: 1100px</code> with no sidebar. Posts are grouped by year, sorted newest-first, in a compact list row showing date, title, category, and reading time.</p>
+
+    <h3>Layout files</h3>
+    <table>
+      <thead><tr><th>File</th><th>Shell</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">index.ejs</td><td>Two-column</td><td>Home page with the 3-column post grid (9 per page)</td></tr>
+        <tr><td class="opt-key">post.ejs</td><td>Two-column</td><td>Individual post with cover image, metadata, and body</td></tr>
+        <tr><td class="opt-key">archive.ejs</td><td>Full-width</td><td>All posts as a year-grouped list</td></tr>
+        <tr><td class="opt-key">tag.ejs</td><td>Full-width</td><td>Posts filtered by a single tag</td></tr>
+        <tr><td class="opt-key">category.ejs</td><td>Full-width</td><td>Posts filtered by a single category</td></tr>
+        <tr><td class="opt-key">page.ejs</td><td>Full-width</td><td>Static pages (About, etc.) — no post metadata</td></tr>
+        <tr><td class="opt-key">404.ejs</td><td>Full-width</td><td>Custom 404 page</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Static pages -->
+    <h2 id="static-pages">Static pages</h2>
+    <p>Create static pages with <code>hexo new page</code>:</p>
+<pre><code>hexo new page about</code></pre>
+    <p>This creates <code>source/about/index.md</code>. The page is rendered with <code>layout/page.ejs</code> (full-width shell, no post metadata). You can add any Markdown content, including <code>{% note %}</code> callouts.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Add the page to <code>navbar.links</code> in the theme config so it appears in the navigation bar.</p>
+    </div>
+
+    <hr>
+
+    <!-- CSS pipeline -->
+    <h2 id="css">CSS pipeline</h2>
+    <p>All styles are written in <a href="https://stylus-lang.com/">Stylus</a> and compiled by <code>hexo-renderer-stylus</code>. The entry point is <code>themes/coldnight/source/css/style.styl</code>, which imports the others in dependency order:</p>
+
+    <table>
+      <thead><tr><th>File</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">_variables.styl</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site.</td></tr>
+        <tr><td class="opt-key">_base.styl</td><td>CSS reset, body defaults, scrollbar</td></tr>
+        <tr><td class="opt-key">_typography.styl</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
+        <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar</td></tr>
+        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid</td></tr>
+        <tr><td class="opt-key">_code.styl</td><td>Code block toolbar, language label, copy button</td></tr>
+        <tr><td class="opt-key">_lightgallery.styl</td><td>LightGallery overrides to match the dark theme</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Never hardcode color values in partials — always reference a variable from <code>_variables.styl</code>. This ensures a single edit recolors the whole theme.</p>
+    </div>
+
+    <hr>
+
+    <!-- GitHub Pages -->
+    <h2 id="deploy-github">Deploying to GitHub Pages</h2>
+
+    <h3>Option A — GitHub Actions (recommended)</h3>
+    <p>Create <code>.github/workflows/pages.yml</code> in your repository:</p>
+<pre><code><span class="nb">name</span><span class="pn">:</span> <span class="str">Deploy to GitHub Pages</span>
+
+<span class="nb">on</span><span class="pn">:</span>
+  <span class="nb">push</span><span class="pn">:</span>
+    <span class="nb">branches</span><span class="pn">:</span> <span class="pn">[</span><span class="str">main</span><span class="pn">]</span>
+
+<span class="nb">permissions</span><span class="pn">:</span>
+  <span class="nb">contents</span><span class="pn">:</span> <span class="val">read</span>
+  <span class="nb">pages</span><span class="pn">:</span>    <span class="val">write</span>
+  <span class="nb">id-token</span><span class="pn">:</span> <span class="val">write</span>
+
+<span class="nb">jobs</span><span class="pn">:</span>
+  <span class="nb">build</span><span class="pn">:</span>
+    <span class="nb">runs-on</span><span class="pn">:</span> <span class="val">ubuntu-latest</span>
+    <span class="nb">steps</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/checkout@v4</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/setup-node@v4</span>
+        <span class="nb">with</span><span class="pn">:</span>
+          <span class="nb">node-version</span><span class="pn">:</span> <span class="str">"20"</span>
+      <span class="pn">-</span> <span class="nb">run</span><span class="pn">:</span> <span class="val">npm ci</span>
+      <span class="pn">-</span> <span class="nb">run</span><span class="pn">:</span> <span class="val">npx hexo generate</span>
+      <span class="pn">-</span> <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/upload-pages-artifact@v3</span>
+        <span class="nb">with</span><span class="pn">:</span>
+          <span class="nb">path</span><span class="pn">:</span> <span class="str">public</span>
+
+  <span class="nb">deploy</span><span class="pn">:</span>
+    <span class="nb">needs</span><span class="pn">:</span> <span class="val">build</span>
+    <span class="nb">runs-on</span><span class="pn">:</span> <span class="val">ubuntu-latest</span>
+    <span class="nb">environment</span><span class="pn">:</span>
+      <span class="nb">name</span><span class="pn">:</span>  <span class="val">github-pages</span>
+      <span class="nb">url</span><span class="pn">:</span>   <span class="val">$&#123;&#123; steps.deployment.outputs.page_url &#125;&#125;</span>
+    <span class="nb">steps</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="nb">id</span><span class="pn">:</span> <span class="val">deployment</span>
+        <span class="nb">uses</span><span class="pn">:</span> <span class="val">actions/deploy-pages@v4</span></code></pre>
+
+    <p>Then in your repo: <strong>Settings → Pages → Source</strong> → select <em>GitHub Actions</em>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Set <code>url</code> in your site's <code>_config.yml</code> to your Pages URL (<code>https://username.github.io</code> or <code>https://username.github.io/repo-name</code>) so all asset paths resolve correctly.</p>
+    </div>
+
+    <h3>Option B — gh-pages branch (hexo-deployer-git)</h3>
+<pre><code><span class="cm"># Install the deployer plugin</span>
+npm install hexo-deployer-git --save
+
+<span class="cm"># Add to _config.yml</span>
+<span class="nb">deploy</span><span class="pn">:</span>
+  <span class="nb">type</span><span class="pn">:</span>   <span class="val">git</span>
+  <span class="nb">repo</span><span class="pn">:</span>   <span class="str">https://github.com/username/username.github.io.git</span>
+  <span class="nb">branch</span><span class="pn">:</span> <span class="val">gh-pages</span>
+
+<span class="cm"># Deploy</span>
+hexo clean &amp;&amp; hexo deploy</code></pre>
+
+    <hr>
+
+    <!-- GitLab Pages -->
+    <h2 id="deploy-gitlab">Deploying to GitLab Pages</h2>
+    <p>Create <code>.gitlab-ci.yml</code> in the repository root:</p>
+<pre><code><span class="nb">image</span><span class="pn">:</span> <span class="val">node:20-alpine</span>
+
+<span class="nb">pages</span><span class="pn">:</span>
+  <span class="nb">stage</span><span class="pn">:</span> <span class="val">deploy</span>
+  <span class="nb">script</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">npm ci</span>
+    <span class="pn">-</span> <span class="val">npx hexo generate</span>
+    <span class="pn">-</span> <span class="val">mv public public_html</span>    <span class="cm"># GitLab Pages requires this name</span>
+    <span class="pn">-</span> <span class="val">cp -r public_html public</span>  <span class="cm"># keep 'public' for the artifact</span>
+  <span class="nb">artifacts</span><span class="pn">:</span>
+    <span class="nb">paths</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="val">public</span>
+  <span class="nb">only</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="val">main</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>GitLab Pages serves from the <code>public/</code> artifact path. Hexo already generates into <code>public/</code>, so no extra config is needed beyond the CI file above.</p>
+    </div>
+
+    <hr>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>
