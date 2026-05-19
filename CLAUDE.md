@@ -94,6 +94,8 @@ The archive page (`archive.ejs`) shows a row of pill-shaped filter chips above t
 
 Uses the `hidden` attribute (not `display:none`) for accessible, style-decoupled visibility. `Array.prototype.some.call` is used for NodeList iteration, consistent with the existing `var`-style codebase.
 
+**Accessibility** — each chip carries `aria-pressed="true/false"` so screen readers announce the active filter state ("Dev, button, pressed"). The JS toggles `aria-pressed` alongside the CSS class on every click.
+
 **Styles** — `.archive-filters` and `.archive-filter-chip` live in `_layout.scss` under `// ─── Archive filter chips`. The active chip uses `$accent` background; chips have a `:focus-visible` outline for keyboard accessibility.
 
 ### Static pages
