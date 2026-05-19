@@ -176,7 +176,7 @@ LightGallery v2 JS and CSS are loaded from jsDelivr CDN **only on post pages** (
 
 ### Post grid (index page only)
 
-The index page renders posts inside `.post-grid` (CSS Grid, `_layout.scss`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling Stylus.
+The index page renders posts inside `.post-grid` (CSS Grid, `_layout.scss`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling SCSS.
 
 - Desktop: `grid.columns` columns (default 3)
 - Tablet (≤1024px): `ceil(columns / 2)` columns
@@ -185,6 +185,36 @@ The index page renders posts inside `.post-grid` (CSS Grid, `_layout.scss`). Col
 When `grid.columns: 1` the grid switches to `.post-grid--list`, which flips each `.post-card` to `flex-direction: row` with a fixed-width thumbnail on the left.
 
 A `before_generate` filter in `helpers.js` auto-sets `index_generator.per_page = columns × rows` for grid mode. In list mode (`columns: 1`) the filter does not override `per_page`, so the site `_config.yml` value is used.
+
+If a pinned post is detected, it is rendered as a hero above the grid on page 1 and filtered out of the grid on that same page (see **Featured / Pinned Post** below).
+
+### Related posts (`post.ejs`)
+
+At the bottom of each post page (below the post footer, above `</main>`), a "You might also like" section renders up to 3 related posts as `.post-grid` cards. Toggled by `theme.related_posts`.
+
+The scoring runs entirely at build time in the top `<% %>` block of `post.ejs`:
+- +2 pts per shared tag between the current post and a candidate
+- +1 pt if the candidate shares the current post's primary category
+- Candidates with score 0 are excluded; the rest are sorted descending and the top 3 taken
+
+`site.posts.each()` iterates all posts via the Warehouse collection API. The related-posts section is only rendered when at least one candidate scores > 0.
+
+Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The grid reuses the existing `.post-grid` with fixed inline custom properties `--post-grid-cols: 3; --post-grid-cols-md: 2`.
+
+### Featured / Pinned Post (`index.ejs`, `_partial/pinned-post.ejs`)
+
+A post with `pinned: true` in its front-matter is promoted to a full-width hero card above the grid on index page 1. If no post is pinned, the index page is unchanged.
+
+Detection in `index.ejs`:
+```js
+const pinnedPost = site.posts.sort('-date').toArray().find(p => p.pinned)
+const showHero   = !!pinnedPost && (page.current === 1 || !page.current)
+```
+`sort('-date')` ensures the most recently dated pinned post wins when several are marked. `!page.current` handles single-page sites where `page.current` is `undefined`.
+
+When `showHero` is true the grid loop skips the pinned post (`if (showHero && post.path === pinnedPost.path) return`) so it does not appear twice on page 1. On page 2+ the hero is suppressed and the post occupies its chronological grid slot.
+
+The partial `_partial/pinned-post.ejs` uses the same data as `post-card.ejs` (cover image, category, read time, excerpt) and reuses `.post-card__category` and `.post-card__read-more`. Styles live in `_components.scss` under `// ─── Pinned / Featured post`. Key visual details: blue `$border-focus` border, 45%-wide cover panel on the left (stacks on mobile), `.pinned-badge` label in accent colour.
 
 ## Post front-matter
 
@@ -196,6 +226,7 @@ categories: [Dev]
 tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
 excerpt: "Override the auto-excerpt shown on post cards."
+pinned: true                     # optional; promotes post to featured hero on the index page
 ---
 ```
 
@@ -215,3 +246,4 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `toc.max_depth: 2` — limit TOC to h2 headings only (default 3 includes h3)
 - `progress_bar: false` — removes the reading progress bar from post pages
 - `search.enabled: false` — removes the search box from the navbar and skips loading `search.js`
+- `related_posts: false` — hides the "You might also like" section at the bottom of post pages
