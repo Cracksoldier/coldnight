@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — coldnight docs</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar navigation ─────────────────────────────────── -->
+  <nav class="sidenav" aria-label="Documentation">
+    <a class="sidenav-brand" href="index.html">
+      <div class="logo">🌙</div>
+      <span>coldnight</span>
+    </a>
+
+    <div class="nav-section nav-section--active">
+      <div class="nav-section-label">Getting started</div>
+      <a href="#overview">Overview</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#installation">Installation</a>
+      <a href="#quick-start">Quick start</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <a href="configuration.html#config-navbar">Navbar</a>
+      <a href="configuration.html#config-sidebar">Sidebar</a>
+      <a href="configuration.html#config-social">Social links</a>
+      <a href="configuration.html#config-cover">Cover images</a>
+      <a href="configuration.html#config-code">Code blocks</a>
+      <a href="configuration.html#config-lightgallery">LightGallery</a>
+      <a href="configuration.html#config-grid">Post grid</a>
+      <a href="configuration.html#config-toc">Table of contents</a>
+      <a href="configuration.html#config-misc">Misc toggles</a>
+      <a href="configuration.html#config-search">Search</a>
+      <a href="configuration.html#config-og">Open Graph / SEO</a>
+      <a href="configuration.html#config-related-posts">Related posts</a>
+      <a href="configuration.html#config-pinned">Featured post</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Writing</div>
+      <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#tag-gallery">{% gallery %}</a>
+      <a href="writing.html#tag-note">{% note %}</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Layouts &amp; structure</div>
+      <a href="architecture.html#layouts">Page layouts</a>
+      <a href="architecture.html#static-pages">Static pages</a>
+      <a href="architecture.html#ui-features">UI features</a>
+      <a href="architecture.html#css">CSS pipeline</a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Deployment</div>
+      <a href="deployment.html#deploy-github">GitHub Pages</a>
+      <a href="deployment.html#deploy-gitlab">GitLab Pages</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ───────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <section class="hero" id="overview">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Hexo Theme &nbsp;·&nbsp; v1.x
+      </div>
+      <h1>coldnight</h1>
+      <p class="lead">
+        A dark, minimal Hexo theme with a post grid, full-width archive lists, LightGallery integration, and polished code blocks.
+      </p>
+      <div class="hero-tags">
+        <span class="tag tag-blue">Hexo 8</span>
+        <span class="tag tag-green">Dark theme</span>
+        <span class="tag tag-purple">LightGallery v2</span>
+        <span class="tag tag-yellow">EJS + SCSS</span>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">🗃️</div>
+        <h4>3-column post grid</h4>
+        <p>Responsive grid (3 → 2 → 1 cols) with cover images and reading-time estimates.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h4>Archive / tag / category lists</h4>
+        <p>Year-grouped, date-sorted lists — no pagination required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🖼️</div>
+        <h4>LightGallery v2</h4>
+        <p>Full-screen image viewer with zoom and thumbnail strip. Auto-mounted on post images.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">💻</div>
+        <h4>Code blocks</h4>
+        <p>Language label + one-click copy button. Code blocks are excluded from reading-time estimates.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📌</div>
+        <h4>Configurable sidebar</h4>
+        <p>Recent posts, tag cloud, archive widget. Can be left, right, or hidden.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔌</div>
+        <h4>Tag plugins</h4>
+        <p><code>{% gallery %}</code> photo grids and <code>{% note %}</code> callout boxes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📖</div>
+        <h4>Table of contents</h4>
+        <p>Auto-generated from post headings. Sticky in the sidebar with scroll-spy active-section highlighting.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h4>Reading progress bar</h4>
+        <p>3px accent-colored bar fixed to the top of the viewport. Fills as the reader scrolls through a post.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔍</div>
+        <h4>Full-text search</h4>
+        <p>Instant search dropdown in the navbar. Matches titles, content, and tags. Keyboard-navigable with highlight marks on matches.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔗</div>
+        <h4>Open Graph &amp; SEO</h4>
+        <p>Canonical tag, <code>og:*</code>, <code>twitter:card</code>, <code>article:published_time</code>, and keywords — all wired from post front-matter.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔁</div>
+        <h4>Related posts</h4>
+        <p>"You might also like" row at the bottom of each post. Scored by shared tags and category at build time — no plugin required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⭐</div>
+        <h4>Featured / pinned post</h4>
+        <p>Add <code>pinned: true</code> to any post's front-matter to promote it as a full-width hero card above the index grid.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Requirements -->
+    <h2 id="requirements">Requirements</h2>
+    <ul>
+      <li><strong>Node.js</strong> 18 or later</li>
+      <li><strong>Hexo CLI</strong> 8.x (<code>npm install -g hexo-cli</code>)</li>
+      <li>The following Hexo plugins (installed alongside the theme):
+        <ul>
+          <li><code>hexo-renderer-ejs</code> ^2.0</li>
+          <li><code>hexo-renderer-dartsass</code> ^1.0</li>
+          <li><code>hexo-renderer-marked</code> ^7.0</li>
+          <li><code>hexo-generator-archive</code> ^2.0</li>
+          <li><code>hexo-generator-tag</code> ^2.0</li>
+          <li><code>hexo-generator-category</code> ^2.0</li>
+          <li><code>hexo-generator-index</code> ^4.0</li>
+          <li><code>hexo-generator-search</code> ^2.4 (required for search feature)</li>
+        </ul>
+      </li>
+    </ul>
+
+    <hr>
+
+    <!-- Installation -->
+    <h2 id="installation">Installation</h2>
+
+    <ol class="steps">
+      <li>
+        <strong>Scaffold a new Hexo site</strong> (skip if you already have one):
+<pre><code>hexo init my-blog
+cd my-blog
+npm install</code></pre>
+      </li>
+      <li>
+        <strong>Copy the theme</strong> into the <code>themes/</code> directory:
+<pre><code><span class="cm"># Option A — clone directly</span>
+git clone https://github.com/&lt;your-user&gt;/coldnight themes/coldnight
+
+<span class="cm"># Option B — copy the folder manually</span>
+cp -r /path/to/coldnight themes/coldnight</code></pre>
+      </li>
+      <li>
+        <strong>Install required renderers</strong> (if not already present):
+<pre><code>npm install hexo-renderer-ejs hexo-renderer-dartsass hexo-renderer-marked \
+  hexo-generator-archive hexo-generator-tag hexo-generator-category \
+  hexo-generator-index hexo-generator-search</code></pre>
+      </li>
+      <li>
+        <strong>Enable the theme</strong> in your site's <code>_config.yml</code>:
+<pre><code><span class="nb">theme</span><span class="pn">:</span> <span class="val">coldnight</span></code></pre>
+      </li>
+      <li>
+        <strong>Set pagination</strong> in your site's <code>_config.yml</code> so the index grid is full and archive pages show all posts:
+<pre><code><span class="nb">index_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">9</span>       <span class="cm"># 3×3 grid</span>
+
+<span class="nb">archive_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span>       <span class="cm"># no pagination</span>
+
+<span class="nb">tag_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span>
+
+<span class="nb">category_generator</span><span class="pn">:</span>
+  <span class="nb">per_page</span><span class="pn">:</span> <span class="val">0</span></code></pre>
+      </li>
+      <li>
+        <strong>Launch the dev server</strong>:
+<pre><code>hexo server</code></pre>
+        Open <a href="http://localhost:4000">http://localhost:4000</a>.
+      </li>
+    </ol>
+
+    <hr>
+
+    <!-- Quick start -->
+    <h2 id="quick-start">Quick start</h2>
+    <p>Here is the minimal <code>themes/coldnight/_config.yml</code> you need to get a working site:</p>
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+
+<span class="nb">sidebar</span><span class="pn">:</span>
+  <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>
+
+<span class="nb">lightgallery</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>
+
+<span class="nb">code</span><span class="pn">:</span>
+  <span class="nb">copy_button</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
+      coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>
