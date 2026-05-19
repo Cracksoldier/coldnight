@@ -60,6 +60,7 @@
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
       <a href="#ui-features">UI features</a>
+      <a href="#ui-archive-filter">Archive filter chips</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -145,6 +146,12 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
     <h3 id="ui-search">Search</h3>
     <p>A 200px text input in the navbar (and a full-width input in the mobile drawer) provides instant full-text search across all post titles, content, and tags. Results appear in an absolute-positioned dropdown below the input with up to 8 matches, highlighted with <code>&lt;mark&gt;</code> spans. All output — including result anchor <code>href</code> attributes — is passed through <code>esc()</code> to prevent XSS. The mobile drawer (<code>#mobile-nav</code>) starts with <code>aria-hidden="true"</code>; <code>nav.js</code> flips it on open/close so screen readers never traverse a closed drawer. Press <kbd>/</kbd> anywhere on the page to focus the search input instantly; press <kbd>?</kbd> to open a keyboard shortcuts modal. See <a href="configuration.html#config-search">Search configuration</a> for the complete implementation detail including lazy fetch, factory pattern, and keyboard navigation.</p>
 
+    <h3 id="ui-archive-filter">Archive filter chips</h3>
+    <p>The archive page shows a row of pill-shaped filter chips above the year-grouped list. Clicking a chip filters posts by category or tag client-side — no page load required. Because <code>archive_generator.per_page: 0</code> puts all posts into <code>page.posts</code>, the chip set and filter logic are always complete.</p>
+    <p><strong>Data model</strong> — the <code>&lt;% %&gt;</code> block at the top of <code>archive.ejs</code> collects unique categories and tags from <code>page.posts</code> via <code>Set</code>-based deduplication, sorts both arrays alphabetically, then renders one chip per value. Each <code>&lt;li class="archive-item"&gt;</code> carries <code>data-category</code> (primary category name or <code>""</code>) and <code>data-tags</code> (pipe-separated tag names or <code>""</code>). Pipe (<code>|</code>) is used instead of a space so tag names containing spaces work correctly.</p>
+    <p><strong>Chip markup</strong> — each <code>&lt;button class="archive-filter-chip"&gt;</code> stores <code>data-filter-type</code> (<code>"all"</code>, <code>"category"</code>, or <code>"tag"</code>) and <code>data-filter-value</code>. Category chips show the bare name; tag chips are prefixed with <code>#</code>. The chip bar is wrapped in <code>role="group" aria-label="Filter posts"</code>.</p>
+    <p><strong>Implementation</strong> — <code>source/js/archive-filter.js</code> is a self-contained IIFE loaded only on the archive page. On each chip click it: (1) moves the <code>archive-filter-chip--active</code> class to the clicked chip (exclusive — one active filter at a time); (2) sets the <code>hidden</code> attribute on each <code>.archive-item</code> that doesn't match the active filter; (3) checks each <code>.archive-year-group</code> and sets its <code>hidden</code> attribute if all of its items are hidden, collapsing empty year headings automatically. The <code>hidden</code> attribute is used throughout (not <code>display:none</code>) for accessible, style-decoupled visibility. Styles live in <code>_layout.scss</code> under <code>// ─── Archive filter chips</code>.</p>
+
     <h3 id="ui-related">Related posts</h3>
     <p>A "You might also like" row of up to 3 post cards appears at the bottom of every post page. The candidates are selected and scored entirely at build time — no runtime JS is involved. See <a href="configuration.html#config-related-posts">Related posts configuration</a> for the scoring algorithm and implementation detail.</p>
 
@@ -163,7 +170,7 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
         <tr><td class="opt-key">_variables.scss</td><td>All color, spacing, typography, and breakpoint variables. Edit this file to retheme the entire site — every other partial reads from it. Font-stack variables (<code>$font-sans</code>, <code>$font-mono</code>) are <strong>unquoted SCSS lists</strong> — keep them unquoted or the compiler will treat the entire value as one unknown font name.</td></tr>
         <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar styling, reduced-motion overrides (<code>scroll-behavior: auto</code> and <code>animation: none</code> under <code>prefers-reduced-motion: reduce</code>)</td></tr>
         <tr><td class="opt-key">_typography.scss</td><td>Post body typography — headings, lists, blockquotes, tables, inline code</td></tr>
-        <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar layout, <code>.post-cover</code> image, related-posts wrapper</td></tr>
+        <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, archive filter chips, sidebar layout, <code>.post-cover</code> image, related-posts wrapper</td></tr>
         <tr><td class="opt-key">_components.scss</td><td>Navbar, footer, post cards, pinned hero, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget, search dropdown</td></tr>
         <tr><td class="opt-key">_code.scss</td><td>Code block toolbar, language label, copy button hover state</td></tr>
         <tr><td class="opt-key">_lightgallery.scss</td><td>LightGallery overrides to match the dark theme palette</td></tr>

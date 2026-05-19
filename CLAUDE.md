@@ -75,6 +75,27 @@ Pagination is disabled for all three via `_config.yml`:
 - `tag_generator.per_page: 0`
 - `category_generator.per_page: 0`
 
+### Archive filter chips
+
+The archive page (`archive.ejs`) shows a row of pill-shaped filter chips above the year-grouped list. Chips let readers filter posts by category or tag client-side without a page load.
+
+**Data collection** — at the top of the EJS `<% %>` block, unique categories and tags are collected from `page.posts` using `Set`-based deduplication, then sorted alphabetically. `per_page: 0` guarantees all posts are present in `page.posts`, making the chip set and filter logic reliable.
+
+**Data attributes** — each `<li class="archive-item">` carries:
+- `data-category` — the post's primary category name, or `""` if none
+- `data-tags` — pipe-separated (`|`) tag names, or `""` if none. Pipe is used instead of space so tag names containing spaces work correctly.
+
+**Chip markup** — each `<button class="archive-filter-chip">` stores `data-filter-type` (`"all"`, `"category"`, or `"tag"`) and `data-filter-value`. Category chips show the bare name; tag chips are prefixed with `#`.
+
+**`source/js/archive-filter.js`** — plain IIFE, no dependencies. On click:
+1. Removes `archive-filter-chip--active` from all chips, adds it to the clicked one (exclusive mode — one active filter at a time).
+2. Sets `item.hidden` on each `.archive-item` based on the active filter.
+3. Checks each `.archive-year-group`: if all its items are hidden, sets `group.hidden = true` to collapse the year heading.
+
+Uses the `hidden` attribute (not `display:none`) for accessible, style-decoupled visibility. `Array.prototype.some.call` is used for NodeList iteration, consistent with the existing `var`-style codebase.
+
+**Styles** — `.archive-filters` and `.archive-filter-chip` live in `_layout.scss` under `// ─── Archive filter chips`. The active chip uses `$accent` background; chips have a `:focus-visible` outline for keyboard accessibility.
+
 ### Static pages
 
 `layout/page.ejs` renders static Hexo pages (created with `hexo new page`). It uses the full-width shell with no post metadata. The only static page currently in `source/` is `source/about/index.md`.
