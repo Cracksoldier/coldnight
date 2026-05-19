@@ -472,6 +472,7 @@
       <div class="nav-section-label">Layouts &amp; structure</div>
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
+      <a href="#ui-features">UI features</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -955,6 +956,15 @@ This option will be **removed** in a future release.
 
     <hr>
 
+    <!-- UI features -->
+    <h2 id="ui-features">UI features</h2>
+
+    <h3>Back-to-top button</h3>
+    <p>A circular floating button appears at the bottom-right of every page once the reader scrolls past one viewport height. Clicking it smoothly scrolls back to the top. It is always enabled — no configuration required.</p>
+    <p>The button uses <code>opacity</code> + <code>visibility: hidden</code> when not visible so it is excluded from keyboard tab order. Styles live in <code>_components.styl</code> under <code>.back-to-top</code>; the script is <code>source/js/back-to-top.js</code>, loaded via <code>_partial/footer.ejs</code> on every page.</p>
+
+    <hr>
+
     <!-- CSS pipeline -->
     <h2 id="css">CSS pipeline</h2>
     <p>All styles are written in <a href="https://stylus-lang.com/">Stylus</a> and compiled by <code>hexo-renderer-stylus</code>. The entry point is <code>themes/coldnight/source/css/style.styl</code>, which imports the others in dependency order:</p>
@@ -966,7 +976,7 @@ This option will be **removed** in a future release.
         <tr><td class="opt-key">_base.styl</td><td>CSS reset, body defaults, scrollbar</td></tr>
         <tr><td class="opt-key">_typography.styl</td><td>Post body typography — headings, lists, blockquotes, tables</td></tr>
         <tr><td class="opt-key">_layout.styl</td><td>Page shell grids (two-column, archive), post grid, archive list rows, sidebar</td></tr>
-        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid</td></tr>
+        <tr><td class="opt-key">_components.styl</td><td>Navbar, footer, post cards, pagination, note callouts, sidebar widgets, gallery grid, back-to-top button</td></tr>
         <tr><td class="opt-key">_code.styl</td><td>Code block toolbar, language label, copy button</td></tr>
         <tr><td class="opt-key">_lightgallery.styl</td><td>LightGallery overrides to match the dark theme</td></tr>
       </tbody>

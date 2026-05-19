@@ -79,7 +79,7 @@ Pagination is disabled for all three via `_config.yml`:
 
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 
-Four extensions are registered:
+Five extensions are registered:
 
 | Name | Type | Usage |
 |------|------|-------|
@@ -87,12 +87,17 @@ Four extensions are registered:
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box |
 | `after_render:html` filter | filter | Injects `data-lang` attribute on `<figure class="highlight <lang>">` for CSS language labels |
+| `before_generate` filter | filter | Auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 
 ### Code blocks
 
 Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name.
 
 `source/js/copy-code.js` injects a `.code-toolbar` flex div (language label + copy button) into the top-right of each `figure.highlight`. The copy handler targets `td.code` explicitly to exclude line numbers. The toolbar is always visible; the copy button highlights on hover.
+
+### Back-to-top button
+
+`source/js/back-to-top.js` is loaded via `_partial/footer.ejs` on every page. A passive scroll listener toggles the `.back-to-top--visible` modifier on `#back-to-top` once `scrollY` exceeds one viewport height. The button uses `opacity` + `visibility` so it is excluded from the tab order when hidden.
 
 ### LightGallery integration
 
@@ -103,12 +108,15 @@ LightGallery v2 is loaded from jsDelivr CDN **only on post pages** (controlled b
 
 ### Post grid (index page only)
 
-The index page renders posts inside `.post-grid` (CSS Grid, `_layout.styl`):
-- Desktop (>1024px): 3 columns
-- Tablet (≤1024px): 2 columns
-- Mobile (≤640px): 1 column
+The index page renders posts inside `.post-grid` (CSS Grid, `_layout.styl`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling Stylus.
 
-`per_page: 9` in `_config.yml` keeps the grid full (3×3). Archive, tag, and category pages use the list layout instead.
+- Desktop: `grid.columns` columns (default 3)
+- Tablet (≤1024px): `ceil(columns / 2)` columns
+- Mobile (≤640px): always 1 column
+
+When `grid.columns: 1` the grid switches to `.post-grid--list`, which flips each `.post-card` to `flex-direction: row` with a fixed-width thumbnail on the left.
+
+A `before_generate` filter in `helpers.js` auto-sets `index_generator.per_page = columns × rows` for grid mode. In list mode (`columns: 1`) the filter does not override `per_page`, so the site `_config.yml` value is used.
 
 ## Post front-matter
 
@@ -133,3 +141,5 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `lightgallery.enabled: false` — removes all LightGallery CDN requests
 - `code.copy_button: false` — disables the copy-to-clipboard button on code blocks
 - `reading_time: false` — removes reading-time estimates everywhere
+- `grid.columns: 1` — switches the index page to list view; any value >1 sets the grid column count
+- `grid.rows: 3` — rows per page in grid mode; ignored in list mode (`per_page` from site config applies)
