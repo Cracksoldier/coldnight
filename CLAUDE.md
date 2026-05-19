@@ -66,7 +66,7 @@ Each page type (`index`, `post`, `archive`, `tag`, `category`, `page`, `404`) is
 
 ### Archive / tag / category list layout
 
-These pages use a year-grouped list instead of a card grid. Posts are grouped by `post.date.year()` in the EJS template, sorted newest-first. Each row uses `.archive-item` (CSS Grid: `3.5rem 1fr auto`) showing date, linked title, and category + reading time. Styles live in `_layout.styl` under the `// ─── Archive list` section.
+These pages use a year-grouped list instead of a card grid. Posts are grouped by `post.date.year()` in the EJS template, sorted newest-first. Each row uses `.archive-item` (CSS Grid: `3.5rem 1fr auto`) showing date, linked title, and category + reading time. Styles live in `_layout.scss` under the `// ─── Archive list` section.
 
 Pagination is disabled for all three via `_config.yml`:
 - `archive_generator.per_page: 0`
@@ -102,26 +102,72 @@ Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<
 
 The `toc` widget is registered in `sidebar.ejs` with a `page.layout === 'post'` guard — it never renders on archive/tag/category/page layouts. The widget partial (`widgets/toc.ejs`) calls `render_toc(page.content)` and renders nothing if the result is empty, so headingless posts show no widget. The toggle button collapses/expands the `<nav id="toc-list">` via `hidden` attribute.
 
-Styles live in `_components.styl` under `.widget-toc__toggle`, `.toc-list`, `.toc-item`, `.toc-item--h3`, and `.toc-link`.
+Styles live in `_components.scss` under `.widget-toc__toggle`, `.toc-list`, `.toc-item`, `.toc-item--h3`, and `.toc-link`.
 
 ### Reading progress bar
 
 `source/js/reading-progress.js` is loaded on post pages when `theme.progress_bar` is true. A passive scroll listener computes `scrollY / (scrollHeight - clientHeight) * 100` and sets it as the `width` of `#reading-progress`. The element is a `<div>` injected at the very top of `<body>` in `post.ejs`, styled as `position: fixed; top: 0; height: 3px; z-index: 6` (above the sticky navbar at z-index 5). `pointer-events: none` prevents it from intercepting clicks.
 
+### Search
+
+Full-text search is powered by `hexo-generator-search` (emits `public/search.json` at build time) and `source/js/search.js` (loaded via `_partial/footer.ejs`). The feature is toggled by `theme.search.enabled` in `themes/coldnight/_config.yml`.
+
+The search index is configured in the site-level `_config.yml`:
+```yaml
+search:
+  path: search.json
+  field: post
+  content: true
+```
+
+`search.js` behaviour:
+- Index is fetched **lazily** on the first `focus` event of `#search-input` (avoids blocking page load)
+- `hexo-generator-search` v2.4 emits a top-level JSON array; the script handles both `Array` and `{ posts: [] }` formats for forward-compatibility
+- 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags
+- Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet
+- `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output to prevent XSS
+- Keyboard: `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes and returns focus to input; `ArrowUp` at the first result returns focus to the input field
+- Outside click closes the dropdown
+
+Styles live in `_components.scss` under `// ─── Search`. The navbar-specific width (`200px`) and mobile hiding are in `.navbar__search`.
+
 ### Back-to-top button
 
 `source/js/back-to-top.js` is loaded via `_partial/footer.ejs` on every page. A passive scroll listener toggles the `.back-to-top--visible` modifier on `#back-to-top` once `scrollY` exceeds one viewport height. The button uses `opacity` + `visibility` so it is excluded from the tab order when hidden.
+
+### Open Graph / SEO (`_partial/head.ejs`)
+
+All meta computation runs in a single `<% %>` block at the top of `head.ejs` (before any HTML output — EJS is sequential):
+
+```js
+const ogImage    = page.cover_image || theme.cover.default || ''
+const ogImageAbs = ogImage ? config.url + url_for(ogImage) : ''
+const rawExcerpt = page.excerpt ? page.excerpt.replace(/<[^>]+>/g, '').trim() : ''
+const metaDesc   = page.description || rawExcerpt || config.description || ''
+const metaKeywords = (page.tags?.length
+  ? page.tags.map(t => t.name).join(', ')
+  : '') || config.keywords || ''
+```
+
+`metaDesc` is used for all three description tags: `<meta name="description">`, `og:description`, and `twitter:description`. The `rawExcerpt` fallback means posts using `<!-- more -->` get a populated OG description even without a front-matter `description:` field.
+
+Tags emitted:
+- `<meta name="description">` / `<meta name="keywords">` (keywords gated on non-empty value)
+- `og:title`, `og:description`, `og:type` (`article` for posts, `website` otherwise), `og:url`, `og:site_name`, `og:image` (gated)
+- `article:published_time`, `article:author` (gated on `page.layout === 'post'`)
+- `<link rel="canonical">` (uses `page.permalink` or `config.url`)
+- `twitter:card`, `twitter:title`, `twitter:description`, `twitter:site` (gated on `theme.social.twitter`), `twitter:image` (gated)
 
 ### LightGallery integration
 
 LightGallery v2 JS and CSS are loaded from jsDelivr CDN **only on post pages** (gated by `page.layout === 'post'` in `_partial/head.ejs` and `layout/post.ejs`). `source/js/gallery.js` handles two cases:
 
 1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): a single LightGallery instance is created on page load for all `.post-body img` elements (excluding `.no-gallery`). Clicking an image calls `instance.openGallery(idx)` — no new instance per click.
-2. **Explicit galleries**: `{% gallery [cols] %}` tag renders a `.lg-gallery` div with a `data-cols` attribute (1–6); `gallery.js` mounts a separate LightGallery instance on each one. CSS for all column counts is generated via a Stylus loop in `_components.styl`.
+2. **Explicit galleries**: `{% gallery [cols] %}` tag renders a `.lg-gallery` div with a `data-cols` attribute (1–6); `gallery.js` mounts a separate LightGallery instance on each one. CSS for all column counts is generated via a SCSS `@for` loop in `_components.scss`.
 
 ### Post grid (index page only)
 
-The index page renders posts inside `.post-grid` (CSS Grid, `_layout.styl`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling Stylus.
+The index page renders posts inside `.post-grid` (CSS Grid, `_layout.scss`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling Stylus.
 
 - Desktop: `grid.columns` columns (default 3)
 - Tablet (≤1024px): `ceil(columns / 2)` columns
@@ -159,3 +205,4 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `toc.enabled: false` — disables the TOC widget and prevents `toc.js` from loading
 - `toc.max_depth: 2` — limit TOC to h2 headings only (default 3 includes h3)
 - `progress_bar: false` — removes the reading progress bar from post pages
+- `search.enabled: false` — removes the search box from the navbar and skips loading `search.js`
