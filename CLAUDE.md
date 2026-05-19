@@ -112,6 +112,8 @@ Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<
 
 The same file also handles the **permalink button**: a click handler at the bottom of the `DOMContentLoaded` callback queries `.post-permalink-btn` and calls the shared `writeToClipboard()` / `showToast()` helpers already in scope. The button is rendered in `post.ejs` with `data-permalink="<%= page.permalink %>"` so no client-side URL construction is needed. Gated on `theme.permalink_button !== false`.
 
+The same `DOMContentLoaded` callback also injects **heading anchor links**: it queries every `.post-body h2[id]` and `.post-body h3[id]`, appends an `<a class="heading-anchor" href="#id" aria-hidden="true" tabindex="-1">#</a>` to each, and lets the browser handle hash navigation natively on click. The anchor is hidden by default (`opacity: 0`) and revealed by a CSS `:hover` rule on the parent heading. Styles live in `_components.scss` under `// ─── Heading anchors`.
+
 ### Table of contents
 
 `source/js/toc.js` is loaded on post pages when `theme.toc.enabled` is true. It uses `IntersectionObserver` (rootMargin `0px 0px -65% 0px`) to mark a heading active when it enters the top 35% of the viewport, toggling `.active` on the matching `.toc-link`. Headings are resolved from the TOC links' `href` attributes, so the DOM and helper output must agree on ids (they always do because `render_toc` reads from the same rendered HTML).
@@ -144,7 +146,7 @@ search:
 - 180 ms debounce; multi-term AND matching against title, first 800 chars of content, and tags.
 - Results are capped at 8; each rendered as an `<a class="search-result-item">` with a snippet.
 - `mark()` wraps matched terms in `<mark>`; `esc()` HTML-escapes all output — including `post.url` in result anchor `href` attributes — to prevent XSS.
-- Keyboard: `/` pressed outside any text field focuses the desktop search input and selects any existing text; `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes the dropdown and blurs the input; `ArrowUp` at the first result returns focus to the input field.
+- Keyboard: `/` pressed outside any text field focuses the desktop search input and selects any existing text; `ArrowDown`/`ArrowUp` navigate result links; `Escape` closes the dropdown and blurs the input; `ArrowUp` at the first result returns focus to the input field. `?` opens a keyboard shortcuts modal (a native `<dialog>`) listing all available shortcuts; the dialog is lazily created on first trigger and closes on `Escape`, click-outside, or the `×` button.
 - Outside click closes the dropdown.
 
 Two instances are initialised — `init('search-input', 'search-wrap', 'search-results')` for the desktop navbar and `init('search-input-mobile', 'search-wrap-mobile', 'search-results-mobile')` for the mobile nav drawer — both sharing the same data cache.
