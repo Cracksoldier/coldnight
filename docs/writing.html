@@ -50,6 +50,7 @@
       <a href="#tag-gallery">{% gallery %}</a>
       <a href="#tag-note">{% note %}</a>
       <a href="#tag-tabs">{% tabs %}</a>
+      <a href="#tag-download">{% download %}</a>
       <a href="#image-captions">Image captions</a>
     </div>
 
@@ -280,6 +281,47 @@ println!("hello world");
     <p><code>scripts/helpers.js</code> registers <code>tabs</code> as a Hexo block tag plugin. It parses <code>&lt;!-- tab Name --&gt; … &lt;!-- endtab --&gt;</code> markers to split the block into named panels. For each tab it emits a hidden <code>&lt;input type="radio"&gt;</code> with a unique ID, a matching <code>&lt;label&gt;</code> in the tab nav bar, and a <code>&lt;div class="tabs__panel"&gt;</code> for the content. Each panel body is passed through Hexo's synchronous Markdown renderer so fenced code blocks and other syntax work normally.</p>
 
     <p>The "active tab" state is driven entirely by CSS: the checked radio input selects both the active label (via <code>:checked ~ .tabs__nav .tabs__label:nth-child(N)</code>) and the active panel (via <code>:checked ~ .tabs__panels .tabs__panel:nth-child(N)</code>). All non-active panels are <code>display: none</code>. Styles live in <code>_components.scss</code> under <code>// ─── Tabs</code>.</p>
+
+    <hr>
+
+    <!-- Tag: download -->
+    <h2 id="tag-download">{% download %} tag</h2>
+    <p>Renders a prominent download button. An optional <code>external</code> keyword adds an amber badge to indicate the file is hosted on a third-party server.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">download</span> <span class="nb">url</span> <span class="pn">[</span><span class="nb">label</span><span class="pn">]</span> <span class="pn">[</span><span class="kw">external</span><span class="pn">]</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Argument</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">url</td><td>Yes</td><td>Absolute or root-relative URL to the file</td></tr>
+        <tr><td class="opt-key">label</td><td>No</td><td>Button text. Defaults to the filename parsed from the URL.</td></tr>
+        <tr><td class="opt-key">external</td><td>No</td><td>Literal keyword. Adds an amber "External" badge next to the button.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# URL only — label inferred from filename #}</span>
+<span class="pn">{%</span> <span class="kw">download</span> <span class="str">/downloads/app-v1.0.zip</span> <span class="pn">%}</span>
+
+<span class="cm">{# Explicit label #}</span>
+<span class="pn">{%</span> <span class="kw">download</span> <span class="str">/downloads/app-v1.0.zip</span> <span class="nb">My App v1.0</span> <span class="pn">%}</span>
+
+<span class="cm">{# External file with label #}</span>
+<span class="pn">{%</span> <span class="kw">download</span> <span class="str">https://github.com/user/repo/releases/download/v1.0/app.zip</span> <span class="nb">My App v1.0</span> <span class="kw">external</span> <span class="pn">%}</span>
+
+<span class="cm">{# External file, label inferred #}</span>
+<span class="pn">{%</span> <span class="kw">download</span> <span class="str">https://cdn.example.com/report.pdf</span> <span class="kw">external</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>download</code> as an inline Hexo tag (no body, no <code>{% enddownload %}</code>). It emits a <code>.download-block</code> wrapper containing a <code>.btn.btn--primary</code> anchor with the <code>download</code> and <code>rel="noopener noreferrer"</code> attributes. When <code>external</code> is present, an amber <code>.download-block__ext-badge</code> span is appended beside the button. The label and URL are HTML-escaped via the shared <code>escHtml</code> utility before output.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>The HTML <code>download</code> attribute only works for <strong>same-origin</strong> URLs. For files hosted on external servers the browser may open the file inline rather than downloading it. Most CDNs and file hosts set <code>Content-Disposition: attachment</code> headers, which force a download regardless — use the <code>external</code> flag to signal this to readers.</p>
+    </div>
+
+    <p>Styles live in <code>_components.scss</code> under <code>// ─── Download block</code>. The button reuses the existing <code>.btn</code> + <code>.btn--primary</code> classes — no extra button CSS is needed.</p>
 
     <hr>
 
