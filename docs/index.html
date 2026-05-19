@@ -341,18 +341,16 @@
     .steps { list-style: none; padding: 0; counter-reset: steps; }
     .steps li {
       counter-increment: steps;
-      padding: 1rem 1rem 1rem 3.5rem;
       position: relative;
-      border-left: 2px solid var(--border);
-      margin-left: 1rem;
-      margin-bottom: 0.5rem;
+      padding: 0 0 1.75rem 3.5rem;
       color: var(--text-2);
     }
+    /* numbered circle */
     .steps li::before {
       content: counter(steps);
       position: absolute;
-      left: -1.1rem;
-      top: 0.85rem;
+      left: 0;
+      top: 0;
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
@@ -364,8 +362,19 @@
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--accent);
+      z-index: 1;
     }
-    .steps li:last-child { border-left-color: transparent; }
+    /* connector line drawn from below the circle to the bottom of the item */
+    .steps li::after {
+      content: '';
+      position: absolute;
+      left: calc(1rem - 1px);
+      top: 2rem;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .steps li:last-child::after { display: none; }
 
     /* ── Option table helper ─────────────────────────────────── */
     .opt-key  { color: var(--accent); font-family: monospace; white-space: nowrap; }
