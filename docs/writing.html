@@ -55,6 +55,7 @@
       <a href="#tag-note">{% note %}</a>
       <a href="#tag-tabs">{% tabs %}</a>
       <a href="#tag-timeline">{% timeline %}</a>
+      <a href="#tag-spoiler">{% spoiler %}</a>
       <a href="#tag-download">{% download %}</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -344,6 +345,62 @@ Initial public release.
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>
       <p>The <code>::</code> separator can appear in the title itself if needed — only the <em>first</em> occurrence splits the date from the title. For example, <code>&lt;!-- entry 2026-01-01 :: Title :: with colons --&gt;</code> sets the date to <code>2026-01-01</code> and the title to <code>Title :: with colons</code>.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: spoiler -->
+    <h2 id="tag-spoiler">{% spoiler %} tag</h2>
+    <p>Wraps content in a native HTML <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> block — a collapsible section the reader can open and close. Useful for answers, hints, tangents, or long code examples that shouldn't dominate the reading flow.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">spoiler</span> <span class="nb">label text</span> <span class="pn">%}</span>
+Content goes here. **Markdown** is supported.
+<span class="pn">{%</span> <span class="kw">endspoiler</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Argument</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">label text</td><td>No</td><td>Text shown on the collapsed summary row. Defaults to <code>Show spoiler</code> when omitted. Multi-word labels are supported — all arguments are joined with spaces.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+
+    <p>Default label:</p>
+<pre><code><span class="pn">{%</span> <span class="kw">spoiler</span> <span class="pn">%}</span>
+The answer is 42.
+<span class="pn">{%</span> <span class="kw">endspoiler</span> <span class="pn">%}</span></code></pre>
+
+    <p>Custom label with Markdown body:</p>
+<pre><code><span class="pn">{%</span> <span class="kw">spoiler</span> <span class="nb">Show solution</span> <span class="pn">%}</span>
+1. Start by initializing the repository.
+2. Run `npm install`.
+3. Copy `.env.example` to `.env` and fill in the values.
+<span class="pn">{%</span> <span class="kw">endspoiler</span> <span class="pn">%}</span></code></pre>
+
+    <p>Spoilers can nest callouts, code blocks, or any other Markdown content:</p>
+<pre><code><span class="pn">{%</span> <span class="kw">spoiler</span> <span class="nb">Reveal the algorithm</span> <span class="pn">%}</span>
+```js
+function binarySearch(arr, target) {
+  let lo = 0, hi = arr.length - 1
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1
+    if (arr[mid] === target) return mid
+    arr[mid] < target ? lo = mid + 1 : hi = mid - 1
+  }
+  return -1
+}
+```
+<span class="pn">{%</span> <span class="kw">endspoiler</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>spoiler</code> as a Hexo block tag plugin. It joins all arguments with spaces to form the label (HTML-escaped via <code>escHtml</code>), then passes the block body through Hexo's synchronous Markdown renderer (<code>renderSync</code>) with a <code>try/catch</code> fallback — identical to the pattern used by <code>{% note %}</code> and <code>{% tabs %}</code>. The output is a <code>&lt;details class="spoiler"&gt;</code> element containing a <code>&lt;summary&gt;</code> and a <code>&lt;div class="spoiler__body"&gt;</code>.</p>
+    <p>The toggle triangle is a CSS <code>::before</code> pseudo-element on <code>.spoiler__summary</code> that rotates 90° when the <code>[open]</code> attribute is present on the parent <code>&lt;details&gt;</code>. The default browser disclosure marker is hidden via <code>list-style: none</code> (Firefox) and <code>::-webkit-details-marker { display: none }</code> (Chrome/Safari). Styles live in <code>_components.scss</code> under <code>// ─── Spoiler</code>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>The <code>&lt;details&gt;</code> element is keyboard-accessible natively — <kbd>Enter</kbd> and <kbd>Space</kbd> open and close it without any JavaScript.</p>
     </div>
 
     <hr>

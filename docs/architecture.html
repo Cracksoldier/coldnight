@@ -72,6 +72,9 @@
       <a href="#ui-math">KaTeX math</a>
       <a href="#ui-timeline">{% timeline %} tag</a>
       <a href="#ui-toc-drawer">Mobile TOC drawer</a>
+      <a href="#ui-sticky-title">Sticky post title</a>
+      <a href="#ui-diff-highlighting">Diff highlighting</a>
+      <a href="#ui-spoiler">{% spoiler %} tag</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -196,6 +199,31 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
     <p><strong>CSS</strong> — <code>.toc-fab</code> is <code>display: none</code> by default and only shown via <code>@media (max-width: $bp-mobile)</code>. It is positioned <code>fixed; bottom: 80px; right: $sp-4; z-index: 30</code> — above the back-to-top button (64px) and below the drawer overlay (z-index 40/41). The panel slides up with a CSS <code>@keyframes toc-slide-up</code> animation; the backdrop fades in with <code>@keyframes toc-fade-in</code>. The drawer uses the <code>hidden</code> attribute (not <code>display: none</code>) for toggling — this is consistent with the rest of the theme and avoids fighting the animation.</p>
     <p><strong>Client side</strong> — <code>source/js/toc-drawer.js</code> is a self-contained IIFE loaded alongside <code>toc.js</code> whenever <code>toc.enabled</code> is true. It wires up four close triggers: overlay click, close-button click, <kbd>Escape</kbd> key, and click on any <code>.toc-link</code>. Opening the drawer sets <code>document.body.style.overflow = 'hidden'</code> to prevent background scroll; closing restores it. Focus management: opening moves focus to the close button; closing returns it to the FAB. Because <code>toc.js</code> queries <code>.toc-link</code> globally, scroll-spy active highlighting works for drawer links without any modification to <code>toc.js</code>.</p>
 
+    <h3 id="ui-sticky-title">Sticky post title</h3>
+    <p>When <code>sticky_title: true</code>, the post's <code>&lt;h1&gt;</code> heading is mirrored into the navbar once it scrolls out of view. This gives readers a persistent orientation anchor on long posts without duplicating HTML at build time.</p>
+    <p><strong>Implementation</strong> — <code>source/js/post-title.js</code> is a defer-loaded IIFE that runs only on post pages (gated in <code>post.ejs</code> by <code>theme.sticky_title</code>). On load it:</p>
+    <ol>
+      <li>Queries <code>.post-title</code> (the <code>&lt;h1&gt;</code>) and <code>.navbar__inner</code>. Returns early if either is absent.</li>
+      <li>Creates a <code>&lt;span class="navbar__post-title"&gt;</code>, sets its <code>textContent</code> to the heading's text, and inserts it after <code>.navbar__brand</code> via <code>insertAdjacentElement('afterend', …)</code>.</li>
+      <li>Adds <code>has-post-title</code> to <code>.navbar__inner</code> so the CSS can override <code>.navbar__nav</code>'s <code>margin-left: auto</code> — the injected <code>flex: 1</code> span takes over gap management.</li>
+      <li>Creates an <code>IntersectionObserver</code> (threshold 0) on the <code>&lt;h1&gt;</code>. When the heading leaves the viewport, it adds <code>navbar--title-visible</code> to <code>.navbar__inner</code>; when it re-enters, it removes it.</li>
+    </ol>
+    <p><strong>CSS</strong> — <code>.navbar__post-title</code> is always <code>flex: 1; min-width: 0</code> once injected, so it fills the gap between the brand and the nav links. It starts at <code>opacity: 0; transform: translateY(4px); pointer-events: none</code>. The <code>navbar--title-visible</code> modifier transitions it to <code>opacity: 1; transform: translateY(0)</code> with a <code>$transition-normal</code> duration. Hidden on mobile (<code>display: none</code> at <code>≤$bp-mobile</code>) since the navbar is too compact for an extra text element. Styles live in <code>_components.scss</code> immediately after <code>.navbar__title</code>.</p>
+
+    <h3 id="ui-diff-highlighting">Diff code block highlighting</h3>
+    <p>Fenced code blocks tagged with the <code>diff</code> language get per-line green/red visual markers for added and removed lines. No extra library is needed — Hexo's built-in highlight.js renderer already classifies <code>+</code>-prefixed lines as <code>.hljs-addition</code> and <code>-</code>-prefixed lines as <code>.hljs-deletion</code>.</p>
+    <p><strong>CSS</strong> — Both span classes in <code>_code.scss</code> use <code>display: block</code> to expand beyond inline width, <code>margin: 0 -1rem</code> to bleed to the edges of the code cell's <code>pre</code> padding, and <code>padding: 0 1rem 0 calc(1rem - 3px)</code> to compensate for a 3px left border stripe. This mirrors exactly the pattern already used by <code>figure.highlight .marked</code> (the manually marked-line feature). Color values:</p>
+    <ul>
+      <li><code>.hljs-addition</code> — <code>background: rgba(16, 185, 129, 0.15)</code> (green tint), <code>border-left: 3px solid rgba(16, 185, 129, 0.7)</code>, <code>color: #7ee8a2</code></li>
+      <li><code>.hljs-deletion</code> — <code>background: rgba(239, 68, 68, 0.12)</code> (red tint), <code>border-left: 3px solid rgba(239, 68, 68, 0.6)</code>, <code>color: #ffa198</code></li>
+    </ul>
+    <p>The border stripe is the key visual addition over a plain background: it gives an unambiguous edge marker, consistent with how most code review tools (GitHub, GitLab) render diff lines. Because the gutter (<code>td.gutter</code>) is a separate table column, per-line gutter coloring is not feasible without restructuring Hexo's table output — the left border on the code cell serves the same orientation purpose.</p>
+
+    <h3 id="ui-spoiler">{% spoiler %} tag</h3>
+    <p>A collapsible content block using the native HTML <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> elements with theme-consistent styling. No JavaScript is required — open/close behavior is handled by the browser natively, including full keyboard accessibility (<kbd>Enter</kbd>/<kbd>Space</kbd> to toggle).</p>
+    <p><strong>Tag registration</strong> — <code>scripts/helpers.js</code> registers <code>spoiler</code> as a Hexo block tag (<code>{ ends: true }</code>). All tag arguments are joined with spaces and HTML-escaped to form the summary label, defaulting to <code>"Show spoiler"</code> when no arguments are provided. The block body is passed through <code>hexo.render.renderSync({ engine: 'markdown' })</code> with a <code>try/catch</code> fallback, identical to <code>{% note %}</code> and <code>{% tabs %}</code>. The output is a <code>&lt;details class="spoiler"&gt;</code> wrapping a <code>&lt;summary class="spoiler__summary"&gt;</code> and a <code>&lt;div class="spoiler__body"&gt;</code>.</p>
+    <p><strong>CSS</strong> — <code>.spoiler</code> has <code>overflow: hidden</code> to clip child content (code blocks, images) to the container's <code>border-radius</code>. The custom triangle indicator is a CSS <code>::before</code> pseudo-element on <code>.spoiler__summary</code>: the default browser disclosure marker is suppressed via <code>list-style: none</code> (Firefox) and <code>::-webkit-details-marker { display: none }</code> (Chrome/Safari), then replaced with a <code>'▶'</code> character that rotates 90° via <code>transform: rotate(90deg)</code> when <code>details[open]</code> is present. <code>:focus-visible</code> provides a keyboard-accessible outline. Styles live in <code>_components.scss</code> under <code>// ─── Spoiler</code>. See <a href="writing.html#tag-spoiler">{% spoiler %} writing guide</a> for syntax and examples.</p>
+
     <hr>
 
     <!-- CSS pipeline -->
@@ -209,8 +237,8 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
         <tr><td class="opt-key">_base.scss</td><td>CSS reset, body defaults, scrollbar styling, reduced-motion overrides (<code>scroll-behavior: auto</code> and <code>animation: none</code> under <code>prefers-reduced-motion: reduce</code>)</td></tr>
         <tr><td class="opt-key">_typography.scss</td><td>Post body typography — headings, lists, blockquotes, tables, inline code</td></tr>
         <tr><td class="opt-key">_layout.scss</td><td>Page shell grids (two-column, archive), post grid, archive list rows, archive filter chips, sidebar layout, <code>.post-cover</code> image, related-posts wrapper</td></tr>
-        <tr><td class="opt-key">_components.scss</td><td>Navbar, footer, post cards, pinned hero, pagination, note callouts, tabs, timeline, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget, mobile TOC drawer, search dropdown</td></tr>
-        <tr><td class="opt-key">_code.scss</td><td>Code block toolbar, language label, copy button hover state</td></tr>
+        <tr><td class="opt-key">_components.scss</td><td>Navbar (including sticky post-title slot), footer, post cards, pinned hero, pagination, note callouts, tabs, timeline, spoiler, sidebar widgets, gallery grid, back-to-top button, reading progress bar, TOC widget, mobile TOC drawer, search dropdown</td></tr>
+        <tr><td class="opt-key">_code.scss</td><td>Code block toolbar, language label, copy button hover state, diff line highlighting (<code>.hljs-addition</code> / <code>.hljs-deletion</code> with green/red background tints and left border stripes)</td></tr>
         <tr><td class="opt-key">_lightgallery.scss</td><td>LightGallery overrides to match the dark theme palette</td></tr>
       </tbody>
     </table>

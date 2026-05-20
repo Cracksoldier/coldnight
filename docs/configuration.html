@@ -362,6 +362,12 @@
           <td>Show a 3px accent-colored reading progress bar fixed to the top of the viewport on post pages. Fills left-to-right as the reader scrolls. No effect on other page types.</td>
         </tr>
         <tr>
+          <td class="opt-key">sticky_title</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Fade the post title into the navbar when the <code>&lt;h1&gt;</code> scrolls out of view. Uses <code>IntersectionObserver</code> — no scroll listener overhead. Only active on post pages; has no effect on any other page type. Set to <code>false</code> to disable. See <a href="architecture.html#ui-sticky-title">Sticky post title</a>.</td>
+        </tr>
+        <tr>
           <td class="opt-key">related_posts</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
