@@ -66,9 +66,13 @@ Each page type (`index`, `post`, `archive`, `tag`, `category`, `page`, `404`) is
 
 `post-card.ejs` is the only partial that expects a local variable — always call it as `partial('_partial/post-card', { post })`.
 
+Cover image `src` attributes in `post.ejs`, `post-card.ejs`, and `pinned-post.ejs` use `<%- url_for(coverImg) %>` so paths resolve correctly for subdirectory-deployed sites (e.g. `root: /blog/`). Never use `<%= coverImg %>` directly for a `src` attribute.
+
 ### Archive / tag / category list layout
 
 These pages use a year-grouped list instead of a card grid. Posts are grouped by `post.date.year()` in the EJS template, sorted newest-first. Each row uses `.archive-item` (CSS Grid: `3.5rem 1fr auto`) showing date, linked title, and category + reading time. Styles live in `_layout.scss` under the `// ─── Archive list` section.
+
+The tag and category page headings highlight the tag/category name with `<span class="page-header__accent">` — a CSS class defined inside `.page-header` in `_layout.scss` that sets `color: $accent-light`. Never use an inline `style=` for this colour.
 
 Pagination is disabled for all three via `_config.yml`:
 - `archive_generator.per_page: 0`
@@ -97,6 +101,10 @@ Uses the `hidden` attribute (not `display:none`) for accessible, style-decoupled
 **Accessibility** — each chip carries `aria-pressed="true/false"` so screen readers announce the active filter state ("Dev, button, pressed"). The JS toggles `aria-pressed` alongside the CSS class on every click.
 
 **Styles** — `.archive-filters` and `.archive-filter-chip` live in `_layout.scss` under `// ─── Archive filter chips`. The active chip uses `$accent` background; chips have a `:focus-visible` outline for keyboard accessibility.
+
+### Sidebar tag cloud widget
+
+`widgets/tag-cloud.ejs` renders a flex-wrapped cloud of `.tag-pill` links. The container uses `.tag-cloud` (`display: flex; flex-wrap: wrap; gap: 6px`) and each tag count `(N)` uses `.tag-cloud__count` (`opacity: 0.6; font-size: 10px`). Both classes are defined in `_components.scss` under `// ─── Tag cloud widget`. Never use inline styles in the widget partial.
 
 ### External link indicator
 
@@ -170,7 +178,7 @@ The `toc` widget is registered in `sidebar.ejs` with a `page.layout === 'post'` 
 
 Styles live in `_components.scss` under `.widget-toc__toggle`, `.toc-list`, `.toc-item`, `.toc-item--h3`, and `.toc-link`.
 
-**Mobile TOC drawer** — On mobile (`≤640px`) the sidebar is CSS-hidden, leaving long posts without navigation. `_partial/toc-drawer.ejs` (rendered in `post.ejs` inside the same `toc.enabled` gate) calls `render_toc(page.content)` a second time at build time. If the result is empty (no headings), it renders nothing. Otherwise it emits a `.toc-fab` button (fixed bottom-right, `z-index: 30`, only visible via `@media (max-width: $bp-mobile)`) and a `.toc-drawer` overlay + bottom-sheet panel (`z-index: 40/41`) with slide-up animation. `source/js/toc-drawer.js` handles open/close: backdrop click, close button, Escape key, and click on any `.toc-link`. Styles live in `_components.scss` under `// ─── Mobile TOC floating button + drawer`.
+**Mobile TOC drawer** — On mobile (`≤640px`) the sidebar is CSS-hidden, leaving long posts without navigation. `_partial/toc-drawer.ejs` (rendered in `post.ejs` inside the same `toc.enabled` gate) calls `render_toc(page.content)` a second time at build time. If the result is empty (no headings), it renders nothing. Otherwise it emits a `.toc-fab` button (fixed bottom-right, `z-index: 30`, only visible via `@media (max-width: $bp-mobile)`) and a `.toc-drawer` overlay + bottom-sheet panel (`z-index: 40/41`) with slide-up animation. `source/js/toc-drawer.js` handles open/close: backdrop click, close button, Escape key, click on any `.toc-link`, and a Tab/Shift+Tab focus trap that cycles within the drawer (required to honour `aria-modal="true"`). Styles live in `_components.scss` under `// ─── Mobile TOC floating button + drawer`.
 
 ### Reading progress bar
 
@@ -205,7 +213,7 @@ The mobile search input lives at the top of `#mobile-nav` in `header.ejs`, wrapp
 
 **Dropdown CSS design** — `.search-results` is `position: absolute; top: 100%; right: 0; min-width: 320px`, anchored to the right edge of `.search-wrap` so it extends leftward into the page on right-aligned navbars. The `.open` modifier uses `margin-top: -1px` to overlap the input's bottom border by 1px; the dropdown's `z-index: 20` ensures its border renders on top, producing a single clean join line rather than a double border. The top-right corner is squared (`border-top-right-radius: 0`) where it meets the input; the top-left keeps `$radius`. When the input is focused with the dropdown open, `.search-input:focus + .search-results.open` applies `border-color: $border-focus` to highlight the whole container, and `.search-input:focus:has(+ .search-results.open)` squares the input's bottom corners so the two elements read as one connected unit. `.search-result-item` is explicitly `display: block` (it is an `<a>` tag — inline by default) so the `$accent-glow` hover background fills the full row width. `mark` elements inside results have `background: none` to suppress the browser's default yellow; matched terms render as bold `$accent-light` text instead. Mobile dropdown `max-height` is reduced to `240px` to avoid overflowing the nav drawer.
 
-The `#mobile-nav` drawer carries `aria-hidden="true"` in its initial (closed) state. `nav.js` sets `aria-hidden="false"` in `openNav()` and `aria-hidden="true"` in `closeNav()` so screen readers never traverse the drawer's content while it is visually hidden.
+The `#mobile-nav` drawer carries `aria-hidden="true"` in its initial (closed) state. `nav.js` sets `aria-hidden="false"` in `openNav()` and `aria-hidden="true"` in `closeNav()` so screen readers never traverse the drawer's content while it is visually hidden. The drawer uses `position: fixed; top: 56px` so it stays anchored immediately below the sticky navbar regardless of scroll position.
 
 ### Back-to-top button
 
@@ -216,8 +224,8 @@ The `#mobile-nav` drawer carries `aria-hidden="true"` in its initial (closed) st
 All meta computation runs in a single `<% %>` block at the top of `head.ejs` (before any HTML output — EJS is sequential):
 
 ```js
-const ogImage    = page.cover_image || theme.cover.default || ''
-const ogImageAbs = ogImage ? config.url + url_for(ogImage) : ''
+const ogImage    = page.cover_image || (theme.cover && theme.cover.default) || ''
+const ogImageAbs = ogImage ? config.url.replace(/\/$/, '') + url_for(ogImage) : ''
 const rawExcerpt = page.excerpt
   ? page.excerpt
       .replace(/<[^>]+>/g, '')                          // strip HTML tags
@@ -225,8 +233,8 @@ const rawExcerpt = page.excerpt
       .replace(/\s+/g, ' ').trim()
   : ''
 const metaDesc   = (page.description || rawExcerpt || config.description || '').slice(0, 160)
-const metaKeywords = (page.tags?.length
-  ? page.tags.map(t => t.name).join(', ')
+const metaKeywords = (page.tags && page.tags.length
+  ? page.tags.toArray().map(function(t){ return t.name }).join(', ')
   : '') || config.keywords || ''
 ```
 
@@ -305,7 +313,7 @@ The scoring runs entirely at build time in the top `<% %>` block of `post.ejs`:
 
 `site.posts.each()` iterates all posts via the Warehouse collection API. The related-posts section is only rendered when at least one candidate scores > 0.
 
-Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The heading is `<h3>` (not `<h2>`) to avoid conflicting with post body `##` headings at the same outline level. The grid reuses the existing `.post-grid` with fixed inline custom properties `--post-grid-cols: 2; --post-grid-cols-md: 2` — 2 columns fits comfortably within the post body width (~700px); 3 columns produces cards too narrow (~217px).
+Styles live in `_layout.scss` under `// ─── Related posts` (`.related-posts`, `.related-posts__heading`). The heading is `<h3>` (not `<h2>`) to avoid conflicting with post body `##` headings at the same outline level. The grid reuses `.post-grid` with `--post-grid-cols` and `--post-grid-cols-md` set to `Math.min(relatedPosts.length, 2)` — so a single related post fills a 1-column grid rather than sitting in one half of a 2-column row. 2 columns fits comfortably within the post body width (~700px); 3 columns produces cards too narrow (~217px).
 
 ### Series posts (`post.ejs`)
 
