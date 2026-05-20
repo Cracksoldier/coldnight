@@ -171,7 +171,7 @@ math:
   enabled: true    # render $...$ and $$...$$ as KaTeX HTML
 ```
 
-Math is rendered at `hexo generate` time by KaTeX's Node.js API — zero JavaScript on the page. Only the KaTeX CSS file is served to the browser.
+Math is rendered at `hexo generate` time by KaTeX's Node.js API — zero JavaScript on the page. Only the KaTeX CSS file is served to the browser. Output includes both visual HTML and a `<math>` element for screen readers.
 
 | Syntax | Usage |
 |--------|-------|
@@ -185,6 +185,8 @@ $$\int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}$$
 ```
 
 Math inside fenced code blocks is never processed — it stays as literal `$` text.
+
+**Avoiding false positives** — `$...$` matches any two dollar signs on the same line, so prose with currency amounts can trigger the renderer. Escape a literal dollar sign with a backslash: `\$50`. Display blocks (`$$...$$`) are less prone to this since they span their own line.
 
 ## Image captions
 
