@@ -246,9 +246,9 @@ Toggled by `theme.mermaid.enabled` (default `false`). When enabled, fenced ` ```
 
 **How it works**: Hexo's highlight.js renderer emits mermaid blocks as `<figure class="highlight plaintext">` with a `<code class="hljs mermaid">` inner element (mermaid is not a known HL language, so it falls back to `plaintext` for the figure class but still applies the `mermaid` class to the `<code>` tag). The `after_render:html` filter iterates every `<figure>` block on the page; if the `<code>` element has `class="hljs mermaid"`, it decodes the HTML-escaped source and replaces the entire `<figure>` with `<div class="mermaid">decoded source</div>`.
 
-**Entity decoding**: Hexo HTML-encodes the code content (`>` → `&gt;`, `{` → `&#123;`, line breaks → `<br>`, etc.). The transform decodes `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;`, `&#123;`, `&#125;`, and `<br>` before writing the source into the div.
+**Entity decoding**: Hexo HTML-encodes the code content (`>` → `&gt;`, `{` → `&#123;`, line breaks → `<br>`, etc.). The transform decodes `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;`, `&#123;`, `&#125;`, and `<br>` before writing the source into the div. Known edge case: decoding `&lt;` → `<` puts a literal `<` into the div's innerHTML; a node label containing `<` would break surrounding HTML. Rare in practice since mermaid syntax rarely uses `<` in node text.
 
-**Mermaid JS**: Vendored under `themes/coldnight/source/vendor/mermaid/` — entry point `mermaid.esm.min.mjs` plus its required `chunks/mermaid.esm.min/` subdirectory (the ESM build is chunked; the entry file alone is insufficient). Injected as `<script type="module">` at the bottom of `post.ejs` (module scripts are deferred by default). `mermaid.initialize({ startOnLoad: true, theme: '<%= theme.mermaid.theme %>' })` renders all `.mermaid` divs on load.
+**Mermaid JS**: Vendored under `themes/coldnight/source/vendor/mermaid/` — entry point `mermaid.esm.min.mjs` plus its required `chunks/mermaid.esm.min/` subdirectory (the ESM build is chunked; the entry file alone is insufficient). Injected as `<script type="module">` at the bottom of `post.ejs` (module scripts are deferred by default). `mermaid.initialize({ startOnLoad: true, theme: '...' })` renders all `.mermaid` divs on load. The theme value is validated against `/^[a-z]+$/` before injection to prevent code injection.
 
 **Theme**: `theme.mermaid.theme` (default `dark`). Mermaid's `dark` theme renders self-contained SVG — no extra color overrides needed.
 
@@ -264,7 +264,9 @@ Toggled by `theme.math.enabled` (default `true`). When enabled, `$...$` (inline)
    - `$$expr$$` → `<div class="katex-d" data-e="htmlEncoded(expr)"></div>`
    - `$expr$` → `<span class="katex-i" data-e="htmlEncoded(expr)"></span>`
 
-2. **`after_post_render`** — finds the placeholders and renders them with `katex.renderToString()`. A combined regex also matches `<figure>` blocks first so any placeholders that ended up inside a code block (edge case) are skipped rather than rendered.
+2. **`after_post_render`** — finds the placeholders and renders them with `katex.renderToString()`. A combined regex also matches `<figure>` blocks first so any placeholders that ended up inside a code block (edge case) are skipped rather than rendered. Output mode is the KaTeX default (`htmlAndMathml`): visual HTML plus a `<math>` element for screen readers.
+
+**False positives**: `$...$` matches any two dollar signs on the same line, so prose containing currency amounts (e.g. `$50`) can accidentally trigger math rendering. Escape a literal dollar sign with `\$`.
 
 **KaTeX CSS**: Linked in `_partial/head.ejs` on post pages only when `math.enabled`. No `<script>` tag anywhere — rendering is fully build-time.
 
