@@ -3,7 +3,7 @@ title: "Timelines — the timeline block tag"
 date: 2026-05-20 14:00:00
 categories: [Documentation]
 tags: [timeline, features, markdown]
-cover_image: https://placeholdpicsum.dev/seed/timeline/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "The timeline block tag renders vertical timelines for changelogs, career histories, and project journals — all at build time, zero runtime JavaScript."
 ---
 
