@@ -3,7 +3,7 @@ title: Syntax Highlighting Showcase
 date: 2026-05-15 10:00:00
 categories: [Development]
 tags: [syntax-highlighting, code, javascript, python]
-cover_image: https://picsum.photos/seed/syntax/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: A tour of syntax highlighting across JavaScript, TypeScript, Python, CSS, JSON, and Bash — all rendered by the built-in highlight.js processor.
 ---
 

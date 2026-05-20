@@ -3,7 +3,7 @@ title: CSS Layout Techniques Worth Knowing
 date: 2026-04-03 10:00:00
 categories: [Design]
 tags: [css, layout, grid, flexbox, frontend]
-cover_image: https://picsum.photos/seed/csslayout/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: Grid, Flexbox, container queries, and logical properties — the layout tools that make responsive design feel natural rather than fought against.
 ---
 

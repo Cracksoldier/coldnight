@@ -3,7 +3,7 @@ title: Configuring the Coldnight Theme
 date: 2026-03-13 10:00:00
 categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
-cover_image: https://picsum.photos/seed/config/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: A complete walkthrough of every option in themes/coldnight/_config.yml — navbar, sidebar, LightGallery, sponsor button, and more.
 ---
 

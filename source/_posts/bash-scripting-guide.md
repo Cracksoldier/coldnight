@@ -3,7 +3,7 @@ title: Practical Bash Scripting
 date: 2026-03-20 08:00:00
 categories: [Development]
 tags: [bash, cli, scripting, linux]
-cover_image: https://picsum.photos/seed/bash/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: Strict mode, argument parsing, logging helpers, and patterns for scripts that behave predictably and fail loudly.
 ---
 

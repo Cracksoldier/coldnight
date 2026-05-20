@@ -3,7 +3,7 @@ title: A Clean Git Workflow for Solo Developers
 date: 2026-03-06 09:00:00
 categories: [Development]
 tags: [git, workflow, version-control]
-cover_image: https://picsum.photos/seed/git/800/450
+cover_image: https://placeholdpicsum.dev/800x450
 excerpt: Conventional commits, interactive rebase, useful aliases, and the few commands that make up 90% of daily git usage.
 ---
 
