@@ -96,3 +96,9 @@ Math inside a code block is **not** rendered — it stays as literal source:
 $E = mc^2$   ← this stays as text
 $$\int f\,dx$$ ← this too
 ```
+
+## Avoiding false positives
+
+The `$...$` delimiter matches any two dollar signs on the same line, so prose containing currency can trigger the renderer unintentionally. For example, writing "costs $50 and saves $30" would render "50 and saves" as a math expression.
+
+To avoid this, either escape the dollar sign with a backslash (`\$50`) or rephrase to keep dollar signs on separate lines. Display blocks (`$$...$$`) are less prone to false positives since they require a blank line around them in most contexts.
