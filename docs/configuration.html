@@ -54,6 +54,7 @@
       <a href="writing.html#tag-gallery">{% gallery %}</a>
       <a href="writing.html#tag-note">{% note %}</a>
       <a href="writing.html#tag-tabs">{% tabs %}</a>
+      <a href="writing.html#tag-timeline">{% timeline %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
       <a href="writing.html#mermaid">Mermaid diagrams</a>
       <a href="writing.html#math">KaTeX math</a>
@@ -305,7 +306,7 @@
 
     <!-- Table of contents -->
     <h2 id="config-toc">Table of contents</h2>
-    <p>Auto-generates a sticky TOC in the sidebar from post headings. Add <code>toc</code> to <code>sidebar.widgets</code> to display it. The widget silently renders nothing on posts with no headings.</p>
+    <p>Auto-generates a sticky TOC in the sidebar from post headings, and a floating bottom-sheet drawer on mobile. Add <code>toc</code> to <code>sidebar.widgets</code> to display the desktop widget. The mobile drawer is automatic — it appears on any post with headings when the sidebar is hidden (≤640px viewport). Both silently render nothing on headingless posts.</p>
 
     <table>
       <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
@@ -314,13 +315,13 @@
           <td class="opt-key">toc.enabled</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
-          <td>Enable the TOC widget and load <code>toc.js</code> on post pages. Set to <code>false</code> to disable both.</td>
+          <td>Enable the TOC widget, mobile drawer, and load <code>toc.js</code> + <code>toc-drawer.js</code> on post pages. Set to <code>false</code> to disable all three.</td>
         </tr>
         <tr>
           <td class="opt-key">toc.max_depth</td>
           <td class="opt-type">number</td>
           <td class="opt-default">3</td>
-          <td>Maximum heading level to include. <code>2</code> = <code>##</code> headings only; <code>3</code> = <code>##</code> and <code>###</code>. H3 entries are indented in the list.</td>
+          <td>Maximum heading level to include. <code>2</code> = <code>##</code> headings only; <code>3</code> = <code>##</code> and <code>###</code>. H3 entries are indented in the list. Applies to both the sidebar widget and the mobile drawer.</td>
         </tr>
       </tbody>
     </table>
@@ -334,9 +335,11 @@
 
     <p><strong>Build time</strong> — <code>scripts/helpers.js</code> registers a <code>render_toc(content)</code> Hexo helper. When the sidebar widget calls <code>&lt;%- render_toc(page.content) %&gt;</code>, the helper receives the already-rendered HTML of the post, scans it for <code>&lt;h2&gt;</code> and <code>&lt;h3&gt;</code> elements that have <code>id</code> attributes (Hexo's renderer assigns these automatically), and returns a flat <code>&lt;ol class="toc-list"&gt;</code> with one <code>&lt;li class="toc-item"&gt;&lt;a class="toc-link" href="#id"&gt;</code> per heading. H3 entries get an additional <code>toc-item--h3</code> class which adds left padding in CSS. If no qualifying headings are found, the helper returns an empty string and the widget renders nothing.</p>
 
-    <p><strong>Client side</strong> — <code>source/js/toc.js</code> is loaded on post pages only when <code>theme.toc.enabled</code> is true and the sidebar is not hidden. It uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code>. This rootMargin shrinks the observable area to the top 35% of the viewport — a heading is considered "active" the moment it enters that zone. When the observer fires, it reads the heading's <code>id</code>, finds the matching <code>.toc-link</code> by comparing <code>href</code> attributes, and toggles the <code>active</code> class (which applies an accent-colored left border).</p>
+    <p><strong>Client side</strong> — <code>source/js/toc.js</code> is loaded on post pages whenever <code>theme.toc.enabled</code> is true (the former sidebar-hidden guard has been removed). It uses <code>IntersectionObserver</code> with <code>rootMargin: '0px 0px -65% 0px'</code>. This rootMargin shrinks the observable area to the top 35% of the viewport — a heading is considered "active" the moment it enters that zone. When the observer fires, it reads the heading's <code>id</code>, finds the matching <code>.toc-link</code> by comparing <code>href</code> attributes, and toggles the <code>active</code> class (which applies an accent-colored left border). Because it queries <code>.toc-link</code> globally, scroll-spy highlighting works automatically for both the sidebar widget and the mobile drawer.</p>
 
     <p>The toggle button in the widget sets or removes the <code>hidden</code> attribute on <code>&lt;nav id="toc-list"&gt;</code> and flips <code>aria-expanded</code> on the button. The CSS chevron rotation is handled entirely via the selector <code>[aria-expanded="false"] svg { transform: rotate(180deg) }</code> — no JS class toggling needed.</p>
+
+    <p><strong>Mobile drawer</strong> — on viewports ≤640px the sidebar is CSS-hidden, so the TOC widget is not visible. <code>_partial/toc-drawer.ejs</code> is rendered in <code>post.ejs</code> inside the same <code>toc.enabled</code> gate. It calls <code>render_toc(page.content)</code> a second time at build time — if the result is empty it renders nothing; otherwise it emits a <code>.toc-fab</code> button (fixed bottom-right, visible only on mobile) and a <code>.toc-drawer</code> overlay + bottom-sheet panel with a slide-up animation. <code>source/js/toc-drawer.js</code> handles open/close: clicking the FAB opens the drawer, clicking the backdrop or close button closes it, pressing <kbd>Escape</kbd> closes it, and clicking any TOC link closes it (the browser then scrolls to the heading natively). Styles live in <code>_components.scss</code> under <code>// ─── Mobile TOC floating button + drawer</code>.</p>
 
     <hr>
 

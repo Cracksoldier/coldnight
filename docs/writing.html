@@ -54,6 +54,7 @@
       <a href="#tag-gallery">{% gallery %}</a>
       <a href="#tag-note">{% note %}</a>
       <a href="#tag-tabs">{% tabs %}</a>
+      <a href="#tag-timeline">{% timeline %}</a>
       <a href="#tag-download">{% download %}</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -287,6 +288,63 @@ println!("hello world");
     <p><code>scripts/helpers.js</code> registers <code>tabs</code> as a Hexo block tag plugin. It parses <code>&lt;!-- tab Name --&gt; … &lt;!-- endtab --&gt;</code> markers to split the block into named panels. For each tab it emits a hidden <code>&lt;input type="radio"&gt;</code> with a unique ID, a matching <code>&lt;label&gt;</code> in the tab nav bar, and a <code>&lt;div class="tabs__panel"&gt;</code> for the content. Each panel body is passed through Hexo's synchronous Markdown renderer so fenced code blocks and other syntax work normally.</p>
 
     <p>The "active tab" state is driven entirely by CSS: the checked radio input selects both the active label (via <code>:checked ~ .tabs__nav .tabs__label:nth-child(N)</code>) and the active panel (via <code>:checked ~ .tabs__panels .tabs__panel:nth-child(N)</code>). All non-active panels are <code>display: none</code>. Styles live in <code>_components.scss</code> under <code>// ─── Tabs</code>.</p>
+
+    <hr>
+
+    <!-- Tag: timeline -->
+    <h2 id="tag-timeline">{% timeline %} tag</h2>
+    <p>Renders a vertical timeline — ideal for changelogs, career histories, project journals, or any chronological list. Markdown is fully supported inside each entry body. All rendering is build-time; no JavaScript is required.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">timeline</span> <span class="pn">%}</span>
+<span class="cm">&lt;!-- entry 2026-01-15 :: My First Job --&gt;</span>
+Description text. **Markdown** is _supported_.
+<span class="cm">&lt;!-- endentry --&gt;</span>
+<span class="cm">&lt;!-- entry 2025-06-01 :: Open Source Project --&gt;</span>
+Another entry body. You can include lists, code, and more.
+<span class="cm">&lt;!-- endentry --&gt;</span>
+<span class="pn">{%</span> <span class="kw">endtimeline</span> <span class="pn">%}</span></code></pre>
+
+    <p>Each entry is delimited by <code>&lt;!-- entry DATE :: TITLE --&gt;</code> and <code>&lt;!-- endentry --&gt;</code>. The <code>::</code> separator splits the date from the title. Order is author-controlled — entries are rendered in the order they appear, with no automatic sorting.</p>
+
+    <table>
+      <thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">DATE</td><td>No</td><td>Any string used as the date label (ISO format recommended, e.g. <code>2026-01-15</code>). Omit it entirely by writing <code>&lt;!-- entry :: Title only --&gt;</code>.</td></tr>
+        <tr><td class="opt-key">TITLE</td><td>No</td><td>The entry heading. Omit it by writing <code>&lt;!-- entry 2026-01-15 --&gt;</code> with no <code>::</code>. Both date and title can be omitted if the body is self-describing.</td></tr>
+        <tr><td class="opt-key">body</td><td>No</td><td>Any Markdown content between the open and close markers. Rendered via Hexo's synchronous Markdown renderer, so fenced code blocks, bold, lists, etc. all work normally.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Example — changelog</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">timeline</span> <span class="pn">%}</span>
+<span class="cm">&lt;!-- entry 2026-03-01 :: v1.3.0 --&gt;</span>
+- Added `{% timeline %}` tag plugin
+- Added mobile TOC drawer for long posts
+- Updated KaTeX to 0.16
+<span class="cm">&lt;!-- endentry --&gt;</span>
+<span class="cm">&lt;!-- entry 2026-01-10 :: v1.2.0 --&gt;</span>
+- KaTeX math rendering (`$...$` and `$$...$$`)
+- Mermaid diagram support
+<span class="cm">&lt;!-- endentry --&gt;</span>
+<span class="cm">&lt;!-- entry 2025-11-20 :: v1.0.0 --&gt;</span>
+Initial public release.
+<span class="cm">&lt;!-- endentry --&gt;</span>
+<span class="pn">{%</span> <span class="kw">endtimeline</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>timeline</code> as a Hexo block tag plugin. It scans the block content for <code>&lt;!-- entry DATE :: TITLE --&gt;</code> markers using a single regex pass, then for each match it:</p>
+    <ol>
+      <li>Splits the header on the first <code>::</code> to extract the date (left side) and title (right side). If <code>::</code> is absent, the whole header is treated as the date and title is empty.</li>
+      <li>Passes the body text through Hexo's synchronous Markdown renderer (<code>renderSync</code>), identical to the pattern used by <code>{% note %}</code> and <code>{% tabs %}</code>. Falls back to a <code>&lt;pre&gt;</code>-escaped literal if the renderer throws.</li>
+      <li>Emits a <code>.timeline__entry</code> containing a dot marker, a date <code>&lt;time&gt;</code>, a title <code>&lt;span&gt;</code>, and the rendered body.</li>
+    </ol>
+    <p>If no valid entries are found the tag emits nothing — safe to leave partially filled. The vertical connecting line is a CSS <code>::before</code> pseudo-element on <code>.timeline</code> positioned to run through the centre of the entry markers. Styles live in <code>_components.scss</code> under <code>// ─── Timeline</code>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>The <code>::</code> separator can appear in the title itself if needed — only the <em>first</em> occurrence splits the date from the title. For example, <code>&lt;!-- entry 2026-01-01 :: Title :: with colons --&gt;</code> sets the date to <code>2026-01-01</code> and the title to <code>Title :: with colons</code>.</p>
+    </div>
 
     <hr>
 

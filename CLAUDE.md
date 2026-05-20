@@ -132,6 +132,7 @@ Eight extensions are registered. Two module-level utilities are defined at the t
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid. `alt` and `src` values are HTML-escaped via `escHtml` before insertion into attributes. |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box. Body is rendered via `renderSync`; falls back to `<pre>`-escaped content if the Markdown engine throws. |
 | `{% tabs %}` | tag (block) | Multi-tab content block using CSS-only radio toggle. Each panel rendered via `renderSync` with the same try/catch safety as `{% note %}`. Supports up to 10 tabs. |
+| `{% timeline %}` | tag (block) | Vertical timeline for changelogs, career histories, etc. Entries delimited by `<!-- entry DATE :: TITLE -->` / `<!-- endentry -->`. `::` separates ISO date from title; order is author-controlled. Each body rendered via `renderSync` with try/catch fallback. Returns `""` if no entries found. Styles in `_components.scss` under `// ─── Timeline`. |
 | `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; converts mermaid code blocks to `<div class="mermaid">` when `theme.mermaid.enabled`; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
 | `before_generate` filter | filter | Resets tab counter and auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 | `before_post_render` filter | filter | When `theme.math.enabled`: replaces `$...$` / `$$...$$` with KaTeX placeholder tags, skipping pre-rendered code blocks (`<hexoPostRenderCodeBlock>`) and inline code spans |
@@ -162,9 +163,13 @@ The same `DOMContentLoaded` callback also injects **heading anchor links**: it q
 
 `source/js/toc.js` is loaded on post pages when `theme.toc.enabled` is true. It uses `IntersectionObserver` (rootMargin `0px 0px -65% 0px`) to mark a heading active when it enters the top 35% of the viewport, toggling `.active` on the matching `.toc-link`. Headings are resolved from the TOC links' `href` attributes, so the DOM and helper output must agree on ids (they always do because `render_toc` reads from the same rendered HTML).
 
+`toc.js` and `toc-drawer.js` are both loaded whenever `theme.toc.enabled` is true — the former sidebar-hidden guard has been removed. Both scripts share the same `if (theme.toc && theme.toc.enabled)` gate in `post.ejs`. `toc.js` queries `.toc-link` globally, so scroll-spy highlights work for both the sidebar widget and the mobile drawer.
+
 The `toc` widget is registered in `sidebar.ejs` with a `page.layout === 'post'` guard — it never renders on archive/tag/category/page layouts. The widget partial (`widgets/toc.ejs`) calls `render_toc(page.content)` and renders nothing if the result is empty, so headingless posts show no widget. The toggle button collapses/expands the `<nav id="toc-list">` via `hidden` attribute.
 
 Styles live in `_components.scss` under `.widget-toc__toggle`, `.toc-list`, `.toc-item`, `.toc-item--h3`, and `.toc-link`.
+
+**Mobile TOC drawer** — On mobile (`≤640px`) the sidebar is CSS-hidden, leaving long posts without navigation. `_partial/toc-drawer.ejs` (rendered in `post.ejs` inside the same `toc.enabled` gate) calls `render_toc(page.content)` a second time at build time. If the result is empty (no headings), it renders nothing. Otherwise it emits a `.toc-fab` button (fixed bottom-right, `z-index: 30`, only visible via `@media (max-width: $bp-mobile)`) and a `.toc-drawer` overlay + bottom-sheet panel (`z-index: 40/41`) with slide-up animation. `source/js/toc-drawer.js` handles open/close: backdrop click, close button, Escape key, and click on any `.toc-link`. Styles live in `_components.scss` under `// ─── Mobile TOC floating button + drawer`.
 
 ### Reading progress bar
 
