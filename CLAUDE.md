@@ -134,6 +134,9 @@ Eight extensions are registered. Two module-level utilities are defined at the t
 | `{% tabs %}` | tag (block) | Multi-tab content block using CSS-only radio toggle. Each panel rendered via `renderSync` with the same try/catch safety as `{% note %}`. Supports up to 10 tabs. |
 | `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; converts mermaid code blocks to `<div class="mermaid">` when `theme.mermaid.enabled`; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
 | `before_generate` filter | filter | Resets tab counter and auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
+| `before_post_render` filter | filter | When `theme.math.enabled`: replaces `$...$` / `$$...$$` with KaTeX placeholder tags, skipping pre-rendered code blocks (`<hexoPostRenderCodeBlock>`) and inline code spans |
+| `after_post_render` (KaTeX) filter | filter | When `theme.math.enabled`: renders KaTeX placeholders to HTML via `katex.renderToString()`; skips placeholders inside `<figure>` blocks |
+| `after_post_render` (links) filter | filter | When `theme.external_links`: adds `target="_blank" rel="noopener noreferrer"` to external links in post body |
 
 ### Footnotes
 
@@ -250,6 +253,24 @@ Toggled by `theme.mermaid.enabled` (default `false`). When enabled, fenced ` ```
 **Theme**: `theme.mermaid.theme` (default `dark`). Mermaid's `dark` theme renders self-contained SVG — no extra color overrides needed.
 
 **CSS**: `.mermaid { margin: 1.5rem 0; text-align: center; svg { max-width: 100%; height: auto; } }` in `_code.scss`.
+
+### KaTeX math rendering
+
+Toggled by `theme.math.enabled` (default `true`). When enabled, `$...$` (inline) and `$$...$$` (display) delimiters in post Markdown are converted to KaTeX HTML at build time — zero runtime JavaScript.
+
+**Two-filter pipeline**:
+
+1. **`before_post_render`** — runs on the partially-preprocessed Markdown. By the time this filter fires, hexo-renderer-marked has already converted fenced code blocks to `<hexoPostRenderCodeBlock><figure>...</figure></hexoPostRenderCodeBlock>` HTML. The combined `MATH_RE` regex uses leftmost-wins priority: `<hexoPostRenderCodeBlock>` regions and inline code spans are matched first and returned unchanged; math delimiters outside those regions are replaced with placeholder tags:
+   - `$$expr$$` → `<div class="katex-d" data-e="htmlEncoded(expr)"></div>`
+   - `$expr$` → `<span class="katex-i" data-e="htmlEncoded(expr)"></span>`
+
+2. **`after_post_render`** — finds the placeholders and renders them with `katex.renderToString()`. A combined regex also matches `<figure>` blocks first so any placeholders that ended up inside a code block (edge case) are skipped rather than rendered.
+
+**KaTeX CSS**: Linked in `_partial/head.ejs` on post pages only when `math.enabled`. No `<script>` tag anywhere — rendering is fully build-time.
+
+**Vendor files**: `themes/coldnight/source/vendor/katex/katex.min.css` + `fonts/` (60 font files), copied from `node_modules/katex/dist/`. `katex.min.css` uses `url(fonts/...)` relative paths — correct at `/vendor/katex/katex.min.css`.
+
+**`katex` package**: Listed as an explicit dependency in `package.json` (was previously only a transitive dep of mermaid).
 
 ### Post grid (index page only)
 
