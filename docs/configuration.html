@@ -43,6 +43,8 @@
       <a href="#config-pinned">Featured post</a>
       <a href="#config-series">Series posts</a>
       <a href="#config-permalink-button">Permalink button</a>
+      <a href="#config-mermaid">Mermaid diagrams</a>
+      <a href="#config-math">KaTeX math</a>
     </div>
 
     <div class="nav-section">
@@ -53,6 +55,8 @@
       <a href="writing.html#tag-note">{% note %}</a>
       <a href="writing.html#tag-tabs">{% tabs %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
+      <a href="writing.html#mermaid">Mermaid diagrams</a>
+      <a href="writing.html#math">KaTeX math</a>
       <a href="writing.html#image-captions">Image captions</a>
     </div>
 
@@ -602,6 +606,84 @@
     <p><code>writeToClipboard()</code> uses <code>navigator.clipboard.writeText()</code> with an <code>execCommand('copy')</code> fallback for non-HTTPS contexts. The toast uses the shared <code>#toast-container</code> element rendered by <code>_partial/toast.ejs</code>, which is included on every post page.</p>
 
     <p>The button uses <code>margin-left: auto</code> in <code>_layout.scss</code> to push it to the far right of the flex <code>.post-meta</code> row, keeping it visually separated from the date, author, and category metadata.</p>
+
+    <!-- Mermaid diagrams -->
+    <h2 id="config-mermaid">Mermaid diagrams</h2>
+    <p>Converts fenced <code>```mermaid</code> code blocks to rendered SVG diagrams. Diagrams are rendered client-side by the vendored Mermaid JS library — no CDN requests.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">mermaid.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Convert <code>```mermaid</code> fenced blocks to <code>&lt;div class="mermaid"&gt;</code> at build time and load the Mermaid JS library on post pages.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">mermaid.theme</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">dark</td>
+          <td>Mermaid colour theme. Valid values: <code>default</code> | <code>dark</code> | <code>neutral</code> | <code>forest</code>. The <code>dark</code> theme renders self-contained SVG that matches the coldnight palette without extra CSS overrides.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">mermaid</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>
+  <span class="nb">theme</span><span class="pn">:</span>   <span class="str">dark</span>   <span class="cm"># default | dark | neutral | forest</span></code></pre>
+
+    <h3>How it works</h3>
+    <p>Hexo's highlight.js renderer processes fenced code blocks before any theme filter runs. A mermaid block emits <code>&lt;figure class="highlight plaintext"&gt;</code> with a <code>&lt;code class="hljs mermaid"&gt;</code> inner element (mermaid is not a known highlight.js language, so it falls back to <code>plaintext</code> for the figure class but still applies the <code>mermaid</code> class to the code tag). The theme's <code>after_render:html</code> filter iterates every <code>&lt;figure&gt;</code> block; if the inner <code>&lt;code&gt;</code> has class <code>mermaid</code>, it decodes the HTML-escaped source and replaces the entire <code>&lt;figure&gt;</code> with <code>&lt;div class="mermaid"&gt;decoded source&lt;/div&gt;</code>.</p>
+
+    <p><strong>Entity decoding</strong> — Hexo HTML-encodes the code content (<code>&amp;gt;</code>, <code>&amp;amp;</code>, line breaks as <code>&lt;br&gt;</code>, etc.). The filter decodes the most common entities before writing the source into the div. The <code>&lt;br&gt;</code> → <code>\n</code> conversion is the structurally essential one: highlight.js encodes newlines as <code>&lt;br&gt;</code>, but the Mermaid parser requires literal newline characters as statement separators.</p>
+
+    <p><strong>Assets</strong> — Mermaid JS is vendored under <code>themes/coldnight/source/vendor/mermaid/</code> (entry point <code>mermaid.esm.min.mjs</code> plus its chunked dependencies). It is injected as a <code>&lt;script type="module"&gt;</code> at the bottom of <code>post.ejs</code> only when <code>mermaid.enabled</code> is true — zero network requests on non-post pages and on sites with the feature disabled.</p>
+
+    <p><strong>Theme safety</strong> — the <code>theme</code> value is validated against the pattern <code>/^[a-z]+$/</code> before injection into the inline script to prevent code injection from a malformed config value. Unknown values fall back to <code>dark</code>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>See <a href="writing.html#mermaid">Writing — Mermaid diagrams</a> for syntax examples.</p>
+    </div>
+
+    <hr>
+
+    <!-- KaTeX math -->
+    <h2 id="config-math">KaTeX math</h2>
+    <p>Renders <code>$...$</code> (inline) and <code>$$...$$</code> (display) LaTeX math delimiters as KaTeX HTML at build time. Zero runtime JavaScript — only the KaTeX CSS file is served to the browser.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">math.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable build-time KaTeX rendering. When disabled, <code>$...$</code> and <code>$$...$$</code> are passed through as literal text and no KaTeX CSS is loaded.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">math</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>   <span class="cm"># render $...$ and $$...$$ as KaTeX math</span></code></pre>
+
+    <h3>How it works</h3>
+    <p>Math rendering uses a two-filter pipeline so that the LaTeX source is never seen by the Markdown renderer:</p>
+
+    <ol>
+      <li><strong><code>before_post_render</code></strong> — runs on the partially pre-processed Markdown. By the time this filter fires, <code>hexo-renderer-marked</code> has already wrapped fenced code blocks in <code>&lt;hexoPostRenderCodeBlock&gt;…&lt;/hexoPostRenderCodeBlock&gt;</code> markers. The filter uses a single combined regex that matches those markers (and inline code spans) first and skips them unchanged, then replaces <code>$$expr$$</code> with <code>&lt;div class="katex-d" data-e="…"&gt;</code> and <code>$expr$</code> with <code>&lt;span class="katex-i" data-e="…"&gt;</code> placeholder tags. The expression is HTML-escaped into the <code>data-e</code> attribute so it survives the Markdown renderer intact.</li>
+      <li><strong><code>after_post_render</code></strong> (KaTeX) — finds the placeholder tags in the rendered HTML, HTML-unescapes the stored expression, and calls <code>katex.renderToString()</code>. A figure-skip guard in the same regex ensures any placeholders that somehow ended up inside a <code>&lt;figure&gt;</code> block (code block edge case) are left unchanged rather than rendered.</li>
+    </ol>
+
+    <p><strong>CSS</strong> — <code>_partial/head.ejs</code> conditionally emits a <code>&lt;link&gt;</code> to <code>/vendor/katex/katex.min.css</code> on post pages only when <code>math.enabled</code> is true. All KaTeX font files are self-hosted under <code>themes/coldnight/source/vendor/katex/fonts/</code>. No <code>&lt;script&gt;</code> tag is ever emitted — rendering is fully build-time.</p>
+
+    <p><strong>Output</strong> — KaTeX uses its default <code>htmlAndMathml</code> output mode, which emits both the visual HTML and a <code>&lt;math&gt;</code> element for screen readers.</p>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p>The <code>$...$</code> delimiter matches any two dollar signs on the same line, so prose containing currency amounts can trigger the renderer unintentionally. Escape a literal dollar sign with a backslash: <code>\$50</code>. See <a href="writing.html#math">Writing — KaTeX math</a> for the full false-positive guidance.</p>
+    </div>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
       coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>

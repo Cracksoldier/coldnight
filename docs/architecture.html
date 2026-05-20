@@ -43,6 +43,8 @@
       <a href="configuration.html#config-pinned">Featured post</a>
       <a href="configuration.html#config-series">Series posts</a>
       <a href="configuration.html#config-permalink-button">Permalink button</a>
+      <a href="configuration.html#config-mermaid">Mermaid diagrams</a>
+      <a href="configuration.html#config-math">KaTeX math</a>
     </div>
 
     <div class="nav-section">
@@ -53,6 +55,8 @@
       <a href="writing.html#tag-note">{% note %}</a>
       <a href="writing.html#tag-tabs">{% tabs %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
+      <a href="writing.html#mermaid">Mermaid diagrams</a>
+      <a href="writing.html#math">KaTeX math</a>
       <a href="writing.html#image-captions">Image captions</a>
     </div>
 
@@ -63,6 +67,8 @@
       <a href="#ui-features">UI features</a>
       <a href="#ui-archive-filter">Archive filter chips</a>
       <a href="#ui-external-links">External link indicator</a>
+      <a href="#ui-mermaid">Mermaid diagrams</a>
+      <a href="#ui-math">KaTeX math</a>
       <a href="#css">CSS pipeline</a>
     </div>
 
@@ -165,6 +171,16 @@ bar.style.width <span class="pn">=</span> Math.min(pct, 100) + <span class="str"
 
     <h3 id="ui-pinned">Featured / pinned post hero</h3>
     <p>A post with <code>pinned: true</code> in its front-matter is promoted to a full-width hero card above the index grid on page 1. The feature is detected and rendered at build time in <code>index.ejs</code>. See <a href="configuration.html#config-pinned">Featured post configuration</a> for the detection, deduplication, and layout implementation.</p>
+
+    <h3 id="ui-mermaid">Mermaid diagrams</h3>
+    <p>When <code>mermaid.enabled: true</code>, fenced <code>```mermaid</code> blocks are converted to <code>&lt;div class="mermaid"&gt;</code> at build time and rendered as SVG diagrams by the vendored Mermaid JS library client-side.</p>
+    <p><strong>Build-time transform</strong> — Hexo's highlight.js renderer wraps the block in <code>&lt;figure class="highlight plaintext"&gt;</code> with <code>&lt;code class="hljs mermaid"&gt;</code> inside. The theme's <code>after_render:html</code> filter scans every <code>&lt;figure&gt;</code>; when the inner <code>&lt;code&gt;</code> carries the <code>mermaid</code> class, the filter HTML-decodes the block source and replaces the whole <code>&lt;figure&gt;</code> with <code>&lt;div class="mermaid"&gt;decoded source&lt;/div&gt;</code>. The most important decode is <code>&lt;br&gt;</code> → <code>\n</code>: highlight.js encodes line breaks as <code>&lt;br&gt;</code>, but Mermaid's parser requires literal newlines as statement separators.</p>
+    <p><strong>Client-side rendering</strong> — Mermaid JS is vendored under <code>themes/coldnight/source/vendor/mermaid/</code> (ESM build, chunked). It is injected as <code>&lt;script type="module"&gt;</code> at the bottom of <code>post.ejs</code> only when <code>mermaid.enabled</code> is true. <code>mermaid.initialize({ startOnLoad: true, theme: '...' })</code> renders all <code>.mermaid</code> divs on page load. The theme value is validated against <code>/^[a-z]+$/</code> before injection to prevent code injection from a malformed config string. See <a href="configuration.html#config-mermaid">Mermaid configuration</a>.</p>
+
+    <h3 id="ui-math">KaTeX math</h3>
+    <p>When <code>math.enabled: true</code>, <code>$...$</code> and <code>$$...$$</code> LaTeX delimiters in post Markdown are converted to KaTeX HTML at <code>hexo generate</code> time — zero JavaScript on the page.</p>
+    <p><strong>Two-filter pipeline</strong> — A <code>before_post_render</code> filter replaces math delimiters with HTML placeholder tags (<code>&lt;div class="katex-d" data-e="…"&gt;</code> and <code>&lt;span class="katex-i" data-e="…"&gt;</code>) before the Markdown renderer runs. The LaTeX expression is stored HTML-escaped in <code>data-e</code> so it survives Markdown processing unchanged. A combined regex with leftmost-wins semantics matches <code>&lt;hexoPostRenderCodeBlock&gt;</code> regions (Hexo's pre-rendered code block marker) and inline code spans first, skipping them entirely, and only then processes math delimiters outside those protected regions. An <code>after_post_render</code> filter then finds each placeholder, decodes the expression, calls <code>katex.renderToString()</code>, and replaces the placeholder with the output. A figure-skip guard in the after-render regex protects any placeholders that somehow ended up inside a <code>&lt;figure&gt;</code> block.</p>
+    <p><strong>CSS and assets</strong> — <code>_partial/head.ejs</code> emits a <code>&lt;link&gt;</code> to <code>/vendor/katex/katex.min.css</code> on post pages only when <code>math.enabled</code> is true. All KaTeX font files (60 files) are self-hosted under <code>themes/coldnight/source/vendor/katex/fonts/</code> — no CDN, no runtime network requests. Output uses KaTeX's default <code>htmlAndMathml</code> mode: visual HTML plus a <code>&lt;math&gt;</code> element for screen readers. See <a href="configuration.html#config-math">KaTeX configuration</a>.</p>
 
     <hr>
 

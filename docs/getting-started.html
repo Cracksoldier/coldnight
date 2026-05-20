@@ -43,6 +43,8 @@
       <a href="configuration.html#config-pinned">Featured post</a>
       <a href="configuration.html#config-series">Series posts</a>
       <a href="configuration.html#config-permalink-button">Permalink button</a>
+      <a href="configuration.html#config-mermaid">Mermaid diagrams</a>
+      <a href="configuration.html#config-math">KaTeX math</a>
     </div>
 
     <div class="nav-section">
@@ -53,6 +55,8 @@
       <a href="writing.html#tag-note">{% note %}</a>
       <a href="writing.html#tag-tabs">{% tabs %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
+      <a href="writing.html#mermaid">Mermaid diagrams</a>
+      <a href="writing.html#math">KaTeX math</a>
       <a href="writing.html#image-captions">Image captions</a>
     </div>
 
@@ -122,7 +126,7 @@
       <div class="feature-card">
         <div class="icon">🔌</div>
         <h4>Tag plugins</h4>
-        <p><code>{% gallery %}</code> photo grids and <code>{% note %}</code> callout boxes.</p>
+        <p><code>{% gallery %}</code>, <code>{% note %}</code>, <code>{% tabs %}</code>, and <code>{% download %}</code> — with full Markdown support inside each.</p>
       </div>
       <div class="feature-card">
         <div class="icon">📖</div>
@@ -153,6 +157,16 @@
         <div class="icon">⭐</div>
         <h4>Featured / pinned post</h4>
         <p>Add <code>pinned: true</code> to any post's front-matter to promote it as a full-width hero card above the index grid.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📐</div>
+        <h4>Mermaid diagrams</h4>
+        <p>Fenced <code>```mermaid</code> blocks rendered to SVG. All assets self-hosted — no CDN requests.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">∑</div>
+        <h4>KaTeX math</h4>
+        <p><code>$...$</code> and <code>$$...$$</code> rendered to HTML at build time. Zero runtime JavaScript — only the KaTeX CSS is served.</p>
       </div>
     </div>
 

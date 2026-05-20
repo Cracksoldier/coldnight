@@ -41,6 +41,10 @@
       <a href="configuration.html#config-og">Open Graph / SEO</a>
       <a href="configuration.html#config-related-posts">Related posts</a>
       <a href="configuration.html#config-pinned">Featured post</a>
+      <a href="configuration.html#config-series">Series posts</a>
+      <a href="configuration.html#config-permalink-button">Permalink button</a>
+      <a href="configuration.html#config-mermaid">Mermaid diagrams</a>
+      <a href="configuration.html#config-math">KaTeX math</a>
     </div>
 
     <div class="nav-section nav-section--active">
@@ -51,6 +55,8 @@
       <a href="#tag-note">{% note %}</a>
       <a href="#tag-tabs">{% tabs %}</a>
       <a href="#tag-download">{% download %}</a>
+      <a href="#mermaid">Mermaid diagrams</a>
+      <a href="#math">KaTeX math</a>
       <a href="#image-captions">Image captions</a>
     </div>
 
@@ -322,6 +328,76 @@ println!("hello world");
     </div>
 
     <p>Styles live in <code>_components.scss</code> under <code>// ─── Download block</code>. The button reuses the existing <code>.btn</code> + <code>.btn--primary</code> classes — no extra button CSS is needed.</p>
+
+    <hr>
+
+    <!-- Mermaid diagrams -->
+    <h2 id="mermaid">Mermaid diagrams</h2>
+    <p>When <code>mermaid.enabled: true</code>, fenced <code>```mermaid</code> blocks are converted to rendered SVG diagrams. Requires no extra front-matter — any post can include diagrams.</p>
+
+    <h3>Syntax</h3>
+    <p>Use a standard fenced code block with the language identifier <code>mermaid</code>:</p>
+<pre><code>```mermaid
+flowchart LR
+    A[Write Post] --&gt; B{Has diagrams?}
+    B -- Yes --&gt; C[Add mermaid block]
+    B -- No  --&gt; D[Publish]
+```</code></pre>
+
+    <h3>Supported diagram types</h3>
+    <p>Any diagram type supported by Mermaid v10 works: <code>flowchart</code>, <code>sequenceDiagram</code>, <code>classDiagram</code>, <code>stateDiagram</code>, <code>erDiagram</code>, <code>gantt</code>, <code>pie</code>, <code>mindmap</code>, and more. See the <a href="https://mermaid.js.org/syntax/flowchart.html">Mermaid documentation</a> for full syntax reference.</p>
+
+    <h3>Examples</h3>
+<pre><code>```mermaid
+sequenceDiagram
+    Browser-&gt;&gt;Server: GET /posts/my-post
+    Server--&gt;&gt;Browser: 200 OK (HTML)
+    Browser-&gt;&gt;Browser: Render KaTeX
+```
+
+```mermaid
+pie title Build time split
+    "Markdown" : 42
+    "SCSS"     : 25
+    "Helpers"  : 33
+```</code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Mermaid diagrams are rendered client-side from the diagram source that was baked into the HTML at build time. The Mermaid JS library and all its assets are self-hosted — no CDN requests. Configure the theme via <a href="configuration.html#config-mermaid">Mermaid configuration</a>.</p>
+    </div>
+
+    <hr>
+
+    <!-- KaTeX math -->
+    <h2 id="math">KaTeX math</h2>
+    <p>When <code>math.enabled: true</code>, <code>$...$</code> (inline) and <code>$$...$$</code> (display) LaTeX delimiters are rendered to KaTeX HTML at build time. No JavaScript runs on the page — equations are static HTML from the moment the page loads.</p>
+
+    <h3>Inline math</h3>
+    <p>Wrap a LaTeX expression in single dollar signs to render it inline with the surrounding text:</p>
+<pre><code>Einstein's equation, $E = mc^2$, is well known.
+The quadratic formula gives $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.</code></pre>
+
+    <h3>Display math</h3>
+    <p>Wrap a standalone expression in double dollar signs to render it centred on its own line:</p>
+<pre><code>$$\int_{-\infty}^{\infty} e^{-x^2}\, dx = \sqrt{\pi}$$
+
+$$\begin{aligned}
+x &amp;= r\cos\theta \\
+y &amp;= r\sin\theta
+\end{aligned}$$</code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Math inside fenced code blocks or inline code spans (<code>`$x$`</code>) is never processed — it remains as literal text.</p>
+    </div>
+
+    <h3>Avoiding false positives</h3>
+    <p>The <code>$...$</code> delimiter matches any two dollar signs on the same line, so prose containing currency amounts can trigger the renderer unintentionally. For example:</p>
+<pre><code>The item costs $50 and saves $30.   ← "50 and saves" renders as math!</code></pre>
+    <p>To avoid this, escape literal dollar signs with a backslash:</p>
+<pre><code>The item costs \$50 and saves \$30.  ← rendered as plain text</code></pre>
+    <p>Display blocks (<code>$$...$$</code>) are less prone to false positives because they require a blank line around them. See <a href="configuration.html#config-math">KaTeX configuration</a> for implementation details.</p>
 
     <hr>
 
