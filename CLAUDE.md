@@ -133,7 +133,8 @@ Eight extensions are registered. Two module-level utilities are defined at the t
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box. Body is rendered via `renderSync`; falls back to `<pre>`-escaped content if the Markdown engine throws. |
 | `{% tabs %}` | tag (block) | Multi-tab content block using CSS-only radio toggle. Each panel rendered via `renderSync` with the same try/catch safety as `{% note %}`. Supports up to 10 tabs. |
 | `{% timeline %}` | tag (block) | Vertical timeline for changelogs, career histories, etc. Entries delimited by `<!-- entry DATE :: TITLE -->` / `<!-- endentry -->`. `::` separates ISO date from title; order is author-controlled. Each body rendered via `renderSync` with try/catch fallback. Returns `""` if no entries found. Styles in `_components.scss` under `// ─── Timeline`. |
-| `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; converts mermaid code blocks to `<div class="mermaid">` when `theme.mermaid.enabled`; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
+| `{% spoiler [label] %}` | tag (block) | Collapsible `<details>/<summary>` block. Optional label argument (default: `"Show spoiler"`). Body rendered via `renderSync` with try/catch fallback. Styles in `_components.scss` under `// ─── Spoiler`. |
+| `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; converts mermaid code blocks to `<div class="mermaid">` when `theme.mermaid.enabled`; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled; adds `class="diff-add"` / `class="diff-del"` to `<tr>` elements in `<figure class="highlight diff">` blocks so the gutter column gets the same green/red background as the code column |
 | `before_generate` filter | filter | Resets tab counter and auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 | `before_post_render` filter | filter | When `theme.math.enabled`: replaces `$...$` / `$$...$$` with KaTeX placeholder tags, skipping pre-rendered code blocks (`<hexoPostRenderCodeBlock>`) and inline code spans |
 | `after_post_render` (KaTeX) filter | filter | When `theme.math.enabled`: renders KaTeX placeholders to HTML via `katex.renderToString()`; skips placeholders inside `<figure>` blocks |
@@ -364,6 +365,7 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `toc.enabled: false` — disables the TOC widget and prevents `toc.js` from loading
 - `toc.max_depth: 2` — limit TOC to h2 headings only (default 3 includes h3)
 - `progress_bar: false` — removes the reading progress bar from post pages
+- `sticky_title: false` — disables the sticky post title that fades into the navbar when the `<h1>` scrolls out of view; prevents `post-title.js` from loading
 - `search.enabled: false` — removes the search box from the navbar and skips loading `search.js`
 - `related_posts: false` — hides the "You might also like" section at the bottom of post pages
 - `permalink_button: false` — removes the copy-permalink icon from the post metadata row
