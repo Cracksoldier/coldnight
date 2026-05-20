@@ -132,7 +132,7 @@ Eight extensions are registered. Two module-level utilities are defined at the t
 | `{% gallery [cols] %}` | tag (block) | Markdown image list → LightGallery grid. `alt` and `src` values are HTML-escaped via `escHtml` before insertion into attributes. |
 | `{% note type %}` | tag (block) | `tip \| info \| warning \| danger` callout box. Body is rendered via `renderSync`; falls back to `<pre>`-escaped content if the Markdown engine throws. |
 | `{% tabs %}` | tag (block) | Multi-tab content block using CSS-only radio toggle. Each panel rendered via `renderSync` with the same try/catch safety as `{% note %}`. Supports up to 10 tabs. |
-| `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
+| `after_render:html` filter | filter | Injects `data-lang` on `<figure class="highlight <lang>">` for CSS language labels; converts mermaid code blocks to `<div class="mermaid">` when `theme.mermaid.enabled`; also converts `<p><img></p>` to `<figure><img><figcaption>` when `theme.image_captions` is enabled |
 | `before_generate` filter | filter | Resets tab counter and auto-sets `index_generator.per_page = grid.columns × grid.rows` for grid mode |
 
 ### Footnotes
@@ -237,6 +237,20 @@ LightGallery v2 JS and CSS are loaded from jsDelivr CDN **only on post pages** (
 1. **Auto-mount** (`theme.lightgallery.auto_mount: true`): a single LightGallery instance is created on page load for all `.post-body img` elements (excluding `.no-gallery`). Clicking an image calls `instance.openGallery(idx)` — no new instance per click.
 2. **Explicit galleries**: `{% gallery [cols] %}` tag renders a `.lg-gallery` div with a `data-cols` attribute (1–6); `gallery.js` mounts a separate LightGallery instance on each one. CSS for all column counts is generated via a SCSS `@for` loop in `_components.scss`.
 
+### Mermaid diagram support
+
+Toggled by `theme.mermaid.enabled` (default `false`). When enabled, fenced ` ```mermaid ` code blocks are converted to `<div class="mermaid">` at build time and rendered as SVG by the Mermaid JS library client-side.
+
+**How it works**: Hexo's highlight.js renderer emits mermaid blocks as `<figure class="highlight plaintext">` with a `<code class="hljs mermaid">` inner element (mermaid is not a known HL language, so it falls back to `plaintext` for the figure class but still applies the `mermaid` class to the `<code>` tag). The `after_render:html` filter iterates every `<figure>` block on the page; if the `<code>` element has `class="hljs mermaid"`, it decodes the HTML-escaped source and replaces the entire `<figure>` with `<div class="mermaid">decoded source</div>`.
+
+**Entity decoding**: Hexo HTML-encodes the code content (`>` → `&gt;`, `{` → `&#123;`, line breaks → `<br>`, etc.). The transform decodes `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&#39;`, `&nbsp;`, `&#123;`, `&#125;`, and `<br>` before writing the source into the div.
+
+**Mermaid JS**: Vendored under `themes/coldnight/source/vendor/mermaid/` — entry point `mermaid.esm.min.mjs` plus its required `chunks/mermaid.esm.min/` subdirectory (the ESM build is chunked; the entry file alone is insufficient). Injected as `<script type="module">` at the bottom of `post.ejs` (module scripts are deferred by default). `mermaid.initialize({ startOnLoad: true, theme: '<%= theme.mermaid.theme %>' })` renders all `.mermaid` divs on load.
+
+**Theme**: `theme.mermaid.theme` (default `dark`). Mermaid's `dark` theme renders self-contained SVG — no extra color overrides needed.
+
+**CSS**: `.mermaid { margin: 1.5rem 0; text-align: center; svg { max-width: 100%; height: auto; } }` in `_code.scss`.
+
 ### Post grid (index page only)
 
 The index page renders posts inside `.post-grid` (CSS Grid, `_layout.scss`). Column count and rows per page are configured via `theme.grid.columns` / `theme.grid.rows` in `themes/coldnight/_config.yml`. The EJS template injects `--post-grid-cols` and `--post-grid-cols-md` as inline CSS custom properties so the column count is resolved at render time without recompiling SCSS.
@@ -326,3 +340,4 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `related_posts: false` — hides the "You might also like" section at the bottom of post pages
 - `permalink_button: false` — removes the copy-permalink icon from the post metadata row
 - `series: false` — disables the series navigation strip on all post pages
+- `mermaid.enabled: true` — converts ` ```mermaid ` fenced blocks to rendered SVG diagrams; `mermaid.theme: dark` sets the Mermaid colour scheme
