@@ -126,7 +126,27 @@ The `.lg-gallery` override suppresses the icon on `{% gallery %}` thumbnail anch
 
 ### Static pages
 
-`layout/page.ejs` renders static Hexo pages (created with `hexo new page`). It uses the full-width shell with no post metadata. The only static page currently in `source/` is `source/about/index.md`.
+`layout/page.ejs` renders static Hexo pages (created with `hexo new page`). It uses the full-width shell with no post metadata. `source/about/index.md` uses this layout.
+
+### Links page
+
+`source/links/index.md` (front-matter: `layout: links`) renders `themes/coldnight/layout/links.ejs` — a custom full-width layout that reads from `source/_data/links.yml` via Hexo's built-in data-file mechanism (`site.data.links`).
+
+**Adding a link** — append an entry to `source/_data/links.yml`:
+
+```yaml
+- title: "Resource Name"
+  subtitle: "Optional tagline"       # omit if not needed
+  url: "https://example.com/"
+  abstract: "One or two sentence description."
+  thumbnail: "/images/links/foo.png" # omit for a text-only card
+```
+
+Required fields: `title`, `url`, `abstract`. Optional: `subtitle`, `thumbnail`.
+
+**Layout** — CSS `column-count` masonry (3 columns desktop → 2 tablet → 1 mobile). Each `.link-card` uses `break-inside: avoid; display: inline-block` so cards of different heights pack naturally without JS. Styles in `_components.scss` under `// ─── Links page`.
+
+**No individual pages** — every link is a card on the single `/links/` page; there is no per-link route or generator.
 
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 

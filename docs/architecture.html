@@ -71,6 +71,7 @@
       <div class="nav-section-label">Layouts &amp; structure</div>
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
+      <a href="#links-page">Links page</a>
       <a href="#ui-features">UI features</a>
       <a href="#ui-archive-filter">Archive filter chips</a>
       <a href="#ui-external-links">External link indicator</a>
@@ -117,6 +118,7 @@
         <tr><td class="opt-key">tag.ejs</td><td>Full-width</td><td>Posts filtered by a single tag</td></tr>
         <tr><td class="opt-key">category.ejs</td><td>Full-width</td><td>Posts filtered by a single category</td></tr>
         <tr><td class="opt-key">page.ejs</td><td>Full-width</td><td>Static pages (About, etc.) — no post metadata</td></tr>
+        <tr><td class="opt-key">links.ejs</td><td>Full-width</td><td>Data-driven link repository — reads <code>source/_data/links.yml</code></td></tr>
         <tr><td class="opt-key">404.ejs</td><td>Full-width</td><td>Custom 404 page</td></tr>
       </tbody>
     </table>
@@ -130,11 +132,17 @@
     <p>Create static pages with <code>hexo new page</code>:</p>
 <pre><code>hexo new page about</code></pre>
     <p>This creates <code>source/about/index.md</code>. The page is rendered with <code>layout/page.ejs</code> — the full-width shell with no post metadata (no date, author, reading time, tags, or related-posts section). Any Markdown content is valid, including <code>{% note %}</code> callouts and <code>{% gallery %}</code> blocks.</p>
+    <p>Pages can also declare a custom <code>layout:</code> in their front-matter to bypass <code>page.ejs</code> entirely and use a dedicated template. The Links page uses this pattern.</p>
 
     <div class="callout callout-info">
       <span class="callout-icon">ℹ️</span>
       <p>Add the page to <code>navbar.links</code> in the theme config so it appears in the navigation bar.</p>
     </div>
+
+    <h3 id="links-page">Links page</h3>
+    <p><code>source/links/index.md</code> sets <code>layout: links</code> in its front-matter, which routes it to <code>themes/coldnight/layout/links.ejs</code> instead of the generic <code>page.ejs</code>. The layout is a data-driven, full-width page that reads every entry from <code>source/_data/links.yml</code> via Hexo's built-in data-file mechanism (<code>site.data.links</code>) and renders them as cards in a CSS masonry grid. No generator, no new route per link — the entire archive lives on one <code>/links/</code> page.</p>
+    <p><strong>Data format</strong> — each entry in <code>source/_data/links.yml</code> is an object with required fields <code>title</code>, <code>url</code>, and <code>abstract</code>, plus optional <code>subtitle</code> and <code>thumbnail</code>. The hostname is extracted client-side in the template (<code>url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]</code>) and shown as the clickable URL chip. All link anchors carry <code>target="_blank" rel="noopener noreferrer"</code> directly in the template — the <code>after_post_render</code> external-link filter does not run on non-post layouts.</p>
+    <p><strong>CSS masonry</strong> — <code>.links-grid</code> uses <code>column-count: 3</code> (2 at tablet, 1 at mobile). Each <code>.link-card</code> is <code>display: inline-block; break-inside: avoid</code> — <code>inline-block</code> is required here because <code>break-inside</code> is not honoured on block-level children in a multi-column container in all browsers. Cards without a <code>thumbnail</code> field render no image area, producing naturally shorter cards that let the masonry stagger. Styles live in <code>_components.scss</code> under <code>// ─── Links page</code>.</p>
 
     <hr>
 
