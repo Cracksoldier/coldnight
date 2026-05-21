@@ -400,6 +400,7 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `search.enabled: false` — removes the search box from the navbar and skips loading `search.js`
 - `related_posts: false` — hides the "You might also like" section at the bottom of post pages
 - `permalink_button: false` — removes the copy-permalink icon from the post metadata row
+- `epub_export: false` — removes the ePub download button from the post metadata row and skips loading JSZip (~100 KB)
 - `series: false` — disables the series navigation strip on all post pages
 - `mermaid.enabled: true` — converts ` ```mermaid ` fenced blocks to rendered SVG diagrams; `mermaid.theme: dark` sets the Mermaid colour scheme
 - `social.share: true` — shows X / Twitter, LinkedIn, and copy-link share buttons in the post footer

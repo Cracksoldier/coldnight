@@ -43,6 +43,7 @@
       <a href="#config-pinned">Featured post</a>
       <a href="#config-series">Series posts</a>
       <a href="#config-permalink-button">Permalink button</a>
+      <a href="#config-epub">ePub export</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
       <a href="#config-keyboard-nav">Keyboard navigation</a>
@@ -438,6 +439,12 @@
           <td>Show a copy-to-clipboard icon button at the right of the post metadata row. One click copies the post's canonical URL. Set to <code>false</code> to hide it. See <a href="#config-permalink-button">Permalink button</a>.</td>
         </tr>
         <tr>
+          <td class="opt-key">epub_export</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show an "Export as ePub" download icon button in the post metadata row. Clicking it generates a valid EPUB 3 file in the browser and triggers a download — no server required. Set to <code>false</code> to hide it and skip loading JSZip. See <a href="#config-epub">ePub export</a>.</td>
+        </tr>
+        <tr>
           <td class="opt-key">series</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
@@ -655,6 +662,37 @@
     <p><code>writeToClipboard()</code> uses <code>navigator.clipboard.writeText()</code> with an <code>execCommand('copy')</code> fallback for non-HTTPS contexts. The toast uses the shared <code>#toast-container</code> element rendered by <code>_partial/toast.ejs</code>, which is included on every post page.</p>
 
     <p>The button uses <code>margin-left: auto</code> in <code>_layout.scss</code> to push it to the far right of the flex <code>.post-meta</code> row, keeping it visually separated from the date, author, and category metadata.</p>
+
+    <!-- ePub export -->
+    <h2 id="config-epub">ePub export</h2>
+    <p>When <code>epub_export: true</code>, a download icon button appears in the post metadata row next to the permalink button. Clicking it assembles a valid EPUB 3 archive entirely in the browser using the vendored JSZip library, then triggers a file download — no server round-trip required.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">epub_export</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the ePub download icon in the post metadata row. Set to <code>false</code> to hide it and skip loading JSZip (saves ~100 KB on post pages).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>The button is rendered in <code>layout/post.ejs</code> with build-time data attributes: <code>data-title</code>, <code>data-author</code>, <code>data-url</code>, and <code>data-slug</code>. When clicked, <code>source/js/epub-export.js</code> reads these attributes, clones the <code>.post-body</code> element, strips UI chrome (copy buttons, heading anchors), fixes void elements for XHTML compatibility, and builds a ZIP with the following structure:</p>
+    <ul>
+      <li><code>mimetype</code> — stored uncompressed (EPUB 3 requirement)</li>
+      <li><code>META-INF/container.xml</code></li>
+      <li><code>OEBPS/content.opf</code> — package document with title, author, language metadata</li>
+      <li><code>OEBPS/nav.xhtml</code> — EPUB 3 navigation document</li>
+      <li><code>OEBPS/content.xhtml</code> — post content wrapped in valid XHTML</li>
+      <li><code>OEBPS/style.css</code> — minimal serif e-reader typography</li>
+    </ul>
+    <p>The file is downloaded as <code>&lt;slug&gt;.epub</code>. A success toast confirms the download; an error toast appears if ZIP generation fails. The button is disabled while building to prevent double-clicks.</p>
+    <p><strong>Dependencies</strong> — JSZip v3.10.1 is vendored at <code>source/vendor/jszip/jszip.min.js</code> (~100 KB, loaded with <code>defer</code> only when <code>epub_export</code> is enabled). The feature only appears on post pages; archive, tag, and category pages are unaffected.</p>
+
+    <hr>
 
     <!-- Mermaid diagrams -->
     <h2 id="config-mermaid">Mermaid diagrams</h2>
