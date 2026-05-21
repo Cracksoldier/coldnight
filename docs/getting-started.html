@@ -371,6 +371,32 @@ Write the project description here in Markdown.</code></pre>
       </li>
     </ol>
 
+    <h3>Adding a project</h3>
+    <p>Each project is a Markdown file at <code>source/showroom/&lt;slug&gt;/index.md</code>. Create one any time — just run <code>hexo generate</code> (or let the dev server pick up the change) to rebuild. The grid, pagination, and sort order update automatically.</p>
+    <p>The slug becomes the URL path: <code>source/showroom/my-cli-tool/index.md</code> is published at <code>/showroom/my-cli-tool/</code>. Use lowercase, hyphen-separated words.</p>
+    <p>Minimal template:</p>
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>       <span class="str">"Project Name"</span>
+<span class="nb">subtitle</span><span class="pn">:</span>    <span class="str">"One-line tagline"</span>
+<span class="nb">cover_image</span><span class="pn">:</span> <span class="val">/images/showroom/project-name.jpg</span>
+<span class="nb">layout</span><span class="pn">:</span>      <span class="val">project</span>
+<span class="nb">date</span><span class="pn">:</span>        <span class="val">2026-01-15</span>
+<span class="pn">---</span>
+
+Brief intro paragraph — this becomes the project page body.
+
+## What it does
+
+Write freely using any Markdown: headings, lists, code blocks, tables,
+<code>{% note %}</code> callouts, etc.</code></pre>
+
+    <p>Place the cover image at the path declared in <code>cover_image</code>. It is cropped to <strong>1:1</strong> on the grid card and displayed at <strong>16:9</strong> on the project page, so an image that reads well at both ratios works best — a wide subject centred in the frame is ideal.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Sort order on the grid is newest-first by <code>date</code>. Set the date to the project's actual creation or release date so the grid reflects a meaningful chronology rather than the order files were added to the repository.</p>
+    </div>
+
     <h3>Project front-matter reference</h3>
 
     <table>
