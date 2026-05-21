@@ -352,6 +352,7 @@ date: 2026-01-01
 categories: [Dev]
 tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
+cover_caption: "Photo by Jane Doe"  # optional; wraps cover in <figure><figcaption> with attribution text
 excerpt: "Override the auto-excerpt shown on post cards."
 updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" in post metadata when it differs from date
 pinned: true                     # optional; promotes post to featured hero on the index page
