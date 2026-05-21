@@ -1,7 +1,7 @@
 ---
 title: "Git Dashboard"
 subtitle: "Local repository activity overview"
-cover_image: /images/showroom/git-dashboard.jpg
+cover_image: /images/showroom/git-dashboard.png
 layout: project
 date: 2025-09-30
 ---

@@ -1,7 +1,7 @@
 ---
 title: "Hexo Blog"
 subtitle: "Static site powered by the coldnight theme"
-cover_image: /images/showroom/hexo-blog.jpg
+cover_image: /images/showroom/hexo-blog.png
 layout: project
 date: 2026-05-01
 ---

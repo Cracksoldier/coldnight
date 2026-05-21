@@ -1,7 +1,7 @@
 ---
 title: "RSS Reader"
 subtitle: "Minimal feed aggregator"
-cover_image: /images/showroom/rss-reader.jpg
+cover_image: /images/showroom/rss-reader.png
 layout: project
 date: 2026-01-25
 ---

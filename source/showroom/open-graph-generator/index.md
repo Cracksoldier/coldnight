@@ -1,7 +1,7 @@
 ---
 title: "OG Image Generator"
 subtitle: "Automated social preview cards"
-cover_image: /images/showroom/og-generator.jpg
+cover_image: /images/showroom/og-generator.png
 layout: project
 date: 2026-03-01
 ---

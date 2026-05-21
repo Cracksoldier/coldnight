@@ -1,7 +1,7 @@
 ---
 title: "CLI Tool"
 subtitle: "Developer productivity scripts"
-cover_image: /images/showroom/cli-tool.jpg
+cover_image: /images/showroom/cli-tool.png
 layout: project
 date: 2026-03-20
 ---

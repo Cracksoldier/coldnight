@@ -1,7 +1,7 @@
 ---
 title: "Keyboard Trainer"
 subtitle: "Touch-typing practice with custom text"
-cover_image: /images/showroom/keyboard-trainer.jpg
+cover_image: /images/showroom/keyboard-trainer.png
 layout: project
 date: 2025-10-18
 ---

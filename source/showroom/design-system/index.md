@@ -1,7 +1,7 @@
 ---
 title: "Design System"
 subtitle: "Component library and visual language"
-cover_image: /images/showroom/design-system.jpg
+cover_image: /images/showroom/design-system.png
 layout: project
 date: 2026-04-15
 ---

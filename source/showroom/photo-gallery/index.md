@@ -1,7 +1,7 @@
 ---
 title: "Photo Gallery"
 subtitle: "Static photography portfolio"
-cover_image: /images/showroom/photo-gallery.jpg
+cover_image: /images/showroom/photo-gallery.png
 layout: project
 date: 2025-12-10
 ---

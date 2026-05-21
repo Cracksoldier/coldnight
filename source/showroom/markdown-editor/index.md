@@ -1,7 +1,7 @@
 ---
 title: "Markdown Editor"
 subtitle: "Browser-based writing tool with live preview"
-cover_image: /images/showroom/markdown-editor.jpg
+cover_image: /images/showroom/markdown-editor.png
 layout: project
 date: 2026-02-10
 ---

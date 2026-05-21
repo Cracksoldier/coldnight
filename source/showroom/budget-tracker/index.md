@@ -1,7 +1,7 @@
 ---
 title: "Budget Tracker"
 subtitle: "Personal finance dashboard"
-cover_image: /images/showroom/budget-tracker.jpg
+cover_image: /images/showroom/budget-tracker.png
 layout: project
 date: 2025-11-05
 ---
