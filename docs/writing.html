@@ -163,6 +163,11 @@ A second reference uses the same syntax.<span class="pn">[^note]</span>
 
     <p>All styling lives in <code>_typography.scss</code> inside the <code>.post-body, .prose { }</code> block. The inline reference <code>.footnote-ref a</code> is styled as a small superscript in <code>$accent-light</code>. The <code>.footnotes</code> section gets a top border, smaller font size, and muted color to visually separate it from the main post body.</p>
 
+    <h3>Hover tooltips</h3>
+    <p>Hovering (or clicking on touch devices) a footnote reference shows the footnote text in a floating tooltip near the reference, so the reader stays in place instead of jumping to the bottom of the post.</p>
+    <p><strong>Behaviour</strong> — the tooltip appears above the reference by default and flips below if the reference is near the top of the viewport. It dismisses on mouse-out (200 ms delay to prevent flicker), on a click outside the tooltip, or on <kbd>Escape</kbd>. On touch devices, tapping the reference toggles the tooltip; tapping outside closes it.</p>
+    <p><strong>Implementation</strong> — handled entirely in <code>source/js/copy-code.js</code> (always loaded on post pages). A single <code>div.fn-tooltip</code> is appended to <code>&lt;body&gt;</code> and reused for all references on the page. The footnote text is taken from the target <code>&lt;li&gt;</code> in <code>.footnotes</code> — the <code>.footnote-backref</code> arrow is stripped from the clone before display. The entire block is guarded by <code>if (fnRefs.length)</code>, so posts without footnotes pay zero cost. Styles in <code>_components.scss</code> under <code>// ─── Footnote tooltips</code>.</p>
+
     <hr>
 
     <!-- Tag: gallery -->

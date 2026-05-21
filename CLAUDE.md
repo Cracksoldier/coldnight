@@ -159,6 +159,8 @@ Rendered HTML:
 
 `_typography.scss` inside `.post-body, .prose { }` styles `.footnote-ref a` as a small superscript in `$accent-light`, and styles `.footnotes` with a `border-top` separator (the `<hr>` emitted inside is hidden via `display: none` — the border-top replaces it), smaller font size, and muted text color.
 
+**Hover tooltips** — `copy-code.js` intercepts `.footnote-ref a` interactions so clicking a reference no longer jumps the page. On `mouseenter` (or tap/click on mobile) a single shared `div.fn-tooltip` is positioned above the reference (`position: fixed`, flips below if near the top of the viewport) and populated with the footnote `<li>` content — the `.footnote-backref` arrow is stripped from the clone before display. The tooltip is dismissed on `mouseleave` (200 ms delay so fast movement doesn't flicker), outside click, or Escape. All logic lives inside the existing `DOMContentLoaded` callback in `copy-code.js`, guarded by `if (fnRefs.length)` so posts without footnotes pay zero cost. Styles in `_components.scss` under `// ─── Footnote tooltips`.
+
 ### Code blocks
 
 Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<table>`: `td.gutter` (line numbers) and `td.code` (code). The `after_render:html` filter adds `data-lang` so the CSS toolbar can display the language name. It also extracts an optional filename comment from the first line of the code block.
@@ -169,7 +171,7 @@ Hexo emits code blocks as `<figure class="highlight <lang>">` with a two-cell `<
 
 The same file also handles the **permalink button**: a click handler at the bottom of the `DOMContentLoaded` callback queries `.post-permalink-btn` and calls the shared `writeToClipboard()` / `showToast()` helpers already in scope. The button is rendered in `post.ejs` with `data-permalink="<%= page.permalink %>"` so no client-side URL construction is needed. Gated on `theme.permalink_button !== false`.
 
-The same `DOMContentLoaded` callback also injects **heading anchor links**: it queries every `.post-body h2[id]` and `.post-body h3[id]`, appends an `<a class="heading-anchor" href="#id" aria-hidden="true" tabindex="-1">#</a>` to each, and lets the browser handle hash navigation natively on click. The anchor is hidden by default (`opacity: 0`) and revealed by a CSS `:hover` rule on the parent heading. Styles live in `_components.scss` under `// ─── Heading anchors`.
+The same `DOMContentLoaded` callback also injects **heading anchor links**: it queries every `.post-body h2[id]` and `.post-body h3[id]`, appends an `<a class="heading-anchor" href="#id" aria-hidden="true" tabindex="-1">#</a>` to each. Clicking the anchor calls `e.preventDefault()`, builds the full URL (`window.location.origin + pathname + '#' + id`), and copies it to clipboard via the shared `writeToClipboard()` / `showToast()` helpers — matching the UX of Notion, GitHub docs, and Medium. The anchor is hidden by default (`opacity: 0`) and revealed by a CSS `:hover` rule on the parent heading. Styles live in `_components.scss` under `// ─── Heading anchors`.
 
 ### Table of contents
 
