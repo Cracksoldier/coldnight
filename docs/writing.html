@@ -45,6 +45,8 @@
       <a href="configuration.html#config-permalink-button">Permalink button</a>
       <a href="configuration.html#config-mermaid">Mermaid diagrams</a>
       <a href="configuration.html#config-math">KaTeX math</a>
+      <a href="configuration.html#config-keyboard-nav">Keyboard navigation</a>
+      <a href="configuration.html#config-print">Print / PDF styles</a>
     </div>
 
     <div class="nav-section nav-section--active">
@@ -88,14 +90,16 @@
     <p>All fields except <code>title</code> and <code>date</code> are optional.</p>
 
 <pre><code><span class="pn">---</span>
-<span class="nb">title</span><span class="pn">:</span>        <span class="str">My Post Title</span>
-<span class="nb">date</span><span class="pn">:</span>         <span class="val">2026-01-15</span>
-<span class="nb">categories</span><span class="pn">:</span>  <span class="pn">[</span><span class="str">Dev</span><span class="pn">]</span>
-<span class="nb">tags</span><span class="pn">:</span>         <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
-<span class="nb">cover_image</span><span class="pn">:</span>  <span class="str">/images/cover.jpg</span>   <span class="cm"># optional; falls back to cover.default</span>
-<span class="nb">excerpt</span><span class="pn">:</span>      <span class="str">"Override the auto-excerpt shown on post cards."</span>
-<span class="nb">pinned</span><span class="pn">:</span>       <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
-<span class="nb">series</span><span class="pn">:</span>       <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
+<span class="nb">title</span><span class="pn">:</span>          <span class="str">My Post Title</span>
+<span class="nb">date</span><span class="pn">:</span>           <span class="val">2026-01-15</span>
+<span class="nb">updated</span><span class="pn">:</span>        <span class="val">2026-03-10</span>            <span class="cm"># optional; shows "↻ Updated YYYY-MM-DD" in post metadata when it differs from date</span>
+<span class="nb">categories</span><span class="pn">:</span>    <span class="pn">[</span><span class="str">Dev</span><span class="pn">]</span>
+<span class="nb">tags</span><span class="pn">:</span>           <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
+<span class="nb">cover_image</span><span class="pn">:</span>    <span class="str">/images/cover.jpg</span>     <span class="cm"># optional; falls back to cover.default</span>
+<span class="nb">cover_caption</span><span class="pn">:</span>  <span class="str">"Photo by Jane Doe"</span>   <span class="cm"># optional; wraps cover in &lt;figure&gt;&lt;figcaption&gt;</span>
+<span class="nb">excerpt</span><span class="pn">:</span>        <span class="str">"Override the auto-excerpt shown on post cards."</span>
+<span class="nb">pinned</span><span class="pn">:</span>         <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
+<span class="nb">series</span><span class="pn">:</span>         <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
 <span class="pn">---</span></code></pre>
 
     <table>
@@ -105,12 +109,19 @@
         <tr><td class="opt-key">date</td><td><strong>Required.</strong> Publication date. Used for archive sorting and <code>article:published_time</code>.</td></tr>
         <tr><td class="opt-key">categories</td><td>Array of category names. The first is the primary category used in post cards and related-post scoring.</td></tr>
         <tr><td class="opt-key">tags</td><td>Array of tag names. Used in the tag cloud widget, tag pages, related-post scoring, and OG keywords.</td></tr>
+        <tr><td class="opt-key">updated</td><td>Explicit last-modified date. When set and different from <code>date</code>, a "↻ Updated YYYY-MM-DD" badge appears in the post metadata row. If omitted Hexo falls back to the file's mtime — set this explicitly to avoid false badges on fresh <code>git clone</code>s.</td></tr>
         <tr><td class="opt-key">cover_image</td><td>Path to the post's cover image. Used on post cards, the post header, the pinned hero, and as <code>og:image</code>. Falls back to <code>theme.cover.default</code> if omitted.</td></tr>
+        <tr><td class="opt-key">cover_caption</td><td>Attribution text shown below the cover image. When present the cover is wrapped in a <code>&lt;figure&gt;&lt;figcaption&gt;</code> element and the <code>img</code> gets <code>alt=""</code> so screen readers don't announce both the caption and the alt text.</td></tr>
         <tr><td class="opt-key">excerpt</td><td>Override the auto-excerpt shown on post cards and in <code>og:description</code>. If omitted, Hexo uses the text up to the first <code>&lt;!-- more --&gt;</code> tag, or the start of the post body.</td></tr>
         <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
         <tr><td class="opt-key">series</td><td>A string that groups this post with others sharing the same value. All matching posts appear in a numbered nav strip above the post body, sorted by date. See <a href="configuration.html#config-series">Series posts</a>.</td></tr>
       </tbody>
     </table>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p><strong>mtime false positives:</strong> Hexo always populates <code>page.updated</code> — it defaults to the file's mtime when not set in front-matter. On a fresh <code>git clone</code>, all mtimes reflect the clone timestamp, which will differ from <code>date:</code> and trigger the "↻ Updated" badge on every post. Always set <code>updated:</code> explicitly in front-matter when you want to surface a revision date; omit it entirely when the post has never been revised.</p>
+    </div>
 
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>

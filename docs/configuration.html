@@ -45,6 +45,8 @@
       <a href="#config-permalink-button">Permalink button</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
+      <a href="#config-keyboard-nav">Keyboard navigation</a>
+      <a href="#config-print">Print / PDF styles</a>
     </div>
 
     <div class="nav-section">
@@ -131,11 +133,43 @@
 
     <!-- Social links -->
     <h2 id="config-social">Social links</h2>
-    <p>Displayed in the footer. Leave a value empty to hide that icon.</p>
+    <p>Footer icons and per-post share buttons. Leave icon values empty to hide that link.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">social.github</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>GitHub username. Renders a footer link to <code>https://github.com/username</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">social.twitter</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Twitter/X handle (without <code>@</code>). Used for the footer link and <code>twitter:site</code> OG tag.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">social.rss</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show an RSS feed link in the footer pointing to <code>/atom.xml</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">social.share</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Show a row of share buttons (X&nbsp;/&nbsp;Twitter, LinkedIn, Copy link) in the post footer below the tags. Set to <code>true</code> to enable. The copy-link button reuses the same clipboard helper as the permalink button and shows a toast on success.</td>
+        </tr>
+      </tbody>
+    </table>
+
 <pre><code><span class="nb">social</span><span class="pn">:</span>
   <span class="nb">github</span><span class="pn">:</span>  <span class="str">"your-username"</span>   <span class="cm"># → https://github.com/your-username</span>
   <span class="nb">twitter</span><span class="pn">:</span> <span class="str">"your-handle"</span>     <span class="cm"># → https://twitter.com/your-handle</span>
-  <span class="nb">rss</span><span class="pn">:</span>     <span class="val">true</span>              <span class="cm"># show RSS feed link (/atom.xml)</span></code></pre>
+  <span class="nb">rss</span><span class="pn">:</span>     <span class="val">true</span>              <span class="cm"># show RSS feed link (/atom.xml)</span>
+  <span class="nb">share</span><span class="pn">:</span>   <span class="val">false</span>             <span class="cm"># show X/Twitter + LinkedIn + copy-link share buttons in the post footer</span></code></pre>
 
     <hr>
 
@@ -354,6 +388,12 @@
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
           <td>Show an estimated reading time ("N min read") on post cards and post headers. Calculated at ~200 wpm. Code blocks are excluded from the word count so they don't inflate the estimate.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">word_count</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the raw word count (e.g. "1,240 words") in the post header metadata row. Code blocks are excluded. Set to <code>false</code> to hide it.</td>
         </tr>
         <tr>
           <td class="opt-key">progress_bar</td>
@@ -693,6 +733,47 @@
       <span class="callout-icon">⚠️</span>
       <p>The <code>$...$</code> delimiter matches any two dollar signs on the same line, so prose containing currency amounts can trigger the renderer unintentionally. Escape a literal dollar sign with a backslash: <code>\$50</code>. See <a href="writing.html#math">Writing — KaTeX math</a> for the full false-positive guidance.</p>
     </div>
+
+    <hr>
+
+    <!-- Keyboard navigation -->
+    <h2 id="config-keyboard-nav">Keyboard navigation</h2>
+    <p>Post pages support keyboard shortcuts for navigating between posts and opening a shortcuts reference. No configuration is required — the shortcuts are always active on post pages.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Action</th><th>Guard</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key"><kbd>←</kbd></td><td>Navigate to the previous post (same as clicking the ← Previous link in the post footer)</td><td>Disabled when focus is on an <code>input</code>, <code>textarea</code>, <code>select</code>, <code>button</code>, <code>summary</code>, or any <code>contenteditable</code> element</td></tr>
+        <tr><td class="opt-key"><kbd>→</kbd></td><td>Navigate to the next post</td><td>Same guards as ←; does nothing when the current post has no next post</td></tr>
+        <tr><td class="opt-key"><kbd>/</kbd></td><td>Focus the search input (any page)</td><td>No-op when an input or contenteditable already has focus</td></tr>
+        <tr><td class="opt-key"><kbd>?</kbd></td><td>Open a keyboard shortcuts reference modal</td><td>No-op when an input or contenteditable has focus; modal lists only the shortcuts available on the current page type</td></tr>
+        <tr><td class="opt-key"><kbd>Esc</kbd></td><td>Close the search dropdown or shortcuts modal</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p><code>source/js/post-nav-keys.js</code> is a tiny IIFE loaded via <code>&lt;script defer&gt;</code> only on post pages. It listens for <code>ArrowLeft</code> / <code>ArrowRight</code> on <code>document</code>, checks that the active element is not an interactive control (input, textarea, select, button, summary, or contenteditable), then calls <code>.click()</code> on the matching <code>.post-nav__item--prev a</code> or <code>.post-nav__item--next a</code> link. <code>e.preventDefault()</code> is called to suppress simultaneous horizontal scroll on the arrow key press.</p>
+
+    <p>The <code>&lt;summary&gt;</code> guard is particularly important: pressing <kbd>→</kbd> while a <code>{% spoiler %}</code> block's summary element is focused would otherwise navigate away from the page instead of toggling the spoiler. The guard prevents this.</p>
+
+    <p>The <kbd>?</kbd> shortcuts modal is built lazily in <code>source/js/search.js</code> on first trigger (a native <code>&lt;dialog&gt;</code> element appended to <code>&lt;body&gt;</code>). The ← / → entries are only added to the modal when <code>.post-nav__item--prev</code> or <code>.post-nav__item--next</code> exists in the DOM at dialog-build time — so the modal correctly omits navigation shortcuts on archive, tag, and category pages.</p>
+
+    <hr>
+
+    <!-- Print styles -->
+    <h2 id="config-print">Print / PDF styles</h2>
+    <p>The theme includes a dedicated <code>@media print</code> stylesheet that produces a clean black-on-white printout from any post page. No configuration is required — the styles activate automatically when the browser's print dialog is opened or when generating a PDF via the browser.</p>
+
+    <h3>What the print stylesheet does</h3>
+    <ul>
+      <li><strong>Reset</strong> — all backgrounds are forced white and all text is forced black via a wildcard rule so syntax-highlighted code and dark UI components don't produce black rectangles.</li>
+      <li><strong>Hides UI chrome</strong> — navbar, sidebar, back-to-top button, reading progress bar, TOC FAB, TOC drawer, permalink button, share buttons, related posts section, post navigation (prev/next), code toolbar, footer, toast container, skip-nav link, series nav, and the pinned post hero are all hidden.</li>
+      <li><strong>Full-width content</strong> — the two-column grid collapses to a single column (<code>.page-wrapper { display: block }</code>) so the post body fills the page width.</li>
+      <li><strong>External link URLs</strong> — external links in the post body have their URL appended in parentheses after the link text (e.g. <em>Hexo (<code>https://hexo.io</code>)</em>) so the destination is visible in print. The ↗ icon added by the external-link feature is suppressed so it doesn't appear before the URL.</li>
+      <li><strong>Page breaks</strong> — <code>h2</code> and <code>h3</code> headings have <code>page-break-after: avoid</code> to prevent a heading from stranding alone at the bottom of a page. Code blocks, figures, and cover images have <code>page-break-inside: avoid</code>.</li>
+    </ul>
+
+    <p>Print styles live in <code>source/css/_print.scss</code> and are imported at the end of <code>style.scss</code> so the <code>@media print</code> rules have correct cascade priority over the rest of the stylesheet.</p>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
       coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>

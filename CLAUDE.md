@@ -343,6 +343,25 @@ When `showHero` is true the grid loop skips the pinned post (`if (showHero && po
 
 The partial `_partial/pinned-post.ejs` uses the same data as `post-card.ejs` (cover image, category, read time, excerpt) and reuses `.post-card__category` and `.post-card__read-more`. Styles live in `_components.scss` under `// ─── Pinned / Featured post`. Key visual details: blue `$border-focus` border, 45%-wide cover panel on the left (stacks on mobile), `.pinned-badge` label in accent colour, `min-height: 200px` on `.pinned-post` to guarantee hero visual weight with minimal content and to anchor the cover panel height via flex stretch.
 
+### Social share buttons (`post.ejs`)
+
+Toggled by `theme.social.share` (default `false`). When enabled, a `.post-share` row renders in `post.ejs` between the `.post-tags` block and `.post-nav`. It contains three buttons: X / Twitter (opens `twitter.com/intent/tweet` with `encodeURIComponent` title + permalink), LinkedIn (`linkedin.com/sharing/share-offsite/`), and a "Copy link" button. The copy handler lives in `copy-code.js` — it queries `.post-share-copy`, reads `dataset.permalink`, and calls the shared `writeToClipboard()` / `showToast()` helpers already in scope. Styles live in `_layout.scss` under `// ─── Post share`.
+
+### Keyboard post navigation (`post-nav-keys.js`)
+
+`source/js/post-nav-keys.js` is a tiny IIFE loaded via `<script defer>` only on post pages. It binds `ArrowLeft` / `ArrowRight` to the `.post-nav__item--prev a` and `.post-nav__item--next a` links respectively. Guard conditions: skips when `activeElement` is `input`, `textarea`, `select`, `button`, `summary`, or `isContentEditable`. Calls `e.preventDefault()` to suppress simultaneous horizontal scroll. The `summary` guard is critical — without it, pressing `→` while a `{% spoiler %}` summary is focused would navigate away instead of toggling the spoiler.
+
+The `?` keyboard shortcuts modal in `search.js` lazily adds `←` / `→` entries only when `.post-nav__item--prev` or `.post-nav__item--next` is present in the DOM at dialog-build time, so the entries are correctly absent on archive/tag/category pages.
+
+### Print / PDF styles (`_print.scss`)
+
+`source/css/_print.scss` defines a dedicated `@media print` block, `@use`d at the end of `style.scss`. Key behaviors:
+- Wildcard reset: all `background` forced white, all `color` forced black so no syntax-highlighted code or dark UI element produces a black rectangle.
+- Hidden elements: `.navbar`, `.sidebar`, `#back-to-top`, `#reading-progress`, `.toc-fab`, `.toc-drawer`, `.post-permalink-btn`, `.post-share`, `.related-posts`, `.post-nav`, `.code-toolbar`, `.site-footer`, `.toast-container`, `.skip-nav`, `.series-nav`, `.pinned-post`.
+- Layout: `.page-wrapper { display: block }`, `.main-content, .post-page { max-width: 100% }` so the post body fills the paper width.
+- External link URLs: two rules in order — (1) suppress the ↗ icon (`a[target="_blank"]::after { content: none }`) then (2) append URL text (`.post-body a[href^="http"]::after { content: " (" attr(href) ")" }`). **Rule order matters**: since all external links receive `target="_blank"` from the `after_post_render` filter, the suppress rule must come first so it is overridden by the more specific URL rule, not the other way around.
+- Page breaks: `h2, h3 { page-break-after: avoid }`, `pre, figure, .post-cover { page-break-inside: avoid }`.
+
 ## Post front-matter
 
 ```yaml
@@ -383,3 +402,5 @@ User-facing settings are in `themes/coldnight/_config.yml`. Key toggles:
 - `permalink_button: false` — removes the copy-permalink icon from the post metadata row
 - `series: false` — disables the series navigation strip on all post pages
 - `mermaid.enabled: true` — converts ` ```mermaid ` fenced blocks to rendered SVG diagrams; `mermaid.theme: dark` sets the Mermaid colour scheme
+- `social.share: true` — shows X / Twitter, LinkedIn, and copy-link share buttons in the post footer
+- `word_count: false` — hides the raw word count from the post header metadata row
