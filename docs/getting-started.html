@@ -25,6 +25,7 @@
       <a href="#installation">Installation</a>
       <a href="#quick-start">Quick start</a>
       <a href="#links-page-setup">Links page</a>
+      <a href="#showroom-page-setup">Showroom page</a>
     </div>
 
     <div class="nav-section">
@@ -170,6 +171,11 @@
         <div class="icon">🔖</div>
         <h4>Links page</h4>
         <p>A curated link archive at <code>/links/</code>. CSS masonry layout — add entries to a YAML file to grow the collection, no rebuilding templates needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🖼️</div>
+        <h4>Showroom page</h4>
+        <p>A paginated project portfolio at <code>/showroom/</code>. 3×3 card grid with 1:1 aspect ratio, gradient overlay, always-visible title, hover subtitle. Each project has its own page.</p>
       </div>
       <div class="feature-card">
         <div class="icon">📐</div>
@@ -330,6 +336,60 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>
       <p>Cards without a thumbnail are naturally shorter, which creates the staggered masonry effect. A mix of thumbnail and text-only cards looks better than all-thumbnail or all-text.</p>
+    </div>
+
+    <hr>
+
+    <!-- Showroom page setup -->
+    <h2 id="showroom-page-setup">Showroom page</h2>
+    <p>The theme includes a built-in <strong>project portfolio</strong> at <code>/showroom/</code> — a paginated 3×3 grid of project cards. Each card shows a 1:1 cover image with an always-visible title overlay and a subtitle that appears on hover. Clicking a card navigates to a dedicated project page with the full Markdown content. New projects are added by creating Markdown files; the grid and pagination are handled automatically by a built-in generator.</p>
+
+    <ol class="steps">
+      <li>
+        <strong>Create a project page</strong> at <code>source/showroom/&lt;slug&gt;/index.md</code>:
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>       <span class="str">"My Project"</span>
+<span class="nb">subtitle</span><span class="pn">:</span>    <span class="str">"A short tagline"</span>
+<span class="nb">cover_image</span><span class="pn">:</span> <span class="val">/images/showroom/my-project.jpg</span>
+<span class="nb">layout</span><span class="pn">:</span>      <span class="val">project</span>
+<span class="nb">date</span><span class="pn">:</span>        <span class="val">2026-01-01</span>
+<span class="pn">---</span>
+
+Write the project description here in Markdown.</code></pre>
+        <p>The <code>layout: project</code> front-matter tells Hexo to render this page with <code>themes/coldnight/layout/project.ejs</code> — a full-width layout with a 16:9 cover image, subtitle, and Markdown body. The page is accessible at <code>/showroom/&lt;slug&gt;/</code>.</p>
+      </li>
+      <li>
+        <strong>Add the cover image</strong> to <code>source/images/showroom/</code>. Any image format works; square crops (1:1) look best since the card clips to that ratio, but the full image is shown on the project page at 16:9.
+      </li>
+      <li>
+        <strong>Add the navbar link</strong> in <code>themes/coldnight/_config.yml</code>:
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>     <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span>  <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Showroom</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/showroom</span> <span class="pn">}</span></code></pre>
+      </li>
+    </ol>
+
+    <h3>Project front-matter reference</h3>
+
+    <table>
+      <thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">title</td><td>Yes</td><td>Project name — shown on the card overlay and the project page heading</td></tr>
+        <tr><td class="opt-key">subtitle</td><td>Yes</td><td>Short tagline — shown on hover over the card and below the title on the project page</td></tr>
+        <tr><td class="opt-key">cover_image</td><td>Yes</td><td>Path to the cover image. Clipped to 1:1 on the card; shown at 16:9 on the project page.</td></tr>
+        <tr><td class="opt-key">layout</td><td>Yes</td><td>Must be <code>project</code> — routes the page to <code>project.ejs</code></td></tr>
+        <tr><td class="opt-key">date</td><td>Yes</td><td>Controls sort order on the grid (newest first)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Pagination</h3>
+    <p>The grid shows 9 projects per page. When there are more than 9, pagination controls appear below the grid linking to <code>/showroom/page/2/</code>, <code>/showroom/page/3/</code>, etc. No configuration is needed — the built-in generator handles all routes automatically.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>The Showroom index (<code>/showroom/</code>) is generated entirely from your project files — there is no <code>source/showroom/index.md</code> to create. Only the individual project pages under <code>source/showroom/&lt;slug&gt;/</code> are needed.</p>
     </div>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">

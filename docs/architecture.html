@@ -72,6 +72,7 @@
       <a href="#layouts">Page layouts</a>
       <a href="#static-pages">Static pages</a>
       <a href="#links-page">Links page</a>
+      <a href="#showroom-page">Showroom page</a>
       <a href="#ui-features">UI features</a>
       <a href="#ui-archive-filter">Archive filter chips</a>
       <a href="#ui-external-links">External link indicator</a>
@@ -119,6 +120,8 @@
         <tr><td class="opt-key">category.ejs</td><td>Full-width</td><td>Posts filtered by a single category</td></tr>
         <tr><td class="opt-key">page.ejs</td><td>Full-width</td><td>Static pages (About, etc.) — no post metadata</td></tr>
         <tr><td class="opt-key">links.ejs</td><td>Full-width</td><td>Data-driven link repository — reads <code>source/_data/links.yml</code></td></tr>
+        <tr><td class="opt-key">showroom.ejs</td><td>Full-width</td><td>Paginated 3×3 project grid — output of the custom <code>showroom</code> generator</td></tr>
+        <tr><td class="opt-key">project.ejs</td><td>Full-width</td><td>Individual project page — cover image, subtitle, Markdown body</td></tr>
         <tr><td class="opt-key">404.ejs</td><td>Full-width</td><td>Custom 404 page</td></tr>
       </tbody>
     </table>
@@ -132,7 +135,7 @@
     <p>Create static pages with <code>hexo new page</code>:</p>
 <pre><code>hexo new page about</code></pre>
     <p>This creates <code>source/about/index.md</code>. The page is rendered with <code>layout/page.ejs</code> — the full-width shell with no post metadata (no date, author, reading time, tags, or related-posts section). Any Markdown content is valid, including <code>{% note %}</code> callouts and <code>{% gallery %}</code> blocks.</p>
-    <p>Pages can also declare a custom <code>layout:</code> in their front-matter to bypass <code>page.ejs</code> entirely and use a dedicated template. The Links page uses this pattern.</p>
+    <p>Pages can also declare a custom <code>layout:</code> in their front-matter to bypass <code>page.ejs</code> entirely and use a dedicated template. The Links and Showroom pages use this pattern.</p>
 
     <div class="callout callout-info">
       <span class="callout-icon">ℹ️</span>
@@ -143,6 +146,21 @@
     <p><code>source/links/index.md</code> sets <code>layout: links</code> in its front-matter, which routes it to <code>themes/coldnight/layout/links.ejs</code> instead of the generic <code>page.ejs</code>. The layout is a data-driven, full-width page that reads every entry from <code>source/_data/links.yml</code> via Hexo's built-in data-file mechanism (<code>site.data.links</code>) and renders them as cards in a CSS masonry grid. No generator, no new route per link — the entire archive lives on one <code>/links/</code> page.</p>
     <p><strong>Data format</strong> — each entry in <code>source/_data/links.yml</code> is an object with required fields <code>title</code>, <code>url</code>, and <code>abstract</code>, plus optional <code>subtitle</code> and <code>thumbnail</code>. The hostname is extracted client-side in the template (<code>url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0]</code>) and shown as the clickable URL chip. All link anchors carry <code>target="_blank" rel="noopener noreferrer"</code> directly in the template — the <code>after_post_render</code> external-link filter does not run on non-post layouts.</p>
     <p><strong>CSS masonry</strong> — <code>.links-grid</code> uses <code>column-count: 3</code> (2 at tablet, 1 at mobile). Each <code>.link-card</code> is <code>display: inline-block; break-inside: avoid</code> — <code>inline-block</code> is required here because <code>break-inside</code> is not honoured on block-level children in a multi-column container in all browsers. Cards without a <code>thumbnail</code> field render no image area, producing naturally shorter cards that let the masonry stagger. Styles live in <code>_components.scss</code> under <code>// ─── Links page</code>.</p>
+
+    <h3 id="showroom-page">Showroom page</h3>
+    <p>The Showroom page displays project pages in a paginated 3×3 card grid at <code>/showroom/</code>. Unlike the Links page (which uses a data file), individual projects are standard Hexo pages — each one lives at <code>source/showroom/&lt;slug&gt;/index.md</code> with <code>layout: project</code> in its front-matter and has its own URL at <code>/showroom/&lt;slug&gt;/</code>.</p>
+    <p><strong>Custom generator</strong> — because there is no <code>source/showroom/index.md</code> to route the grid, a custom generator in <code>scripts/helpers.js</code> (<code>hexo.extend.generator.register('showroom', ...)</code>) produces the paginated index routes. It collects all pages where <code>layout === 'project'</code> and <code>path.startsWith('showroom/')</code>, sorts them newest-first, and emits <code>showroom/index.html</code> (page 1) and <code>showroom/page/N/index.html</code> (pages 2+) at 9 projects per page. The <code>layout</code> key must be at the top level of each returned route object — placing it inside <code>data</code> causes Hexo to serialise the data as raw JSON instead of rendering through the EJS template.</p>
+    <p><strong>Front-matter</strong> — each project page requires <code>title</code>, <code>subtitle</code>, and <code>cover_image</code>:</p>
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span>       <span class="str">"Project Title"</span>
+<span class="nb">subtitle</span><span class="pn">:</span>    <span class="str">"Short tagline"</span>
+<span class="nb">cover_image</span><span class="pn">:</span> <span class="val">/images/showroom/project.jpg</span>
+<span class="nb">layout</span><span class="pn">:</span>      <span class="val">project</span>
+<span class="nb">date</span><span class="pn">:</span>        <span class="val">2026-01-01</span>
+<span class="pn">---</span></code></pre>
+    <p><strong>Card grid CSS</strong> — <code>.showroom-grid</code> is <code>display: grid; grid-template-columns: repeat(3, 1fr)</code> (2 cols at <code>$bp-tablet</code>, 1 col at <code>$bp-mobile</code>). Each <code>.project-card</code> is <code>aspect-ratio: 1/1; overflow: hidden</code> with a gradient <code>.project-card__overlay</code> (<code>position: absolute; inset: 0</code>) layered over the cover image. The title (<code>&lt;span class="project-card__title"&gt;</code>) is always visible in white at the bottom of the card; the subtitle (<code>&lt;span class="project-card__subtitle"&gt;</code>) starts at <code>opacity: 0; transform: translateY(4px)</code> and fades in on <code>:hover</code>. <code>&lt;span&gt;</code> elements are used (not headings) to avoid polluting the document heading outline with decorative card titles — the overlay is a flex column, so inline elements behave as block-level flex children automatically.</p>
+    <p><strong>Project page</strong> — <code>layout/project.ejs</code> uses the full-width shell. It renders a <code>.project-back</code> link to <code>/showroom/</code>, a <code>.project-cover</code> image at 16:9, the <code>&lt;h1&gt;</code> title, a <code>.project-subtitle</code> paragraph, and the Markdown body in a <code>class="prose"</code> container. It loads <code>copy-code.js</code> (project pages may contain code blocks) and <code>nav.js</code> only.</p>
+    <p>Styles live in <code>_components.scss</code> under <code>// ─── Showroom grid</code>, <code>// ─── Project page</code>, and <code>// ─── Showroom pagination</code>.</p>
 
     <hr>
 

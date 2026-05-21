@@ -148,6 +148,28 @@ Required fields: `title`, `url`, `abstract`. Optional: `subtitle`, `thumbnail`.
 
 **No individual pages** — every link is a card on the single `/links/` page; there is no per-link route or generator.
 
+### Showroom page
+
+`source/showroom/<slug>/index.md` files with `layout: project` in their front-matter become individual project pages at `/showroom/<slug>/`. A custom generator in `scripts/helpers.js` (`hexo.extend.generator.register('showroom', ...)`) produces the paginated `/showroom/` index — it collects all pages where `layout === 'project'` and `path.startsWith('showroom/')`, sorts them newest-first, and emits routes at 9 projects per page: `showroom/index.html` (page 1) and `showroom/page/N/index.html` (pages 2+). The `layout` key is at the top level of each returned route object (not inside `data`) — this is required for Hexo to render the output through the EJS template rather than serialising the data as raw JSON.
+
+**Front-matter for a project page:**
+
+```yaml
+---
+title: "Project Title"
+subtitle: "Short tagline"        # required — shown on card hover and project page
+cover_image: /images/showroom/project.jpg  # required — fills the 1:1 card
+layout: project
+date: 2026-01-01
+---
+```
+
+**Layout files** — `layout/showroom.ejs` renders the grid index (`.showroom-grid`) and pagination nav. `layout/project.ejs` renders the individual project page (back link, 16:9 cover, title, subtitle, Markdown body via `class="prose"`). Both use the `.archive-wrapper` full-width shell. `project.ejs` loads `copy-code.js` (project pages can contain fenced code blocks) and `nav.js` only.
+
+**Grid CSS** — `.showroom-grid` is `display: grid; grid-template-columns: repeat(3, 1fr)` (2 cols at tablet, 1 at mobile). Each `.project-card` is `aspect-ratio: 1/1; overflow: hidden` with a gradient `.project-card__overlay` (`position: absolute; inset: 0`) that overlays the cover image. The card title (`<span class="project-card__title">`) is always visible; the subtitle (`<span class="project-card__subtitle">`) starts at `opacity: 0; transform: translateY(4px)` and transitions in on `:hover`. The `<span>` elements (not `<h2>`) are used to avoid polluting the heading outline with decorative card titles. Styles in `_components.scss` under `// ─── Showroom grid`, `// ─── Project page`, and `// ─── Showroom pagination`.
+
+**Adding a project** — create `source/showroom/<slug>/index.md` with the required front-matter and Markdown body. The generator picks it up automatically on the next build.
+
 ### Hexo helpers and tag plugins (`scripts/helpers.js`)
 
 Eight extensions are registered. Two module-level utilities are defined at the top and shared by all handlers: `stripHtml` (removes `<pre>`/`<figure>` blocks then all tags) and `escHtml` (HTML-escapes `&`, `<`, `>`, `"`).
