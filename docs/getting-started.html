@@ -24,6 +24,7 @@
       <a href="#requirements">Requirements</a>
       <a href="#installation">Installation</a>
       <a href="#quick-start">Quick start</a>
+      <a href="#links-page-setup">Links page</a>
     </div>
 
     <div class="nav-section">
@@ -166,6 +167,11 @@
         <p>Add <code>pinned: true</code> to any post's front-matter to promote it as a full-width hero card above the index grid.</p>
       </div>
       <div class="feature-card">
+        <div class="icon">🔖</div>
+        <h4>Links page</h4>
+        <p>A curated link archive at <code>/links/</code>. CSS masonry layout — add entries to a YAML file to grow the collection, no rebuilding templates needed.</p>
+      </div>
+      <div class="feature-card">
         <div class="icon">📐</div>
         <h4>Mermaid diagrams</h4>
         <p>Fenced <code>```mermaid</code> blocks rendered to SVG. All assets self-hosted — no CDN requests.</p>
@@ -268,6 +274,63 @@ cp -r /path/to/coldnight themes/coldnight</code></pre>
 
 <span class="nb">code</span><span class="pn">:</span>
   <span class="nb">copy_button</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <hr>
+
+    <!-- Links page setup -->
+    <h2 id="links-page-setup">Links page</h2>
+    <p>The theme ships with a built-in <strong>link repository</strong> at <code>/links/</code> — a single paginated page that displays external links as cards in a responsive CSS masonry layout. New links are added by appending entries to a YAML file; no template changes are needed.</p>
+
+    <ol class="steps">
+      <li>
+        <strong>Create the page stub</strong> at <code>source/links/index.md</code>:
+<pre><code><span class="pn">---</span>
+<span class="nb">title</span><span class="pn">:</span> <span class="val">Links</span>
+<span class="nb">layout</span><span class="pn">:</span> <span class="val">links</span>
+<span class="pn">---</span></code></pre>
+        <p>The <code>layout: links</code> front-matter tells Hexo to use <code>themes/coldnight/layout/links.ejs</code> instead of the generic <code>page.ejs</code>.</p>
+      </li>
+      <li>
+        <strong>Create the data file</strong> at <code>source/_data/links.yml</code> with at least one entry:
+<pre><code><span class="pn">-</span> <span class="nb">title</span><span class="pn">:</span>    <span class="str">"Resource Name"</span>
+  <span class="nb">url</span><span class="pn">:</span>      <span class="str">"https://example.com/"</span>
+  <span class="nb">abstract</span><span class="pn">:</span> <span class="str">"One or two sentence description."</span></code></pre>
+      </li>
+      <li>
+        <strong>Add the navbar link</strong> in <code>themes/coldnight/_config.yml</code>:
+<pre><code><span class="nb">navbar</span><span class="pn">:</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Links</span><span class="pn">,</span>   <span class="nb">url</span><span class="pn">:</span> <span class="str">/links</span> <span class="pn">}</span></code></pre>
+      </li>
+    </ol>
+
+    <h3>Adding links</h3>
+    <p>Each entry in <code>source/_data/links.yml</code> is one card. Append entries at any time — just run <code>hexo generate</code> (or let the dev server pick up the change) to rebuild.</p>
+
+    <table>
+      <thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">title</td><td>Yes</td><td>Card heading</td></tr>
+        <tr><td class="opt-key">url</td><td>Yes</td><td>Destination URL — opens in a new tab</td></tr>
+        <tr><td class="opt-key">abstract</td><td>Yes</td><td>One or two sentence description shown on the card</td></tr>
+        <tr><td class="opt-key">subtitle</td><td>No</td><td>Short tagline rendered below the title in muted text</td></tr>
+        <tr><td class="opt-key">thumbnail</td><td>No</td><td>Path or URL to a cover image (16:9 crop). Omit for a text-only card.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Example with all fields:</p>
+<pre><code><span class="pn">-</span> <span class="nb">title</span><span class="pn">:</span>     <span class="str">"Hexo Documentation"</span>
+  <span class="nb">subtitle</span><span class="pn">:</span>  <span class="str">"Static site generator"</span>
+  <span class="nb">url</span><span class="pn">:</span>       <span class="str">"https://hexo.io/docs/"</span>
+  <span class="nb">abstract</span><span class="pn">:</span>  <span class="str">"The official reference for Hexo — covers installation, configuration, and theme development."</span>
+  <span class="nb">thumbnail</span><span class="pn">:</span> <span class="str">"/images/links/hexo.png"</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>Cards without a thumbnail are naturally shorter, which creates the staggered masonry effect. A mix of thumbnail and text-only cards looks better than all-thumbnail or all-text.</p>
+    </div>
 
     <p style="color: var(--text-3); font-size: 0.8rem; margin-top: 3rem;">
       coldnight theme &nbsp;·&nbsp; Built with <a href="https://hexo.io">Hexo</a>
