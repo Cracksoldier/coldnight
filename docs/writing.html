@@ -60,6 +60,8 @@
       <a href="#tag-timeline">{% timeline %}</a>
       <a href="#tag-spoiler">{% spoiler %}</a>
       <a href="#tag-download">{% download %}</a>
+      <a href="#tag-video">{% video %}</a>
+      <a href="#code-filename">Code filename label</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
       <a href="#image-captions">Image captions</a>
@@ -455,6 +457,94 @@ function binarySearch(arr, target) {
     </div>
 
     <p>Styles live in <code>_components.scss</code> under <code>// ─── Download block</code>. The button reuses the existing <code>.btn</code> + <code>.btn--primary</code> classes — no extra button CSS is needed.</p>
+
+    <hr>
+
+    <!-- Tag: video -->
+    <h2 id="tag-video">{% video %} tag</h2>
+    <p>Embeds a responsive 16:9 video — YouTube, Vimeo, or a direct video file — with an optional caption. No JavaScript configuration required; the tag handles all URL patterns automatically.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">video</span> <span class="nb">url</span> <span class="pn">[</span><span class="nb">caption words</span><span class="pn">]</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Argument</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">url</td><td>Yes</td><td>YouTube URL (<code>youtube.com/watch?v=…</code> or <code>youtu.be/…</code>), Vimeo URL (<code>vimeo.com/…</code>), or direct video file path (<code>.mp4</code>, <code>.webm</code>, <code>.ogv</code>). Unrecognised URLs render as a plain link — no error.</td></tr>
+        <tr><td class="opt-key">caption</td><td>No</td><td>All words after the URL are joined and used as the caption text (shown below the embed in a <code>&lt;figcaption&gt;</code>). Also used as the iframe <code>title</code> attribute for accessibility.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# YouTube — full URL #}</span>
+<span class="pn">{%</span> <span class="kw">video</span> <span class="str">https://www.youtube.com/watch?v=dQw4w9WgXcQ</span> <span class="pn">%}</span>
+
+<span class="cm">{# YouTube — short URL with caption #}</span>
+<span class="pn">{%</span> <span class="kw">video</span> <span class="str">https://youtu.be/dQw4w9WgXcQ</span> <span class="nb">Never Gonna Give You Up</span> <span class="pn">%}</span>
+
+<span class="cm">{# Vimeo #}</span>
+<span class="pn">{%</span> <span class="kw">video</span> <span class="str">https://vimeo.com/123456789</span> <span class="nb">Conference keynote</span> <span class="pn">%}</span>
+
+<span class="cm">{# Self-hosted MP4 with caption #}</span>
+<span class="pn">{%</span> <span class="kw">video</span> <span class="str">/videos/demo.mp4</span> <span class="nb">Product walkthrough</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>video</code> as an inline Hexo tag (no body, no <code>{% endvideo %}</code>). The first argument is the URL; all remaining arguments are joined with spaces to form the optional caption. URL matching runs in priority order: YouTube patterns are checked first (both <code>youtube.com/watch?v=</code> and <code>youtu.be/</code> short links), then Vimeo, then direct video file extensions. The matched id or path is HTML-escaped via <code>escHtml</code> before being written into the embed HTML.</p>
+
+    <p>YouTube and Vimeo embeds use <code>&lt;iframe&gt;</code> with <code>loading="lazy"</code>. Direct files use a native <code>&lt;video controls preload="metadata"&gt;</code> element. All three are wrapped in a <code>.video-embed__wrapper</code> div that uses <code>aspect-ratio: 16 / 9</code> and absolute-positioned children so the embed fills the wrapper at any width.</p>
+
+    <p>The output structure:</p>
+<pre><code><span class="kw">&lt;figure</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"video-embed"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"video-embed__wrapper"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;iframe</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"https://www.youtube.com/embed/ID"</span> <span class="cm">... loading="lazy"&gt;&lt;/iframe&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;figcaption&gt;</span>Optional caption<span class="kw">&lt;/figcaption&gt;</span>
+<span class="kw">&lt;/figure&gt;</span></code></pre>
+
+    <p>Styles live in <code>_components.scss</code> under <code>// ─── Video embed</code>. The <code>figcaption</code> style is inherited from the existing <code>.post-body figcaption</code> rule in <code>_typography.scss</code> — no extra caption CSS is needed.</p>
+
+    <hr>
+
+    <!-- Code filename label -->
+    <h2 id="code-filename">Code block filename label</h2>
+    <p>Place a filename comment as the very first line of any fenced code block. The theme strips the comment from the displayed code and shows it as a filename chip in the code toolbar, to the left of the language label.</p>
+
+    <h3>Syntax</h3>
+    <p>Use the comment style that matches the language:</p>
+<pre><code><span class="cm">// filename: src/utils/format.js</span>   <span class="cm">{# JavaScript, TypeScript, Go, Java, C/C++, Rust, CSS-in-JS #}</span>
+<span class="cm"># filename: scripts/build.py</span>      <span class="cm">{# Python, Ruby, Shell, YAML #}</span>
+<span class="cm">/* filename: src/styles/reset.css */</span> <span class="cm">{# CSS, SCSS, Less #}</span></code></pre>
+
+    <h3>Examples</h3>
+<pre><code>```js
+<span class="cm">// filename: src/app.js</span>
+export function greet(name) {
+  return `Hello, ${name}!`
+}
+```
+
+```python
+<span class="cm"># filename: scripts/deploy.py</span>
+import subprocess
+subprocess.run(['hexo', 'generate'])
+```
+
+```css
+<span class="cm">/* filename: src/styles/base.css */</span>
+*, *::before, *::after { box-sizing: border-box; }
+```</code></pre>
+
+    <p>The toolbar for the first example renders as <code>[ src/app.js &nbsp; js &nbsp; 📋 ]</code> — filename first, then language, then copy button. Code blocks without a filename comment are unaffected.</p>
+
+    <h3>How it works</h3>
+    <p>The <code>after_render:html</code> filter (Pass 1) in <code>scripts/helpers.js</code> processes the full <code>&lt;figure class="highlight"&gt;</code> HTML using a regex. It looks for an <code>&lt;span class="hljs-comment"&gt;</code> element matching any of the three comment patterns (<code>//</code>, <code>#</code>, <code>/* ... */</code>) immediately followed by a <code>&lt;br&gt;</code> as the first content in the code block. When found, the comment span is stripped from the body and a <code>data-filename</code> attribute is added to the <code>&lt;figure&gt;</code> element (value is HTML-escaped).</p>
+
+    <p>Client-side, <code>copy-code.js</code> reads <code>data-filename</code> in <code>addCopyButton()</code> and prepends a <code>&lt;span class="code-filename-label"&gt;</code> to the toolbar before the language label. The filename chip uses <code>$text-primary</code> colour with a right border to visually separate it from the muted language label. Styles live in <code>_code.scss</code>. Long filenames are capped at <code>max-width: 220px</code> with <code>text-overflow: ellipsis</code>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>The filename comment is stripped from the <em>displayed</em> code but is <strong>not</strong> stripped from what the copy button puts on the clipboard — the raw code cell text is copied verbatim. If you want the filename excluded from copies too, omit the comment entirely and just annotate it in prose above the block.</p>
+    </div>
 
     <hr>
 

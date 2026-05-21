@@ -58,7 +58,10 @@
       <a href="writing.html#tag-note">{% note %}</a>
       <a href="writing.html#tag-tabs">{% tabs %}</a>
       <a href="writing.html#tag-timeline">{% timeline %}</a>
+      <a href="writing.html#tag-spoiler">{% spoiler %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
+      <a href="writing.html#tag-video">{% video %}</a>
+      <a href="writing.html#code-filename">Code filename label</a>
       <a href="writing.html#mermaid">Mermaid diagrams</a>
       <a href="writing.html#math">KaTeX math</a>
       <a href="writing.html#image-captions">Image captions</a>
@@ -225,9 +228,9 @@
     <h3>How it works</h3>
     <p>Code block enhancement is a two-part pipeline — a build-time filter and a client-side script — that work together to inject the toolbar without touching the Hexo renderer output.</p>
 
-    <p><strong>Build time</strong> — <code>scripts/helpers.js</code> registers an <code>after_render:html</code> filter that runs on every generated HTML page after Hexo's renderer finishes. It scans for <code>&lt;figure class="highlight lang"&gt;</code> elements (the standard Hexo highlight output) and injects a <code>data-lang="lang"</code> attribute onto each one. This attribute is what makes the language label possible in CSS using <code>attr()</code>, and it also gives the JS a reliable hook to read the language name.</p>
+    <p><strong>Build time</strong> — <code>scripts/helpers.js</code> registers an <code>after_render:html</code> filter that runs on every generated HTML page after Hexo's renderer finishes. It scans for <code>&lt;figure class="highlight lang"&gt;</code> elements (the standard Hexo highlight output) and injects a <code>data-lang="lang"</code> attribute onto each one. This attribute is what makes the language label possible in CSS using <code>attr()</code>, and it also gives the JS a reliable hook to read the language name. At the same time the filter checks whether the first line of the code block is a filename comment (<code>// filename:</code>, <code># filename:</code>, or <code>/* filename: … */</code>); if so it strips the comment from the displayed code and adds a <code>data-filename</code> attribute to the figure — see <a href="writing.html#code-filename">Code filename label</a>.</p>
 
-    <p><strong>Client side</strong> — <code>source/js/copy-code.js</code> runs on <code>DOMContentLoaded</code> and queries every <code>figure.highlight</code>. For each one it injects a <code>.code-toolbar</code> flex div into the top-right corner containing a language label (reads <code>data-lang</code>) and a copy button. The copy handler targets <code>td.code</code> specifically — not the entire figure — to exclude the gutter line-number column from the copied text.</p>
+    <p><strong>Client side</strong> — <code>source/js/copy-code.js</code> runs on <code>DOMContentLoaded</code> and queries every <code>figure.highlight</code>. For each one it injects a <code>.code-toolbar</code> flex div into the top-right corner. The toolbar contains, left to right: an optional <code>.code-filename-label</code> (if <code>data-filename</code> is set), the language label (reads <code>data-lang</code>), and the copy button. The copy handler targets <code>td.code</code> specifically — not the entire figure — to exclude the gutter line-number column from the copied text.</p>
 
     <p>The clipboard write uses <code>navigator.clipboard.writeText()</code> as the primary path. For non-HTTPS contexts (local preview over HTTP) where the Clipboard API is unavailable, it falls back to <code>document.execCommand('copy')</code> via a hidden <code>&lt;textarea&gt;</code>.</p>
 
