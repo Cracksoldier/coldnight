@@ -353,12 +353,15 @@ categories: [Dev]
 tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
 excerpt: "Override the auto-excerpt shown on post cards."
+updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" in post metadata when it differs from date
 pinned: true                     # optional; promotes post to featured hero on the index page
 series: My Series Name           # optional; groups post into a numbered series nav strip
 ---
 ```
 
 `<!-- more -->` in the post body also sets the excerpt boundary.
+
+**`updated:` and file mtime**: Hexo always populates `page.updated` — it defaults to the file's mtime when not set in front-matter. On a fresh `git clone`, all mtimes reflect the clone timestamp, which will differ from `date:` and trigger the "↻ Updated" badge on every post. Always set `updated:` explicitly in front-matter when you want to surface a revision date; do not rely on mtime.
 
 ## Theme configuration
 
