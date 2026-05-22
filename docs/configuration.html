@@ -48,6 +48,7 @@
       <a href="#config-series">Series posts</a>
       <a href="#config-permalink-button">Permalink button</a>
       <a href="#config-epub">ePub export</a>
+      <a href="#config-pdf-viewer">PDF viewer</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
       <a href="#config-keyboard-nav">Keyboard navigation</a>
@@ -452,6 +453,12 @@
           <td>Show an "Export as ePub" download icon button in the post metadata row. Clicking it generates a valid EPUB 3 file in the browser and triggers a download — no server required. Set to <code>false</code> to hide it and skip loading JSZip. See <a href="#config-epub">ePub export</a>.</td>
         </tr>
         <tr>
+          <td class="opt-key">pdf_viewer</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Load <code>pdf-viewer.js</code> on post pages to enable the <code>{% pdf %}</code> tag's modal preview. Set to <code>false</code> to prevent the script from loading. See <a href="#config-pdf-viewer">PDF viewer</a>.</td>
+        </tr>
+        <tr>
           <td class="opt-key">series</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
@@ -698,6 +705,28 @@
     </ul>
     <p>The file is downloaded as <code>&lt;slug&gt;.epub</code>. A success toast confirms the download; an error toast appears if ZIP generation fails. The button is disabled while building to prevent double-clicks.</p>
     <p><strong>Dependencies</strong> — JSZip v3.10.1 is vendored at <code>source/vendor/jszip/jszip.min.js</code> (~100 KB, loaded with <code>defer</code> only when <code>epub_export</code> is enabled). The feature only appears on post pages; archive, tag, and category pages are unaffected.</p>
+
+    <hr>
+
+    <!-- PDF viewer -->
+    <h2 id="config-pdf-viewer">PDF viewer</h2>
+    <p>When <code>pdf_viewer: true</code>, <code>source/js/pdf-viewer.js</code> is loaded deferred on all post pages. The script exits immediately if the page contains no <code>.pdf-card</code> elements, so there is no cost on posts that don't use the <code>{% pdf %}</code> tag. PDF.js itself is not bundled — it is imported dynamically from jsDelivr on the first click.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">pdf_viewer</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Load <code>pdf-viewer.js</code> on post pages. Set to <code>false</code> to prevent the script from loading if you don't use the <code>{% pdf %}</code> tag and want to eliminate the script tag entirely.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">pdf_viewer</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <p>See the <a href="writing.html#tag-pdf">{% pdf %} tag</a> documentation for usage and examples.</p>
 
     <hr>
 

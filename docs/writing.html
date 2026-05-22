@@ -65,6 +65,7 @@
       <a href="#tag-spoiler">{% spoiler %}</a>
       <a href="#tag-download">{% download %}</a>
       <a href="#tag-video">{% video %}</a>
+      <a href="#tag-pdf">{% pdf %}</a>
       <a href="#code-filename">Code filename label</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -511,6 +512,53 @@ function binarySearch(arr, target) {
 <span class="kw">&lt;/figure&gt;</span></code></pre>
 
     <p>Styles live in <code>_components.scss</code> under <code>// ─── Video embed</code>. The <code>figcaption</code> style is inherited from the existing <code>.post-body figcaption</code> rule in <code>_typography.scss</code> — no extra caption CSS is needed.</p>
+
+    <hr>
+
+    <!-- Tag: pdf -->
+    <h2 id="tag-pdf">{% pdf %} tag</h2>
+    <p>Renders a clickable card that opens an in-page PDF preview modal powered by PDF.js. The modal supports page navigation, zoom (0.5×–3×), and a direct download link. PDF.js is loaded from CDN lazily — only on the first click, only on pages that contain a <code>{% pdf %}</code> tag.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">pdf</span> <span class="nb">path</span> <span class="pn">[</span><span class="nb">title words</span><span class="pn">]</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Argument</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">path</td><td>Yes</td><td>Root-relative or absolute URL to the PDF file.</td></tr>
+        <tr><td class="opt-key">title words</td><td>No</td><td>Display title shown on the card and in the modal header. All words after the path are joined with spaces. Defaults to the filename without the <code>.pdf</code> extension.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# Path only — title inferred from filename #}</span>
+<span class="pn">{%</span> <span class="kw">pdf</span> <span class="str">/files/report.pdf</span> <span class="pn">%}</span>
+
+<span class="cm">{# Explicit title #}</span>
+<span class="pn">{%</span> <span class="kw">pdf</span> <span class="str">/files/report.pdf</span> <span class="nb">Annual Report 2025</span> <span class="pn">%}</span></code></pre>
+
+    <h3>Modal controls</h3>
+    <table>
+      <thead><tr><th>Control</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>‹ / ›</td><td>Previous / next page</td></tr>
+        <tr><td>− / +</td><td>Zoom out / in (step 0.25×, range 0.5×–3×)</td></tr>
+        <tr><td>↓</td><td>Download the PDF file</td></tr>
+        <tr><td>× or Esc</td><td>Close the modal</td></tr>
+        <tr><td>Click outside</td><td>Close the modal</td></tr>
+        <tr><td>Enter / Space on card</td><td>Open the modal (keyboard accessible)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>pdf</code> as an inline Hexo tag (no body, no <code>{% endpdf %}</code>). It emits a <code>.pdf-card</code> div with <code>data-pdf-src</code> and <code>data-pdf-title</code> data attributes, a file icon, the title, and a "Click to preview" hint.</p>
+    <p><code>source/js/pdf-viewer.js</code> is loaded deferred on all post pages when <code>pdf_viewer: true</code>. At <code>DOMContentLoaded</code> it exits immediately if no <code>.pdf-card</code> elements exist. On first card click it dynamically imports <code>pdfjs-dist@4</code> from jsDelivr, then opens a lazily-created native <code>&lt;dialog&gt;</code> element and renders the first page onto a <code>&lt;canvas&gt;</code>. A <code>loadSeq</code> counter prevents stale async callbacks from overwriting state when the user opens multiple cards in quick succession.</p>
+    <p>Requires <code>pdf_viewer: true</code> in the theme config (the default). Styles live in <code>_components.scss</code> under <code>// ─── PDF viewer</code>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>PDF.js is loaded from <strong>jsDelivr CDN</strong> on first click — the page does not request it until a reader interacts with a PDF card. If you need fully offline or self-hosted delivery, vendor the <code>pdfjs-dist</code> ESM build and update the import URL in <code>pdf-viewer.js</code>.</p>
+    </div>
 
     <hr>
 
