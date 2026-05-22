@@ -73,6 +73,10 @@ Uses the `hidden` attribute (not `display:none`) for accessible visibility. `per
 
 Hexo defaults `page.updated` to file mtime when not set. On a fresh `git clone` all mtimes reflect the clone time, triggering the "↻ Updated" badge on every post. Always set `updated:` explicitly in front-matter when surfacing a revision date.
 
+### PDF viewer tag
+
+`{% pdf /path/to/file.pdf Optional Title %}` emits a `.pdf-card` div with `data-pdf-src` and `data-pdf-title` attributes. The JS (`pdf-viewer.js`) reads both from `dataset` — never query child elements for the title. The modal is a lazily-created native `<dialog>`; PDF.js is loaded from jsDelivr CDN on first click only.
+
 ### KaTeX false positives
 
 `$...$` matches any two dollar signs on the same line. Prose containing currency amounts (e.g. `$50`) can accidentally trigger math rendering. Escape with `\$`.
@@ -120,5 +124,6 @@ series: My Series Name           # optional; groups post into a numbered series 
 | `reading_time: false` | Removes reading-time estimates everywhere |
 | `lightgallery.enabled: false` | Removes all LightGallery CDN requests |
 | `code.copy_button: false` | Disables copy-to-clipboard on code blocks |
+| `pdf_viewer: false` | Prevents `pdf-viewer.js` from loading on post pages |
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |

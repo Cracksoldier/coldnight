@@ -196,6 +196,14 @@ image_captions: true
 
 Standalone images with non-empty `alt` text are automatically wrapped in `<figure><figcaption>` at build time. The alt text becomes the visible caption below the image.
 
+## PDF viewer
+
+```yaml
+pdf_viewer: true
+```
+
+Loads a lightweight PDF preview script on post pages. Use the `{% pdf %}` tag to embed a clickable card in a post — clicking it opens a modal that renders the document via PDF.js (loaded lazily from CDN on first click). Supports page navigation, zoom, and direct download. Set `false` to prevent the script from loading entirely.
+
 ## External links
 
 ```yaml
@@ -298,6 +306,20 @@ Renders a styled download button. Add `external` at the end to badge links hoste
 {% download https://example.com/file.zip My File external %}
 ```
 {% endraw %}
+
+### pdf
+
+Renders a clickable card that opens an in-page PDF preview modal. The first argument is the file path; everything after it is the display title (defaults to the filename without the `.pdf` extension).
+
+{% raw %}
+```
+{% pdf /files/report.pdf Annual Report 2025 %}
+```
+{% endraw %}
+
+Clicking the card loads PDF.js from CDN (once, lazily) and renders the document on a canvas. Controls: previous/next page, zoom out/in (0.5×–3×), download, and close. The modal is keyboard-accessible — `Esc` closes it; the card responds to `Enter` and `Space`.
+
+Requires `pdf_viewer: true` in the theme config (the default).
 
 ---
 
