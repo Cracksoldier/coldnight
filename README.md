@@ -2,7 +2,7 @@
 
 A dark, minimal [Hexo](https://hexo.io) theme built for developers.
 
-Grid layout · LightGallery · full-text search · Mermaid diagrams · KaTeX math · polished code blocks — all without a framework.
+Grid layout · LightGallery · full-text search · Mermaid diagrams · KaTeX math · PDF preview · polished code blocks — all without a framework.
 
 **[Live Demo](https://cracksoldier.github.io/coldnight-demo/) · [Documentation](https://cracksoldier.github.io/coldnight/)**
 
@@ -23,7 +23,8 @@ Grid layout · LightGallery · full-text search · Mermaid diagrams · KaTeX mat
 | ∑ KaTeX math | `$...$` and `$$...$$` rendered at build time — zero runtime JS |
 | 🔁 Related posts | Build-time tag & category scoring surfaces the 3 most relevant posts |
 | 🏷️ Archive filter chips | Client-side category/tag pills on the archive page |
-| 🔌 Tag plugins | `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% gallery %}`, `{% video %}` |
+| 📄 PDF preview | `{% pdf %}` tag opens a PDF.js modal with page navigation, zoom, and download |
+| 🔌 Tag plugins | `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% gallery %}`, `{% video %}`, `{% pdf %}` |
 | 🔗 Open Graph & SEO | Full `og:*`, Twitter Card, and canonical tags |
 | 📥 ePub export | Assembles a valid EPUB 3 archive in the browser via JSZip |
 | ↗ External link indicator | Auto-injects `target="_blank"` and a subtle ↗ icon on external links |
@@ -99,6 +100,7 @@ social:
   share: false   # X/Twitter + LinkedIn + copy-link in post footer
 
 epub_export: true
+pdf_viewer: true
 ```
 
 See the [full configuration reference](https://cracksoldier.github.io/coldnight/configuration.html) for all options.

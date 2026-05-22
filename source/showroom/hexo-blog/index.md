@@ -6,7 +6,7 @@ layout: project
 date: 2026-05-01
 ---
 
-A personal blog built with Hexo 8 and the coldnight dark theme. Features include a 3-column post grid, full-text search, LightGallery image viewer, KaTeX math rendering, Mermaid diagram support, and ePub export.
+A personal blog built with Hexo 8 and the coldnight dark theme. Features include a 3-column post grid, full-text search, LightGallery image viewer, KaTeX math rendering, Mermaid diagram support, PDF preview, and ePub export.
 
 ## Stack
 
@@ -20,4 +20,5 @@ A personal blog built with Hexo 8 and the coldnight dark theme. Features include
 - Dark, minimal design with configurable sidebar
 - Post grid with reading-time estimates and cover images
 - Keyboard navigation and accessibility features
-- Tag plugin ecosystem: `{% gallery %}`, `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% download %}`, `{% video %}`
+- Tag plugin ecosystem: `{% gallery %}`, `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% download %}`, `{% video %}`, `{% pdf %}`
+- In-page PDF preview via PDF.js — lazy-loaded modal with page navigation and zoom
