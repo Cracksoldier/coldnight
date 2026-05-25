@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## What this repo is
+
+This is the **example/demo site** for the coldnight Hexo theme. Content lives here (`source/`); the theme lives in a separate repository consumed as a git submodule at `themes/coldnight/`.
+
+**Theme repo:** `github.com/Cracksoldier/coldnight-theme` — theme CLAUDE.md is at `themes/coldnight/CLAUDE.md`.
+
 ## Commands
 
 ```bash
@@ -26,79 +32,51 @@ After `hexo clean`, always run `hexo generate` or `hexo server` before inspectin
 
 ## Architecture
 
-Hexo static site using the custom **coldnight** theme at `themes/coldnight/`. Posts from `source/_posts/` → EJS templates → static HTML in `public/`.
+Hexo static site using the **coldnight** theme (git submodule at `themes/coldnight/`). Posts from `source/_posts/` → EJS templates → static HTML in `public/`.
 
 ```
-themes/coldnight/
-├── _config.yml          ← theme settings (all user-facing knobs live here)
-├── layout/
-│   ├── _partial/        ← reusable fragments included via partial()
-│   │   └── widgets/     ← sidebar widgets (recent-posts, tag-cloud, archive, about, toc)
-│   └── *.ejs            ← one file per Hexo page type
-├── source/
-│   ├── css/             ← SCSS source; compiled by hexo-renderer-dartsass
-│   └── js/              ← vanilla JS; copied verbatim to public/js/
-└── scripts/
-    └── helpers.js       ← Hexo helper + tag plugin registrations
+source/
+├── _posts/          ← blog posts (Markdown)
+├── _data/           ← YAML data files (e.g. links.yml)
+├── showroom/        ← one directory per showroom project
+│   └── <slug>/
+│       └── index.md
+├── about/
+└── links/
+themes/coldnight/    ← git submodule (do not edit here; commit to theme repo)
 ```
 
-## Rules and gotchas
+## Submodule workflow
 
-### CSS
+The theme is a git submodule — changes to theme files must be committed inside `themes/coldnight/` and pushed to the theme repo separately.
 
-- Never hardcode color values in partials — always reference a variable from `_variables.scss`.
-- `$font-sans` and `$font-mono` are **unquoted** SCSS lists. Wrapping them in quotes causes the browser to treat the entire comma-separated value as one unrecognised font name.
+```bash
+# Pull latest theme changes
+git submodule update --remote themes/coldnight
 
-### Page shells
+# After updating, bump the pointer in the site repo
+git add themes/coldnight
+git commit -m "chore: update theme submodule"
 
-- **Two-column** (`post`, `index`): `.page-wrapper` with CSS Grid (`65fr 35fr`), `.main-content` + `.sidebar`.
-- **Full-width** (`archive`, `tag`, `category`, `page`, `showroom`, `project`, `links`): `.archive-wrapper`, `max-width: 1100px`. No sidebar.
-- Both need `flex: 1` because `body` is `display: flex; flex-direction: column; min-height: 100vh`.
+# When cloning this repo fresh
+git clone --recurse-submodules <url>
+# or after a plain clone
+git submodule update --init
+```
 
-### EJS
-
-- `post-card.ejs` expects a local variable — always call it as `partial('_partial/post-card', { post })`.
-- Cover image `src` must use `<%- url_for(coverImg) %>`, never `<%= coverImg %>` — required for subdirectory deployments.
-- The tag/category page accent colour uses `<span class="page-header__accent">` — never an inline `style=`.
-
-### Showroom generator
-
-The `layout` key in each route object returned by the showroom generator must be at the **top level**, not inside `data`. Hexo uses it to select the EJS template; inside `data` it serialises to JSON instead.
-
-The generator paginates at 9 projects per page, emitting `showroom/index.html` (page 1) and `showroom/page/N/index.html` for subsequent pages.
-
-### Showroom AI-assisted badge
-
-Add `ai_assisted: true` (bare YAML boolean — never a string or integer) to a project's front-matter to show a blue pill badge on the card. The template uses a strict `=== true` check — `!!` coercion must not be used because truthy strings like `"no"` or `"false"` would be misclassified.
-
-### Archive filter chips
-
-Uses the `hidden` attribute (not `display:none`) for accessible visibility. `per_page: 0` on archive/tag/category guarantees all posts are in `page.posts` — required for reliable chip data collection.
+## Gotchas
 
 ### `updated:` front-matter
 
 Hexo defaults `page.updated` to file mtime when not set. On a fresh `git clone` all mtimes reflect the clone time, triggering the "↻ Updated" badge on every post. Always set `updated:` explicitly in front-matter when surfacing a revision date.
 
-### PDF viewer tag
-
-`{% pdf /path/to/file.pdf Optional Title %}` emits a `.pdf-card` div with `data-pdf-src` and `data-pdf-title` attributes. The JS (`pdf-viewer.js`) reads both from `dataset` — never query child elements for the title. The modal is a lazily-created native `<dialog>`; PDF.js is loaded from jsDelivr CDN on first click only.
-
 ### KaTeX false positives
 
 `$...$` matches any two dollar signs on the same line. Prose containing currency amounts (e.g. `$50`) can accidentally trigger math rendering. Escape with `\$`.
 
-## Showroom project front-matter
+### Archive filter chips
 
-```yaml
----
-title: "Project Title"
-subtitle: "Short tagline"           # shown on card hover and project page
-cover_image: /images/showroom/x.png
-layout: project                     # required — routes to project.ejs
-date: 2026-01-01                    # controls sort order (newest first)
-ai_assisted: true                   # optional; bare boolean only — never "true", "yes", or 1
----
-```
+`per_page: 0` on archive/tag/category in `_config.yml` guarantees all posts are in `page.posts` — required for reliable chip data collection. Do not change this.
 
 ## Post front-matter
 
@@ -118,6 +96,21 @@ series: My Series Name           # optional; groups post into a numbered series 
 ```
 
 `<!-- more -->` in the post body also sets the excerpt boundary.
+
+## Showroom project front-matter
+
+Each project lives at `source/showroom/<slug>/index.md`:
+
+```yaml
+---
+title: "Project Title"
+subtitle: "Short tagline"           # shown on card hover and project page
+cover_image: /images/showroom/x.png
+layout: project                     # required — routes to project.ejs
+date: 2026-01-01                    # controls sort order (newest first)
+ai_assisted: true                   # optional; bare boolean only — never "true", "yes", or 1
+---
+```
 
 ## Theme configuration (`themes/coldnight/_config.yml`)
 
