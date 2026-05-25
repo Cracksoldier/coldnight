@@ -114,6 +114,20 @@ search:
   field: post
   content: true
 
+theme_config:
+  navbar:
+    links:
+      - name: Home
+        url: /
+      - name: Archive
+        url: /archives
+      - name: Links
+        url: /links
+      - name: Showroom
+        url: /showroom
+      - name: About
+        url: /about
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
