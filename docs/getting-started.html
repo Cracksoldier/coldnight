@@ -266,21 +266,23 @@ npm install</code></pre>
 
     <!-- Quick start -->
     <h2 id="quick-start">Quick start</h2>
-    <p>Here is the minimal <code>themes/coldnight/_config.yml</code> you need to get a working site:</p>
-<pre><code><span class="nb">navbar</span><span class="pn">:</span>
-  <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>
-  <span class="nb">links</span><span class="pn">:</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+    <p>Theme defaults are already reasonable. The only thing most sites need is a site name and any optional overrides — add them to your site's <code>_config.yml</code> under <code>theme_config:</code>:</p>
+<pre><code><span class="nb">theme_config</span><span class="pn">:</span>
+  <span class="nb">navbar</span><span class="pn">:</span>
+    <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>
+    <span class="nb">links</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
 
-<span class="nb">sidebar</span><span class="pn">:</span>
-  <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>
+  <span class="nb">sidebar</span><span class="pn">:</span>
+    <span class="nb">position</span><span class="pn">:</span> <span class="val">right</span>
 
-<span class="nb">lightgallery</span><span class="pn">:</span>
-  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>
+  <span class="nb">lightgallery</span><span class="pn">:</span>
+    <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>
 
-<span class="nb">code</span><span class="pn">:</span>
-  <span class="nb">copy_button</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+  <span class="nb">code</span><span class="pn">:</span>
+    <span class="nb">copy_button</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+    <p>The theme ships with <strong>Home</strong>, <strong>Archive</strong>, and <strong>About</strong> in the navbar by default. <strong>Links</strong> and <strong>Showroom</strong> are opt-in — add them to <code>navbar.links</code> only after you've created those pages (see the setup sections below).</p>
 
     <hr>
 
@@ -304,12 +306,14 @@ npm install</code></pre>
   <span class="nb">abstract</span><span class="pn">:</span> <span class="str">"One or two sentence description."</span></code></pre>
       </li>
       <li>
-        <strong>Add the navbar link</strong> in <code>themes/coldnight/_config.yml</code>:
-<pre><code><span class="nb">navbar</span><span class="pn">:</span>
-  <span class="nb">links</span><span class="pn">:</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Links</span><span class="pn">,</span>   <span class="nb">url</span><span class="pn">:</span> <span class="str">/links</span> <span class="pn">}</span></code></pre>
+        <strong>Add the navbar link</strong> in your site's <code>_config.yml</code> under <code>theme_config:</code>:
+<pre><code><span class="nb">theme_config</span><span class="pn">:</span>
+  <span class="nb">navbar</span><span class="pn">:</span>
+    <span class="nb">links</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>    <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Links</span><span class="pn">,</span>   <span class="nb">url</span><span class="pn">:</span> <span class="str">/links</span> <span class="pn">}</span></code></pre>
+        <p>Do not edit <code>themes/coldnight/_config.yml</code> directly — it's a git submodule shared by all users. Always override through <code>theme_config:</code> in your site config.</p>
       </li>
     </ol>
 
@@ -363,12 +367,14 @@ Write the project description here in Markdown.</code></pre>
         <strong>Add the cover image</strong> to <code>source/images/showroom/</code>. Any image format works; square crops (1:1) look best since the card clips to that ratio, but the full image is shown on the project page at 16:9.
       </li>
       <li>
-        <strong>Add the navbar link</strong> in <code>themes/coldnight/_config.yml</code>:
-<pre><code><span class="nb">navbar</span><span class="pn">:</span>
-  <span class="nb">links</span><span class="pn">:</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>     <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span>  <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
-    <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Showroom</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/showroom</span> <span class="pn">}</span></code></pre>
+        <strong>Add the navbar link</strong> in your site's <code>_config.yml</code> under <code>theme_config:</code>:
+<pre><code><span class="nb">theme_config</span><span class="pn">:</span>
+  <span class="nb">navbar</span><span class="pn">:</span>
+    <span class="nb">links</span><span class="pn">:</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span><span class="pn">,</span>     <span class="nb">url</span><span class="pn">:</span> <span class="str">/</span> <span class="pn">}</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Archive</span><span class="pn">,</span>  <span class="nb">url</span><span class="pn">:</span> <span class="str">/archives</span> <span class="pn">}</span>
+      <span class="pn">-</span> <span class="pn">{</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Showroom</span><span class="pn">,</span> <span class="nb">url</span><span class="pn">:</span> <span class="str">/showroom</span> <span class="pn">}</span></code></pre>
+        <p>Do not edit <code>themes/coldnight/_config.yml</code> directly — it's a git submodule shared by all users. Always override through <code>theme_config:</code> in your site config.</p>
       </li>
     </ol>
 

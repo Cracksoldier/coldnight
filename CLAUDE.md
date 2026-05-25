@@ -112,6 +112,23 @@ ai_assisted: true                   # optional; bare boolean only — never "tru
 ---
 ```
 
+## Navbar links (opt-in)
+
+The theme default includes only `Home`, `Archive`, and `About`. `Links` and `Showroom` are **opt-in** — add them via `theme_config:` in the site's `_config.yml` when the corresponding pages exist:
+
+```yaml
+theme_config:
+  navbar:
+    links:
+      - { name: Home,     url: / }
+      - { name: Archive,  url: /archives }
+      - { name: Links,    url: /links }
+      - { name: Showroom, url: /showroom }
+      - { name: About,    url: /about }
+```
+
+This site's `_config.yml` already has this override. Do not add Links/Showroom to the theme's own `_config.yml` — it's a submodule shared by all users.
+
 ## Theme configuration (`themes/coldnight/_config.yml`)
 
 | Key | Effect |
