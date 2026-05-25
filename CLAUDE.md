@@ -65,13 +65,11 @@ themes/coldnight/
 
 The `layout` key in each route object returned by the showroom generator must be at the **top level**, not inside `data`. Hexo uses it to select the EJS template; inside `data` it serialises to JSON instead.
 
-The generator emits a single `showroom/index.html` with all projects — no pagination. This is required so the client-side filter can cover the full set.
+The generator paginates at 9 projects per page, emitting `showroom/index.html` (page 1) and `showroom/page/N/index.html` for subsequent pages.
 
-### Showroom AI-assisted badge and filter
+### Showroom AI-assisted badge
 
-Add `ai_assisted: true` (bare YAML boolean — never a string or integer) to a project's front-matter to mark it as AI-assisted. The card shows a blue pill badge and filter chips (`All / AI-assisted / Human-built`) appear when both kinds of project exist. The template uses strict `=== true` / `!== true` checks throughout — `!!` coercion must not be used here because truthy strings like `"no"` or `"false"` would be misclassified.
-
-The filter chips use `.showroom-filter-chip` / `.showroom-filter-chip--active` (CSS in `_components.scss`). This is intentionally separate from `.archive-filter-chip` used on archive pages — the two scripts must not share class names.
+Add `ai_assisted: true` (bare YAML boolean — never a string or integer) to a project's front-matter to show a blue pill badge on the card. The template uses a strict `=== true` check — `!!` coercion must not be used because truthy strings like `"no"` or `"false"` would be misclassified.
 
 ### Archive filter chips
 
