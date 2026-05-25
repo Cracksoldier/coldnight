@@ -65,6 +65,14 @@ themes/coldnight/
 
 The `layout` key in each route object returned by the showroom generator must be at the **top level**, not inside `data`. Hexo uses it to select the EJS template; inside `data` it serialises to JSON instead.
 
+The generator emits a single `showroom/index.html` with all projects — no pagination. This is required so the client-side filter can cover the full set.
+
+### Showroom AI-assisted badge and filter
+
+Add `ai_assisted: true` (bare YAML boolean — never a string or integer) to a project's front-matter to mark it as AI-assisted. The card shows a blue pill badge and filter chips (`All / AI-assisted / Human-built`) appear when both kinds of project exist. The template uses strict `=== true` / `!== true` checks throughout — `!!` coercion must not be used here because truthy strings like `"no"` or `"false"` would be misclassified.
+
+The filter chips use `.showroom-filter-chip` / `.showroom-filter-chip--active` (CSS in `_components.scss`). This is intentionally separate from `.archive-filter-chip` used on archive pages — the two scripts must not share class names.
+
 ### Archive filter chips
 
 Uses the `hidden` attribute (not `display:none`) for accessible visibility. `per_page: 0` on archive/tag/category guarantees all posts are in `page.posts` — required for reliable chip data collection.
@@ -80,6 +88,19 @@ Hexo defaults `page.updated` to file mtime when not set. On a fresh `git clone` 
 ### KaTeX false positives
 
 `$...$` matches any two dollar signs on the same line. Prose containing currency amounts (e.g. `$50`) can accidentally trigger math rendering. Escape with `\$`.
+
+## Showroom project front-matter
+
+```yaml
+---
+title: "Project Title"
+subtitle: "Short tagline"           # shown on card hover and project page
+cover_image: /images/showroom/x.png
+layout: project                     # required — routes to project.ejs
+date: 2026-01-01                    # controls sort order (newest first)
+ai_assisted: true                   # optional; bare boolean only — never "true", "yes", or 1
+---
+```
 
 ## Post front-matter
 
