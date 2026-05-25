@@ -4,6 +4,7 @@ subtitle: "Static site powered by the coldnight theme"
 cover_image: /images/showroom/hexo-blog.png
 layout: project
 date: 2026-05-01
+ai_assisted: true
 ---
 
 A personal blog built with Hexo 8 and the coldnight dark theme. Features include a 3-column post grid, full-text search, LightGallery image viewer, KaTeX math rendering, Mermaid diagram support, PDF preview, and ePub export.
