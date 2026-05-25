@@ -368,7 +368,7 @@
         <a href="getting-started.html">Docs</a>
         <a href="configuration.html">Config</a>
         <a href="https://cracksoldier.github.io/coldnight-demo/" target="_blank" rel="noopener noreferrer">Demo</a>
-        <a href="https://github.com/Cracksoldier/coldnight">GitHub</a>
+        <a href="https://github.com/Cracksoldier/coldnight-theme">GitHub</a>
       </div>
     </div>
   </nav>
@@ -384,7 +384,7 @@
     <div class="hero-ctas">
       <a href="getting-started.html" class="btn btn-primary">Get started →</a>
       <a href="https://cracksoldier.github.io/coldnight-demo/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">View Demo →</a>
-      <a href="https://github.com/Cracksoldier/coldnight" class="btn btn-secondary">View on GitHub</a>
+      <a href="https://github.com/Cracksoldier/coldnight-theme" class="btn btn-secondary">View on GitHub</a>
     </div>
     <div class="hero-tags">
       <span class="tag tag-blue">Hexo 8</span>
@@ -491,7 +491,7 @@
       <div class="feature-card"><div class="icon">🖼️</div><h4>Lazy image loading</h4><p>All body images automatically receive <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">loading="lazy"</code> at build time. Images already carrying the attribute (cover, gallery thumbnails) are skipped.</p></div>
       <div class="feature-card"><div class="icon">▶️</div><h4>Video embed tag</h4><p><code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">{% video %}</code> embeds YouTube, Vimeo, or direct video files in a responsive 16:9 container with an optional caption. Unrecognised URLs render as plain links.</p></div>
       <div class="feature-card"><div class="icon">📁</div><h4>Code filename label</h4><p>Add <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">// filename: path/to/file</code> as the first line of any code block. The comment is stripped from displayed code and shown as a chip in the toolbar next to the language label.</p></div>
-      <div class="feature-card"><div class="icon">🖼️</div><h4>Showroom page</h4><p>Paginated project portfolio at <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">/showroom/</code>. 3×3 grid of 1:1 cards — gradient overlay, always-visible title, subtitle fades in on hover. Each project has its own page.</p></div>
+      <div class="feature-card"><div class="icon">🖼️</div><h4>Showroom page</h4><p>Paginated project portfolio at <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">/showroom/</code>. 3×3 grid of 1:1 cards — gradient overlay, always-visible title, hover subtitle. Optional <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">ai_assisted: true</code> badge.</p></div>
       <div class="feature-card"><div class="icon">🗂️</div><h4>Links page</h4><p>Curated resource directory at <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">/links/</code>. CSS column-count masonry, optional thumbnails, URL chips. Data-driven from <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">_data/links.yml</code> — no generator, no per-link routes.</p></div>
     </div>
   </section>
@@ -500,7 +500,7 @@
   <section class="page">
     <div class="install">
       <p>Install in seconds:</p>
-      <code>git clone https://github.com/Cracksoldier/coldnight themes/coldnight</code>
+      <code>git submodule add https://github.com/Cracksoldier/coldnight-theme.git themes/coldnight</code>
     </div>
   </section>
 

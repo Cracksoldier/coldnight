@@ -227,12 +227,9 @@ cd my-blog
 npm install</code></pre>
       </li>
       <li>
-        <strong>Copy the theme</strong> into the <code>themes/</code> directory:
-<pre><code><span class="cm"># Option A — clone directly</span>
-git clone https://github.com/&lt;your-user&gt;/coldnight themes/coldnight
-
-<span class="cm"># Option B — copy the folder manually</span>
-cp -r /path/to/coldnight themes/coldnight</code></pre>
+        <strong>Add the theme</strong> as a git submodule:
+<pre><code>git submodule add https://github.com/Cracksoldier/coldnight-theme.git themes/coldnight</code></pre>
+        <p>Anyone cloning your site later will need to run <code>git clone --recurse-submodules &lt;url&gt;</code>, or <code>git submodule update --init</code> after a plain clone.</p>
       </li>
       <li>
         <strong>Install required renderers</strong> (if not already present):
@@ -411,6 +408,7 @@ Write freely using any Markdown: headings, lists, code blocks, tables,
         <tr><td class="opt-key">cover_image</td><td>Yes</td><td>Path to the cover image. Clipped to 1:1 on the card; shown at 16:9 on the project page.</td></tr>
         <tr><td class="opt-key">layout</td><td>Yes</td><td>Must be <code>project</code> — routes the page to <code>project.ejs</code></td></tr>
         <tr><td class="opt-key">date</td><td>Yes</td><td>Controls sort order on the grid (newest first)</td></tr>
+        <tr><td class="opt-key">ai_assisted</td><td>No</td><td>Bare boolean <code>true</code> — shows a blue "AI-assisted" pill badge on the card. Never use a string value.</td></tr>
       </tbody>
     </table>
 
