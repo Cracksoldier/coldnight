@@ -89,6 +89,7 @@ tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
 cover_caption: "Photo by Jane Doe"  # optional; wraps cover in <figure><figcaption>
 excerpt: "Override the auto-excerpt shown on post cards."
+description: "Custom og:description / meta description."  # optional; overrides excerpt for OG/SEO
 updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" when differs from date
 pinned: true                     # optional; promotes post to featured hero on index page 1
 series: My Series Name           # optional; groups post into a numbered series nav strip
@@ -96,6 +97,20 @@ series: My Series Name           # optional; groups post into a numbered series 
 ```
 
 `<!-- more -->` in the post body also sets the excerpt boundary.
+
+## OpenGraph / social previews
+
+OG and Twitter Card meta tags are generated automatically in `themes/coldnight/layout/_partial/head.ejs` for every page. No plugin is needed.
+
+| OG tag | Source (in priority order) |
+|--------|---------------------------|
+| `og:title` | `page.title` → `config.title` |
+| `og:description` | `page.description` → `page.excerpt` (HTML-stripped) → `config.description` |
+| `og:image` | `page.cover_image` → `theme.cover.default` (absolute URL via `full_url_for`) |
+| `og:type` | `article` for posts, `website` for all other pages |
+| `og:url` | `page.permalink` → `config.url` |
+
+The site-wide fallback image lives at `source/images/og-default.jpg` (1200×630 px recommended). Set it via `theme_config.cover.default` in `_config.yml` so the submodule stays untouched.
 
 ## Showroom project front-matter
 
@@ -156,3 +171,4 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `pdf_viewer: false` | Prevents `pdf-viewer.js` from loading on post pages |
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
+| `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
