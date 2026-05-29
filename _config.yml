@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: coldnight demo
 subtitle: ''
-description: ''
+description: 'A demo site for the coldnight Hexo theme — clean, dark, and feature-rich.'
 keywords:
-author: John Doe
+author: Cracksoldier
 language: en
 timezone: ''
 
@@ -115,6 +115,8 @@ search:
   content: true
 
 theme_config:
+  cover:
+    default: /images/og-default.jpg
   navbar:
     links:
       - name: Home
