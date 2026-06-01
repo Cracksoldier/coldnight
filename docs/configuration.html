@@ -49,6 +49,7 @@
       <a href="#config-permalink-button">Permalink button</a>
       <a href="#config-epub">ePub export</a>
       <a href="#config-pdf-viewer">PDF viewer</a>
+      <a href="#config-model-viewer">3D model viewer</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
       <a href="#config-keyboard-nav">Keyboard navigation</a>
@@ -58,6 +59,7 @@
     <div class="nav-section">
       <div class="nav-section-label">Writing</div>
       <a href="writing.html#front-matter">Post front-matter</a>
+      <a href="writing.html#abstract">Abstract block</a>
       <a href="writing.html#footnotes">Footnotes</a>
       <a href="writing.html#tag-gallery">{% gallery %}</a>
       <a href="writing.html#tag-note">{% note %}</a>
@@ -66,6 +68,8 @@
       <a href="writing.html#tag-spoiler">{% spoiler %}</a>
       <a href="writing.html#tag-download">{% download %}</a>
       <a href="writing.html#tag-video">{% video %}</a>
+      <a href="writing.html#tag-pdf">{% pdf %}</a>
+      <a href="writing.html#tag-model">{% model %}</a>
       <a href="writing.html#code-filename">Code filename label</a>
       <a href="writing.html#mermaid">Mermaid diagrams</a>
       <a href="writing.html#math">KaTeX math</a>
@@ -727,6 +731,39 @@
 <pre><code><span class="nb">pdf_viewer</span><span class="pn">:</span> <span class="val">true</span></code></pre>
 
     <p>See the <a href="writing.html#tag-pdf">{% pdf %} tag</a> documentation for usage and examples.</p>
+
+    <hr>
+
+    <!-- 3D model viewer -->
+    <h2 id="config-model-viewer">3D model viewer</h2>
+    <p>Controls the <code>{% model %}</code> tag, which embeds an interactive Three.js WebGL canvas for GLB, GLTF, and STL files. Three.js and all required loaders are self-hosted under <code>source/vendor/three/</code> — no CDN requests. The scripts are only injected on post pages that use the tag.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">model_viewer.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the <code>{% model %}</code> tag. When <code>false</code>, the tag returns an empty string and no Three.js scripts are loaded on any page.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">model_viewer.background</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">#1a1a2e</td>
+          <td>Default canvas background colour. Applied as the Three.js scene background and as a CSS <code>style</code> override so the element shows the correct colour before the canvas is ready. Per-tag <code>bg=</code> overrides this value.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">model_viewer</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span>    <span class="val">true</span>
+  <span class="nb">background</span><span class="pn">:</span> <span class="str">"#1a1a2e"</span>   <span class="cm"># canvas background colour (any CSS colour value)</span></code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>See <a href="writing.html#tag-model">Writing — {% model %} tag</a> for syntax, attribute reference, and examples.</p>
+    </div>
 
     <hr>
 

@@ -57,6 +57,7 @@
     <div class="nav-section nav-section--active">
       <div class="nav-section-label">Writing</div>
       <a href="#front-matter">Post front-matter</a>
+      <a href="#abstract">Abstract block</a>
       <a href="#footnotes">Footnotes</a>
       <a href="#tag-gallery">{% gallery %}</a>
       <a href="#tag-note">{% note %}</a>
@@ -66,6 +67,7 @@
       <a href="#tag-download">{% download %}</a>
       <a href="#tag-video">{% video %}</a>
       <a href="#tag-pdf">{% pdf %}</a>
+      <a href="#tag-model">{% model %}</a>
       <a href="#code-filename">Code filename label</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -108,6 +110,7 @@
 <span class="nb">excerpt</span><span class="pn">:</span>        <span class="str">"Override the auto-excerpt shown on post cards."</span>
 <span class="nb">pinned</span><span class="pn">:</span>         <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
 <span class="nb">series</span><span class="pn">:</span>         <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
+<span class="nb">abstract</span><span class="pn">:</span>       <span class="str">"Short summary shown above the post body."</span>  <span class="cm"># optional; Markdown supported</span>
 <span class="pn">---</span></code></pre>
 
     <table>
@@ -123,6 +126,7 @@
         <tr><td class="opt-key">excerpt</td><td>Override the auto-excerpt shown on post cards and in <code>og:description</code>. If omitted, Hexo uses the text up to the first <code>&lt;!-- more --&gt;</code> tag, or the start of the post body.</td></tr>
         <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
         <tr><td class="opt-key">series</td><td>A string that groups this post with others sharing the same value. All matching posts appear in a numbered nav strip above the post body, sorted by date. See <a href="configuration.html#config-series">Series posts</a>.</td></tr>
+        <tr><td class="opt-key">abstract</td><td>A short summary rendered as a styled callout between the post header and body. Supports inline Markdown. See <a href="#abstract">Abstract block</a>.</td></tr>
       </tbody>
     </table>
 
@@ -134,6 +138,39 @@
     <div class="callout callout-tip">
       <span class="callout-icon">💡</span>
       <p>You can also use <code>&lt;!-- more --&gt;</code> anywhere in the post body to set the excerpt boundary instead of the front-matter <code>excerpt</code> field.</p>
+    </div>
+
+    <hr>
+
+    <!-- Abstract block -->
+    <h2 id="abstract">Abstract block</h2>
+    <p>Set <code>abstract:</code> in a post's front-matter to render a styled callout between the post header and the body. Useful for paper-style summaries, TL;DR lines, or any preamble you want visually set apart from the prose. Inline Markdown (bold, italic, code, links) is supported.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">---</span>
+<span class="nb">abstract</span><span class="pn">:</span> <span class="str">"This post covers **X**, **Y**, and **Z**. No prior knowledge of W required."</span>
+<span class="pn">---</span></code></pre>
+
+    <p>For multi-sentence abstracts use a YAML block scalar:</p>
+<pre><code><span class="pn">---</span>
+<span class="nb">abstract</span><span class="pn">:</span> <span class="pn">|</span>
+  <span class="str">This post explains how the build pipeline works end to end.</span>
+  <span class="str">We cover SCSS compilation, EJS rendering, and the post-render filter chain.</span>
+<span class="pn">---</span></code></pre>
+
+    <h3>How it works</h3>
+    <p>The <code>render_abstract</code> EJS helper (registered in <code>scripts/helpers.js</code>) passes the front-matter string through Hexo's synchronous Markdown renderer and returns the resulting HTML. <code>post.ejs</code> checks for <code>page.abstract</code> and, when present, includes <code>_partial/post-abstract.ejs</code> directly before the <code>.post-body</code> div. The partial emits:</p>
+
+<pre><code><span class="kw">&lt;aside</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"post-abstract"</span> <span class="nb">role</span><span class="pn">=</span><span class="str">"doc-abstract"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;span</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"post-abstract__label"</span><span class="kw">&gt;</span>Abstract<span class="kw">&lt;/span&gt;</span>
+  <span class="kw">&lt;div</span> <span class="nb">class</span><span class="pn">=</span><span class="str">"post-abstract__body"</span><span class="kw">&gt;</span><span class="cm">...rendered HTML...</span><span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/aside&gt;</span></code></pre>
+
+    <p>Posts without an <code>abstract:</code> field are unaffected — no element is rendered and no script is loaded. Styles live in <code>_components.scss</code> under <code>// ─── Post abstract</code>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>The abstract is separate from <code>excerpt:</code> — the excerpt drives post-card previews and <code>og:description</code>, while the abstract is only shown on the post page itself.</p>
     </div>
 
     <hr>
@@ -558,6 +595,52 @@ function binarySearch(arr, target) {
     <div class="callout callout-info">
       <span class="callout-icon">ℹ️</span>
       <p>PDF.js is loaded from <strong>jsDelivr CDN</strong> on first click — the page does not request it until a reader interacts with a PDF card. If you need fully offline or self-hosted delivery, vendor the <code>pdfjs-dist</code> ESM build and update the import URL in <code>pdf-viewer.js</code>.</p>
+    </div>
+
+    <hr>
+
+    <!-- Tag: model -->
+    <h2 id="tag-model">{% model %} tag</h2>
+    <p>Embeds an interactive 3D model viewer powered by Three.js. Supports GLB, GLTF, and STL files. The viewer renders in a WebGL canvas with orbit controls (drag to rotate, scroll to zoom, right-click to pan) and a reset button. Three.js is loaded lazily — only on posts that contain a <code>{% model %}</code> tag, and only the assets required to load the chosen file format.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/robot.glb"</span> <span class="pn">[</span><span class="nb">height</span><span class="pn">=</span><span class="str">"400px"</span><span class="pn">]</span> <span class="pn">[</span><span class="nb">bg</span><span class="pn">=</span><span class="str">"#1a1a2e"</span><span class="pn">]</span> <span class="pn">[</span><span class="nb">caption</span><span class="pn">=</span><span class="str">"…"</span><span class="pn">]</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Attribute</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">src</td><td>Yes</td><td>—</td><td>Root-relative or absolute URL to a <code>.glb</code>, <code>.gltf</code>, or <code>.stl</code> file.</td></tr>
+        <tr><td class="opt-key">height</td><td>No</td><td><code>400px</code></td><td>Canvas height. Accepts CSS length units: <code>px</code>, <code>em</code>, <code>rem</code>, <code>vh</code>, <code>vw</code>, <code>%</code>. Values containing other units or semicolons are rejected and fall back to <code>400px</code>.</td></tr>
+        <tr><td class="opt-key">bg</td><td>No</td><td><code>#1a1a2e</code></td><td>Canvas background colour. Accepts any CSS colour value. Defaults to the <code>model_viewer.background</code> config setting.</td></tr>
+        <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Optional caption rendered below the viewer. Plain text only (HTML-escaped).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# GLB file, default height and background #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/robot.glb"</span> <span class="pn">%}</span>
+
+<span class="cm">{# STL file with custom height and light background #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">height</span><span class="pn">=</span><span class="str">"500px"</span> <span class="nb">bg</span><span class="pn">=</span><span class="str">"#f0f0f0"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Bracket assembly"</span> <span class="pn">%}</span>
+
+<span class="cm">{# GLTF with a taller canvas #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/scene.gltf"</span> <span class="nb">height</span><span class="pn">=</span><span class="str">"60vh"</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>model</code> as an inline Hexo tag. It emits a <code>.model-viewer-wrap</code> container holding a <code>.model-viewer</code> div with <code>data-src</code>, <code>data-bg</code>, and an inline <code>style="height:…"</code>. The height value is validated against an allowlist regex (<code>/^\d+(\.\d+)?(px|em|rem|vh|vw|%)$/</code>) before interpolation — any value with disallowed characters falls back to <code>400px</code> to prevent CSS injection.</p>
+
+    <p>In <code>post.ejs</code>, if the rendered page content contains <code>class="model-viewer"</code>, a <code>&lt;script type="module"&gt;</code> is injected that imports Three.js r170 and the required loaders from the vendored files at <code>source/vendor/three/</code>, assigns them to <code>window.__THREE_VIEWER__</code>, and dispatches a <code>three-viewer-ready</code> event. A deferred <code>source/js/model-viewer.js</code> script reads <code>window.__THREE_VIEWER__</code> and initialises one viewer per <code>.model-viewer</code> element on the page.</p>
+
+    <p>The rAF render loop is paused via <code>IntersectionObserver</code> when the viewer scrolls out of the viewport and resumed when it re-enters — so off-screen viewers consume no CPU. <code>ResizeObserver</code> handles canvas resize using <code>entry.contentRect</code> to avoid forced reflows. Styles live in <code>_components.scss</code> under <code>// ─── Model viewer</code>. Configure the feature via <a href="configuration.html#config-model-viewer">model_viewer configuration</a>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Three.js and all loader files are self-hosted under <code>themes/coldnight/source/vendor/three/</code> — no CDN requests. The module scripts are only injected on posts that use <code>{% model %}</code>, so there is no performance cost on other pages.</p>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p>Set <code>model_viewer.enabled: false</code> in the theme config to disable the tag globally. The tag returns an empty string and no scripts are loaded. See <a href="configuration.html#config-model-viewer">model_viewer configuration</a>.</p>
     </div>
 
     <hr>

@@ -380,7 +380,7 @@
       Hexo Theme &nbsp;·&nbsp; v1.x &nbsp;·&nbsp; MIT License
     </div>
     <h1>coldnight</h1>
-    <p class="lead">A dark, minimal Hexo theme built for developers. Grid layout, LightGallery, full-text search, Mermaid diagrams, KaTeX math, and polished code blocks — all without a framework.</p>
+    <p class="lead">A dark, minimal Hexo theme built for developers. Grid layout, LightGallery, full-text search, Mermaid diagrams, KaTeX math, 3D model viewer, and polished code blocks — all without a framework.</p>
     <div class="hero-ctas">
       <a href="getting-started.html" class="btn btn-primary">Get started →</a>
       <a href="https://cracksoldier.github.io/coldnight-demo/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">View Demo →</a>
@@ -392,6 +392,7 @@
       <span class="tag tag-purple">LightGallery v2</span>
       <span class="tag tag-yellow">EJS + SCSS</span>
       <span class="tag tag-blue">Vanilla JS</span>
+      <span class="tag tag-purple">Three.js</span>
     </div>
   </section>
 
@@ -458,7 +459,7 @@
   <section class="page features">
     <div class="section-label">Features</div>
     <h2>Everything you need, nothing you don't</h2>
-    <p>31 features, zero runtime dependencies beyond Hexo itself.</p>
+    <p>33 features, zero runtime dependencies beyond Hexo itself.</p>
     <div class="feature-grid">
       <div class="feature-card"><div class="icon">🗃️</div><h4>Responsive post grid</h4><p>3 → 2 → 1 column responsive grid with cover images, reading-time estimates, and list-view mode.</p></div>
       <div class="feature-card"><div class="icon">⭐</div><h4>Featured post hero</h4><p>Add <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">pinned: true</code> to any post to promote it to a full-width hero above the grid.</p></div>
@@ -493,6 +494,8 @@
       <div class="feature-card"><div class="icon">📁</div><h4>Code filename label</h4><p>Add <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">// filename: path/to/file</code> as the first line of any code block. The comment is stripped from displayed code and shown as a chip in the toolbar next to the language label.</p></div>
       <div class="feature-card"><div class="icon">🖼️</div><h4>Showroom page</h4><p>Paginated project portfolio at <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">/showroom/</code>. 3×3 grid of 1:1 cards — gradient overlay, always-visible title, hover subtitle. Optional <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">ai_assisted: true</code> badge.</p></div>
       <div class="feature-card"><div class="icon">🗂️</div><h4>Links page</h4><p>Curated resource directory at <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">/links/</code>. CSS column-count masonry, optional thumbnails, URL chips. Data-driven from <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">_data/links.yml</code> — no generator, no per-link routes.</p></div>
+      <div class="feature-card"><div class="icon">📝</div><h4>Abstract block</h4><p>Add <code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">abstract:</code> to any post's front-matter to render a styled callout between the header and the post body. Supports inline Markdown. Pure build-time, zero JavaScript.</p></div>
+      <div class="feature-card"><div class="icon">🧊</div><h4>3D model viewer</h4><p><code style="font-size:0.8em;background:#21262d;padding:1px 5px;border-radius:3px">{% model %}</code> embeds a Three.js WebGL canvas for GLB, GLTF, and STL files. Orbit controls, reset button, viewport-gated rAF loop. Three.js loaded only on posts that use the tag.</p></div>
     </div>
   </section>
 
