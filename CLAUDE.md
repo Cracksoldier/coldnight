@@ -191,7 +191,7 @@ All parameters except `src` are optional:
 | Parameter | Default | Notes |
 |-----------|---------|-------|
 | `src` | — | Path to `.glb`, `.gltf`, or `.stl` file |
-| `height` | `400px` | CSS height of the viewer canvas |
+| `height` | `400px` | CSS height — allowlist-validated (`px\|em\|rem\|vh\|vw\|%` only) |
 | `bg` | from `model_viewer.background` | CSS colour for canvas background |
 | `caption` | — | Plain-text caption rendered below the viewer |
 
