@@ -93,6 +93,8 @@ description: "Custom og:description / meta description."  # optional; overrides 
 updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" when differs from date
 pinned: true                     # optional; promotes post to featured hero on index page 1
 series: My Series Name           # optional; groups post into a numbered series nav strip
+abstract: |                      # optional; styled summary block rendered before the post body
+  Supports **markdown** inline formatting.
 ---
 ```
 
@@ -172,3 +174,25 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
 | `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
+| `model_viewer.enabled: false` | Disables the Three.js 3D model viewer tag |
+| `model_viewer.background: "#1a1a2e"` | Canvas background colour for model viewer |
+
+## 3D model viewer
+
+Place `.glb` / `.stl` files under `source/models/` and embed them in any post:
+
+```
+{% model src="/models/foo.glb" %}
+{% model src="/models/bar.stl" height="500px" caption="FDM bracket v3" %}
+```
+
+All parameters except `src` are optional:
+
+| Parameter | Default | Notes |
+|-----------|---------|-------|
+| `src` | — | Path to `.glb`, `.gltf`, or `.stl` file |
+| `height` | `400px` | CSS height of the viewer canvas |
+| `bg` | from `model_viewer.background` | CSS colour for canvas background |
+| `caption` | — | Plain-text caption rendered below the viewer |
+
+Three.js (~680 KB) and loader scripts are only loaded on posts that contain a `{% model %}` tag. Vendor files live at `themes/coldnight/source/vendor/three/`.

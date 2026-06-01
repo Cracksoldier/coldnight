@@ -5,6 +5,7 @@ categories: [Development]
 tags: [mermaid, diagrams, documentation]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Embed flowcharts, sequence diagrams, ER diagrams, and more directly in Markdown using fenced mermaid code blocks — rendered as crisp SVGs at build time."
+abstract: "This post demonstrates **Mermaid** diagram support: flowcharts, sequence diagrams, and ER diagrams using fenced `mermaid` code blocks — rendered as inline SVGs."
 ---
 
 Mermaid lets you describe diagrams as text and renders them as SVG in the browser. No image files, no external tools — just a fenced code block with the `mermaid` language tag.
