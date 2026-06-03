@@ -613,6 +613,8 @@ function binarySearch(arr, target) {
         <tr><td class="opt-key">src</td><td>Yes</td><td>—</td><td>Root-relative or absolute URL to a <code>.glb</code>, <code>.gltf</code>, or <code>.stl</code> file.</td></tr>
         <tr><td class="opt-key">height</td><td>No</td><td><code>400px</code></td><td>Canvas height. Accepts CSS length units: <code>px</code>, <code>em</code>, <code>rem</code>, <code>vh</code>, <code>vw</code>, <code>%</code>. Values containing other units or semicolons are rejected and fall back to <code>400px</code>.</td></tr>
         <tr><td class="opt-key">bg</td><td>No</td><td><code>#1a1a2e</code></td><td>Canvas background colour. Accepts any CSS colour value. Defaults to the <code>model_viewer.background</code> config setting.</td></tr>
+        <tr><td class="opt-key">view</td><td>No</td><td><code>front</code></td><td>Starting camera orientation. <code>front</code> = camera on the Z axis (default). <code>iso</code> = camera on the (1,1,1) diagonal for an isometric perspective.</td></tr>
+        <tr><td class="opt-key">autorotate</td><td>No</td><td>—</td><td>Set to <code>"true"</code> to continuously spin the model around the Y-axis. Dragging pauses the rotation; releasing resumes it.</td></tr>
         <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Optional caption rendered below the viewer. Plain text only (HTML-escaped).</td></tr>
       </tbody>
     </table>
@@ -625,7 +627,16 @@ function binarySearch(arr, target) {
 <span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">height</span><span class="pn">=</span><span class="str">"500px"</span> <span class="nb">bg</span><span class="pn">=</span><span class="str">"#f0f0f0"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Bracket assembly"</span> <span class="pn">%}</span>
 
 <span class="cm">{# GLTF with a taller canvas #}</span>
-<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/scene.gltf"</span> <span class="nb">height</span><span class="pn">=</span><span class="str">"60vh"</span> <span class="pn">%}</span></code></pre>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/scene.gltf"</span> <span class="nb">height</span><span class="pn">=</span><span class="str">"60vh"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Isometric starting angle #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">view</span><span class="pn">=</span><span class="str">"iso"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Auto-rotating model #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/robot.glb"</span> <span class="nb">autorotate</span><span class="pn">=</span><span class="str">"true"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Iso view + auto-rotate combined #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">view</span><span class="pn">=</span><span class="str">"iso"</span> <span class="nb">autorotate</span><span class="pn">=</span><span class="str">"true"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Bracket assembly"</span> <span class="pn">%}</span></code></pre>
 
     <h3>How it works</h3>
     <p><code>scripts/helpers.js</code> registers <code>model</code> as an inline Hexo tag. It emits a <code>.model-viewer-wrap</code> container holding a <code>.model-viewer</code> div with <code>data-src</code>, <code>data-bg</code>, and an inline <code>style="height:…"</code>. The height value is validated against an allowlist regex (<code>/^\d+(\.\d+)?(px|em|rem|vh|vw|%)$/</code>) before interpolation — any value with disallowed characters falls back to <code>400px</code> to prevent CSS injection.</p>

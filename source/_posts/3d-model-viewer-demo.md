@@ -28,6 +28,8 @@ Drop a model file under `source/models/` and reference it by path:
 | `src` | — | Path to a `.glb`, `.gltf`, or `.stl` file (**required**) |
 | `height` | `400px` | Canvas height — `px`, `em`, `rem`, `vh`, `vw`, `%` |
 | `bg` | `#1a1a2e` | Canvas background colour |
+| `view` | `front` | Starting camera angle: `front` (Z-axis) or `iso` ((1,1,1) diagonal) |
+| `autorotate` | — | Set to `"true"` to continuously spin the model |
 | `caption` | — | Plain-text caption rendered below the viewer |
 
 ## Custom height and background
@@ -43,6 +45,36 @@ Drop a model file under `source/models/` and reference it by path:
 ```
 
 {% model src="/models/cube.stl" height="300px" bg="#f5f5f0" caption="Light background variant" %}
+
+## Camera view
+
+`view="iso"` positions the camera along the (1,1,1) diagonal — equal distance from all three axes — for a classic isometric perspective:
+
+```
+{% model src="/models/cube.stl" view="iso" caption="Isometric start" %}
+```
+
+{% model src="/models/cube.stl" view="iso" caption="Isometric start" %}
+
+The default (`view="front"`) keeps the camera on the Z-axis as before.
+
+## Auto-rotate
+
+`autorotate="true"` continuously spins the model around the Y-axis. Drag to orbit as normal — the rotation pauses during the drag and resumes on release:
+
+```
+{% model src="/models/cube.stl" autorotate="true" caption="Auto-rotate" %}
+```
+
+{% model src="/models/cube.stl" autorotate="true" caption="Auto-rotate" %}
+
+Combine both options:
+
+```
+{% model src="/models/cube.stl" view="iso" autorotate="true" caption="Iso + auto-rotate" %}
+```
+
+{% model src="/models/cube.stl" view="iso" autorotate="true" caption="Iso + auto-rotate" %}
 
 ## Supported formats
 
