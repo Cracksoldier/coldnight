@@ -29,7 +29,7 @@ Drop a model file under `source/models/` and reference it by path:
 | `height` | `400px` | Canvas height — `px`, `em`, `rem`, `vh`, `vw`, `%` |
 | `bg` | `#1a1a2e` | Canvas background colour |
 | `view` | `front` | Starting camera angle: `front` (Z-axis) or `iso` ((1,1,1) diagonal) |
-| `autorotate` | — | Set to `"true"` to continuously spin the model |
+| `autorotate` | — | Any non-empty value (e.g. `"true"`) enables continuous spin |
 | `caption` | — | Plain-text caption rendered below the viewer |
 
 ## Custom height and background

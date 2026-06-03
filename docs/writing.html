@@ -614,7 +614,7 @@ function binarySearch(arr, target) {
         <tr><td class="opt-key">height</td><td>No</td><td><code>400px</code></td><td>Canvas height. Accepts CSS length units: <code>px</code>, <code>em</code>, <code>rem</code>, <code>vh</code>, <code>vw</code>, <code>%</code>. Values containing other units or semicolons are rejected and fall back to <code>400px</code>.</td></tr>
         <tr><td class="opt-key">bg</td><td>No</td><td><code>#1a1a2e</code></td><td>Canvas background colour. Accepts any CSS colour value. Defaults to the <code>model_viewer.background</code> config setting.</td></tr>
         <tr><td class="opt-key">view</td><td>No</td><td><code>front</code></td><td>Starting camera orientation. <code>front</code> = camera on the Z axis (default). <code>iso</code> = camera on the (1,1,1) diagonal for an isometric perspective.</td></tr>
-        <tr><td class="opt-key">autorotate</td><td>No</td><td>—</td><td>Set to <code>"true"</code> to continuously spin the model around the Y-axis. Dragging pauses the rotation; releasing resumes it.</td></tr>
+        <tr><td class="opt-key">autorotate</td><td>No</td><td>—</td><td>Any non-empty value enables continuous spin around the Y-axis (canonical form: <code>"true"</code>). Dragging pauses the rotation; releasing resumes it.</td></tr>
         <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Optional caption rendered below the viewer. Plain text only (HTML-escaped).</td></tr>
       </tbody>
     </table>

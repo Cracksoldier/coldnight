@@ -211,6 +211,8 @@ All parameters except `src` are optional:
 | `src` | — | Path to `.glb`, `.gltf`, or `.stl` file |
 | `height` | `400px` | CSS height — allowlist-validated (`px\|em\|rem\|vh\|vw\|%` only) |
 | `bg` | from `model_viewer.background` | CSS colour for canvas background |
+| `view` | `front` | Starting camera angle: `front` (Z-axis) or `iso` ((1,1,1) diagonal) |
+| `autorotate` | — | Any non-empty value (e.g. `"true"`) enables continuous Y-axis spin |
 | `caption` | — | Plain-text caption rendered below the viewer |
 
 Three.js (~680 KB) and loader scripts are only loaded on posts that contain a `{% model %}` tag. Vendor files live at `themes/coldnight/source/vendor/three/`.
