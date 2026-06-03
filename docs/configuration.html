@@ -51,6 +51,7 @@
       <a href="#config-pdf-viewer">PDF viewer</a>
       <a href="#config-audio-player">Audio player</a>
       <a href="#config-model-viewer">3D model viewer</a>
+      <a href="#config-giscus">Giscus comments</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
       <a href="#config-keyboard-nav">Keyboard navigation</a>
@@ -794,6 +795,121 @@
       <span class="callout-icon">ℹ️</span>
       <p>See <a href="writing.html#tag-model">Writing — {% model %} tag</a> for syntax, attribute reference, and examples.</p>
     </div>
+
+    <hr>
+
+    <!-- Giscus comments -->
+    <h2 id="config-giscus">Giscus comments</h2>
+    <p>Giscus embeds <a href="https://github.com/giscus/giscus" target="_blank" rel="noopener noreferrer">GitHub Discussions</a>-based comments as an iframe from <code>giscus.app</code>. Anonymous visitors can read all existing comments and reactions without any GitHub account — login is only required to post a new comment or reaction. The widget is <strong>opt-in and disabled by default</strong>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>To suppress the widget on a single post, add <code>comments: false</code> to that post's front-matter. The widget is otherwise shown on all post pages when enabled.</p>
+    </div>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <a href="https://giscus.app" target="_blank" rel="noopener noreferrer">giscus.app</a> and connect your GitHub repository. The repo must be public and have the <strong>Discussions</strong> feature enabled (Settings → Features → Discussions).</li>
+      <li>Install the <a href="https://github.com/apps/giscus" target="_blank" rel="noopener noreferrer">giscus GitHub App</a> on the repo.</li>
+      <li>Copy the generated values (<code>data-repo</code>, <code>data-repo-id</code>, <code>data-category</code>, <code>data-category-id</code>) from the giscus.app output.</li>
+      <li>Paste the values into the theme config and set <code>enabled: true</code>:</li>
+    </ol>
+
+<pre><code><span class="nb">giscus</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span>            <span class="val">true</span>
+  <span class="nb">repo</span><span class="pn">:</span>               <span class="str">"owner/repo"</span>        <span class="cm"># your GitHub repo</span>
+  <span class="nb">repo_id</span><span class="pn">:</span>            <span class="str">"R_..."</span>             <span class="cm"># from giscus.app</span>
+  <span class="nb">category</span><span class="pn">:</span>           <span class="str">"Announcements"</span>     <span class="cm"># discussion category name</span>
+  <span class="nb">category_id</span><span class="pn">:</span>        <span class="str">"DIC_..."</span>           <span class="cm"># from giscus.app</span>
+  <span class="nb">mapping</span><span class="pn">:</span>            <span class="val">pathname</span>            <span class="cm"># pathname | url | title | og:title</span>
+  <span class="nb">reactions_enabled</span><span class="pn">:</span>  <span class="val">true</span>
+  <span class="nb">input_position</span><span class="pn">:</span>     <span class="val">bottom</span>              <span class="cm"># top | bottom</span>
+  <span class="nb">theme</span><span class="pn">:</span>              <span class="val">dark_dimmed</span>         <span class="cm"># giscus theme slug</span>
+  <span class="nb">lang</span><span class="pn">:</span>               <span class="str">""</span>                  <span class="cm"># empty = inherit config.language</span></code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p>To keep the theme submodule untouched, override settings in the site's <code>_config.yml</code> under <code>theme_config:</code> rather than editing the theme's <code>_config.yml</code> directly.</p>
+    </div>
+
+    <h3>Configuration reference</h3>
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">giscus.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Master switch. <code>repo</code> and <code>category_id</code> must also be non-empty for the widget to render.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.repo</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td><code>"owner/repo"</code> — the GitHub repository that hosts Discussions. Required.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.repo_id</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Opaque repository ID from giscus.app (starts with <code>R_</code>). Required for the giscus script.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.category</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Name of the Discussion category to use (e.g. <code>Announcements</code>). Recommended: use an <strong>Announcements</strong>-type category so only maintainers can create new discussions directly on GitHub.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.category_id</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Opaque category ID from giscus.app (starts with <code>DIC_</code>). Required — widget is suppressed when empty even if <code>enabled: true</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.mapping</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">pathname</td>
+          <td>How a page is mapped to a Discussion thread. <code>pathname</code> uses the URL path (recommended). Alternatives: <code>url</code> (full URL), <code>title</code> (page title), <code>og:title</code>. Invalid values fall back to <code>pathname</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.reactions_enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show emoji reactions at the top of the comments section.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.input_position</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">bottom</td>
+          <td>Where the comment input box appears. <code>bottom</code> (below existing comments) or <code>top</code> (above them).</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.theme</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">dark_dimmed</td>
+          <td>Giscus colour theme. <code>dark_dimmed</code> matches the coldnight palette. Any slug listed on giscus.app is valid (e.g. <code>dark</code>, <code>light</code>, <code>transparent_dark</code>). Invalid values fall back to <code>dark_dimmed</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">giscus.lang</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Language for the giscus UI. Empty string inherits the site's <code>config.language</code>. Accepts BCP-47 language codes (e.g. <code>de</code>, <code>zh-CN</code>).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p><code>layout/_partial/giscus.ejs</code> emits a <code>&lt;script src="https://giscus.app/client.js" …&gt;</code> tag. Giscus loads asynchronously and injects an <code>&lt;iframe&gt;</code> from <code>giscus.app</code>. All styling is applied by the iframe — no local CSS is needed beyond the <code>.giscus-wrap</code> container styles in <code>_components.scss</code>.</p>
+
+    <p>The partial is included from <code>layout/post.ejs</code> directly after the closing <code>&lt;/article&gt;</code> tag and before the related-posts section, guarded by:</p>
+<pre><code><span class="kw">&lt;%</span> <span class="kw">if</span> (theme.giscus <span class="pn">&amp;&amp;</span> theme.giscus.enabled
+        <span class="pn">&amp;&amp;</span> theme.giscus.repo <span class="pn">&amp;&amp;</span> theme.giscus.category_id
+        <span class="pn">&amp;&amp;</span> page.comments <span class="pn">!==</span> <span class="val">false</span>) <span class="kw">{ %&gt;</span></code></pre>
+
+    <p>All user-supplied config values are output via EJS <code>&lt;%= %&gt;</code> (which HTML-encodes the value) rather than the raw <code>&lt;%- %&gt;</code>. Additional validation: <code>mapping</code> is checked against an explicit allowlist; <code>theme</code> is checked against <code>/^[a-z_]+$/</code>; <code>lang</code> is stripped of any characters outside <code>[a-z-]</code>. This prevents a malformed config value from injecting HTML into the <code>&lt;script&gt;</code> tag attributes.</p>
+
+    <p>Giscus lazy-loads the comments iframe (<code>data-loading="lazy"</code>) — it does not request the giscus.app service until the widget scrolls into the viewport, so page load performance is not affected on long posts.</p>
 
     <hr>
 
