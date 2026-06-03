@@ -68,6 +68,7 @@
       <a href="#tag-video">{% video %}</a>
       <a href="#tag-pdf">{% pdf %}</a>
       <a href="#tag-model">{% model %}</a>
+      <a href="#tag-audio">{% audio %}</a>
       <a href="#code-filename">Code filename label</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -641,6 +642,54 @@ function binarySearch(arr, target) {
     <div class="callout callout-warning">
       <span class="callout-icon">⚠️</span>
       <p>Set <code>model_viewer.enabled: false</code> in the theme config to disable the tag globally. The tag returns an empty string and no scripts are loaded. See <a href="configuration.html#config-model-viewer">model_viewer configuration</a>.</p>
+    </div>
+
+    <hr>
+
+    <!-- Audio player tag -->
+    <h2 id="tag-audio">{% audio %} tag</h2>
+    <p>Embeds a themed HTML5 audio player with custom controls — play/pause, scrubable progress bar, time display, and mute toggle. Multiple players on the same page automatically pause each other when a new one starts. <code>audio-player.js</code> is only injected on post pages that contain at least one <code>{% audio %}</code> tag.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/file.mp3"</span> <span class="pn">%}</span>
+<span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/file.mp3"</span> <span class="nb">title</span><span class="pn">=</span><span class="str">"Display name"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Optional caption"</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Attribute</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">src</td><td>Yes</td><td>—</td><td>Root-relative path to the audio file. Supports <code>.mp3</code>, <code>.ogg</code>, <code>.wav</code>, <code>.flac</code>, and <code>.m4a</code>.</td></tr>
+        <tr><td class="opt-key">title</td><td>No</td><td>filename</td><td>Label shown above the progress bar. Defaults to the bare filename extracted from <code>src</code>.</td></tr>
+        <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Small muted text rendered below the player. Plain text only (HTML-escaped).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# Minimal — title falls back to "episode.mp3" #}</span>
+<span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/episode.mp3"</span> <span class="pn">%}</span>
+
+<span class="cm">{# With title and caption #}</span>
+<span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/ambient.mp3"</span> <span class="nb">title</span><span class="pn">=</span><span class="str">"Ambient tone"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"528 Hz sine wave — 8 seconds"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Two players — starting the second automatically pauses the first #}</span>
+<span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/track-a.mp3"</span> <span class="nb">title</span><span class="pn">=</span><span class="str">"Track A"</span> <span class="pn">%}</span>
+<span class="pn">{%</span> <span class="kw">audio</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/audio/track-b.mp3"</span> <span class="nb">title</span><span class="pn">=</span><span class="str">"Track B"</span> <span class="pn">%}</span></code></pre>
+
+    <h3>Keyboard controls</h3>
+    <p>Focus the seek bar (Tab or click) and use the arrow keys: <kbd>←</kbd> seeks back 5 seconds, <kbd>→</kbd> seeks forward 5 seconds. The bar also exposes ARIA <code>role="slider"</code> with <code>aria-valuenow</code> updated on every <code>timeupdate</code> event.</p>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>audio</code> as an inline Hexo tag. It emits a <code>.audio-player</code> div with a <code>data-src</code> attribute. In <code>post.ejs</code>, if the rendered page content contains <code>class="audio-player"</code>, a deferred <code>source/js/audio-player.js</code> script is injected. The script creates a hidden <code>&lt;audio&gt;</code> element per player, wires up all controls via DOM events (no framework), and manages mutual-pause by querying all <code>.audio-player audio</code> elements on play.</p>
+
+    <p>Seek is implemented with the Pointer Events API (<code>pointerdown</code> + <code>setPointerCapture</code>) so dragging works on both mouse and touch. Duration is cached after <code>loadedmetadata</code> fires to avoid calling <code>fmtTime()</code> on every <code>timeupdate</code> tick. After <code>ended</code>, <code>audio.currentTime</code> is reset to <code>0</code> so replaying works without a seek. Styles live in <code>_components.scss</code> under <code>.audio-player</code>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">ℹ️</span>
+      <p>Place audio files under <code>source/audio/</code> so they are copied to <code>public/audio/</code> by Hexo. No additional Hexo plugin is needed for audio asset handling.</p>
+    </div>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p>Set <code>audio_player: false</code> in the theme config to disable the tag globally. The tag returns an empty string and <code>audio-player.js</code> is never loaded. See <a href="configuration.html#config-audio-player">audio_player configuration</a>.</p>
     </div>
 
     <hr>

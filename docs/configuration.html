@@ -49,6 +49,7 @@
       <a href="#config-permalink-button">Permalink button</a>
       <a href="#config-epub">ePub export</a>
       <a href="#config-pdf-viewer">PDF viewer</a>
+      <a href="#config-audio-player">Audio player</a>
       <a href="#config-model-viewer">3D model viewer</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
       <a href="#config-math">KaTeX math</a>
@@ -70,6 +71,7 @@
       <a href="writing.html#tag-video">{% video %}</a>
       <a href="writing.html#tag-pdf">{% pdf %}</a>
       <a href="writing.html#tag-model">{% model %}</a>
+      <a href="writing.html#tag-audio">{% audio %}</a>
       <a href="writing.html#code-filename">Code filename label</a>
       <a href="writing.html#mermaid">Mermaid diagrams</a>
       <a href="writing.html#math">KaTeX math</a>
@@ -463,6 +465,12 @@
           <td>Load <code>pdf-viewer.js</code> on post pages to enable the <code>{% pdf %}</code> tag's modal preview. Set to <code>false</code> to prevent the script from loading. See <a href="#config-pdf-viewer">PDF viewer</a>.</td>
         </tr>
         <tr>
+          <td class="opt-key">audio_player</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Load <code>audio-player.js</code> on post pages that use the <code>{% audio %}</code> tag. Set to <code>false</code> to disable the tag globally and prevent the script from loading. See <a href="#config-audio-player">Audio player</a>.</td>
+        </tr>
+        <tr>
           <td class="opt-key">series</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
@@ -731,6 +739,28 @@
 <pre><code><span class="nb">pdf_viewer</span><span class="pn">:</span> <span class="val">true</span></code></pre>
 
     <p>See the <a href="writing.html#tag-pdf">{% pdf %} tag</a> documentation for usage and examples.</p>
+
+    <hr>
+
+    <!-- Audio player -->
+    <h2 id="config-audio-player">Audio player</h2>
+    <p>Controls the <code>{% audio %}</code> tag, which embeds a custom HTML5 audio player with dark-themed controls. Unlike the PDF viewer, <code>audio-player.js</code> is only injected on post pages where the rendered content contains an <code>{% audio %}</code> tag — there is no cost on other pages even when <code>audio_player: true</code>.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">audio_player</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the <code>{% audio %}</code> tag. When <code>false</code>, the tag returns an empty string and <code>audio-player.js</code> is never loaded on any page.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">audio_player</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <p>See the <a href="writing.html#tag-audio">{% audio %} tag</a> documentation for syntax, attribute reference, and examples.</p>
 
     <hr>
 

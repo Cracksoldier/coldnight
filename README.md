@@ -21,7 +21,8 @@ This repository is the example/demo site for the **[coldnight Hexo theme](https:
 | Related posts | Build-time tag & category scoring surfaces the 3 most relevant posts |
 | Archive filter chips | Client-side category/tag pills on the archive page |
 | PDF preview | `{% pdf %}` tag opens a PDF.js modal with page navigation and zoom |
-| Tag plugins | `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% gallery %}`, `{% video %}`, `{% pdf %}` |
+| Audio player | `{% audio %}` tag embeds a styled HTML5 audio player with seek bar and mute toggle |
+| Tag plugins | `{% note %}`, `{% tabs %}`, `{% timeline %}`, `{% spoiler %}`, `{% gallery %}`, `{% video %}`, `{% pdf %}`, `{% audio %}` |
 | Open Graph & SEO | Full `og:*`, Twitter Card, and canonical tags |
 | ePub export | Assembles a valid EPUB 3 archive in the browser via JSZip |
 | Showroom | Paginated project portfolio with optional AI-assisted badge |

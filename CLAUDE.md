@@ -174,8 +174,26 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
 | `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
+| `audio_player: false` | Prevents `audio-player.js` from loading; `{% audio %}` tag returns empty string |
 | `model_viewer.enabled: false` | Disables the Three.js 3D model viewer tag |
 | `model_viewer.background: "#1a1a2e"` | Canvas background colour for model viewer |
+
+## Audio player
+
+Place audio files under `source/audio/` and embed them in any post:
+
+```
+{% audio src="/audio/episode.mp3" %}
+{% audio src="/audio/episode.mp3" title="Episode 1" caption="Recorded live" %}
+```
+
+| Parameter | Required | Notes |
+|-----------|----------|-------|
+| `src` | yes | Path to `.mp3`, `.ogg`, `.wav`, `.flac`, or `.m4a` |
+| `title` | no | Player label; defaults to the filename |
+| `caption` | no | Small muted text rendered below the player |
+
+`audio-player.js` is only loaded on posts that contain an `{% audio %}` tag.
 
 ## 3D model viewer
 
