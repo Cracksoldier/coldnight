@@ -46,6 +46,24 @@ source/
 themes/coldnight/    ← git submodule (do not edit here; commit to theme repo)
 ```
 
+## npm install (alternative to submodule)
+
+The theme is also published to npm as `hexo-theme-coldnight`. Sites that don't need to contribute to the theme can install it this way instead:
+
+```bash
+npm install hexo-theme-coldnight
+```
+
+Hexo will find it automatically in `node_modules/` with `theme: coldnight` in `_config.yml`. Configure it via `_config.coldnight.yml` in the site root (Hexo 5+ standard — overrides the theme's default `_config.yml` without touching node_modules):
+
+```yaml
+# _config.coldnight.yml
+navbar:
+  title: My Blog
+```
+
+This demo site uses the submodule so theme changes can be tested here before publishing.
+
 ## Submodule workflow
 
 The theme is a git submodule — changes to theme files must be committed inside `themes/coldnight/` and pushed to the theme repo separately.
