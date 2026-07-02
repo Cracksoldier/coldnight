@@ -113,6 +113,7 @@ pinned: true                     # optional; promotes post to featured hero on i
 series: My Series Name           # optional; groups post into a numbered series nav strip
 abstract: |                      # optional; styled summary block rendered before the post body
   Supports **markdown** inline formatting.
+stale_warning: false             # optional; suppresses the post-age banner on this post
 ---
 ```
 
@@ -132,6 +133,8 @@ OG and Twitter Card meta tags are generated automatically in `themes/coldnight/l
 | `og:locale` | `config.language` mapped to territory form (`en` → `en_US`, `de` → `de_DE`) |
 
 The canonical `<link>` uses the same source as `og:url` — archive/tag/category pages get their own URL, never the site root.
+
+Post pages additionally emit JSON-LD structured data (`BlogPosting` + `BreadcrumbList`) from the same sources — also automatic, no plugin needed.
 
 The site-wide fallback image lives at `source/images/og-default.jpg` (1200×630 px recommended). Set it via `theme_config.cover.default` in `_config.yml` so the submodule stays untouched.
 
@@ -196,6 +199,10 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
 | `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
 | `audio_player: false` | Prevents `audio-player.js` from loading; `{% audio %}` tag returns empty string |
+| `compare_slider: false` | Prevents `compare-slider.js` from loading; `{% compare %}` tag returns empty string |
+| `stale_warning.enabled: true` | Shows an "information may be outdated" banner on old posts (opt-in) |
+| `stale_warning.months: 24` | Age threshold for the banner; counted from explicit `updated:` or `date:` at build time |
+| `view_transitions: false` | Removes the cross-document View Transitions crossfade between pages |
 | `model_viewer.enabled: false` | Disables the Three.js 3D model viewer tag |
 | `model_viewer.background: "#1a1a2e"` | Canvas background colour for model viewer |
 
@@ -215,6 +222,23 @@ Place audio files under `source/audio/` and embed them in any post:
 | `caption` | no | Small muted text rendered below the player |
 
 `audio-player.js` is only loaded on posts that contain an `{% audio %}` tag.
+
+## Image compare slider
+
+Embed a before/after slider in any post (see `source/_posts/image-compare-demo.md`):
+
+```
+{% compare before="/images/old.png" after="/images/new.png" %}
+{% compare before="/images/old.png" after="/images/new.png" label_before="v1" label_after="v2" caption="Redesign" %}
+```
+
+| Parameter | Required | Notes |
+|-----------|----------|-------|
+| `before` / `after` | yes | Image paths; should share the same aspect ratio |
+| `label_before` / `label_after` | no | Corner labels; default "Before" / "After" |
+| `caption` | no | Muted text below the frame |
+
+Drag, touch, or arrow keys move the divider (native range input under the hood). Without JS it renders as a static 50/50 split. `compare-slider.js` is only loaded on posts that use the tag.
 
 ## 3D model viewer
 
