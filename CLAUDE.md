@@ -128,7 +128,10 @@ OG and Twitter Card meta tags are generated automatically in `themes/coldnight/l
 | `og:description` | `page.description` → `page.excerpt` (HTML-stripped) → `config.description` |
 | `og:image` | `page.cover_image` → `theme.cover.default` (absolute URL via `full_url_for`) |
 | `og:type` | `article` for posts, `website` for all other pages |
-| `og:url` | `page.permalink` → `config.url` |
+| `og:url` | `page.permalink` → current page URL (trailing `index.html` stripped) |
+| `og:locale` | `config.language` mapped to territory form (`en` → `en_US`, `de` → `de_DE`) |
+
+The canonical `<link>` uses the same source as `og:url` — archive/tag/category pages get their own URL, never the site root.
 
 The site-wide fallback image lives at `source/images/og-default.jpg` (1200×630 px recommended). Set it via `theme_config.cover.default` in `_config.yml` so the submodule stays untouched.
 
