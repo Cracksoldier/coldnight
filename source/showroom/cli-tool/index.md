@@ -4,6 +4,7 @@ subtitle: "Developer productivity scripts"
 cover_image: /images/showroom/cli-tool.png
 layout: project
 date: 2026-03-20
+effort: 1
 ---
 
 A collection of Node.js CLI utilities for automating repetitive development tasks: scaffolding new projects, running local mock servers, and batch-processing media assets.

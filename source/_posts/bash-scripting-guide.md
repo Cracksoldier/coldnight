@@ -5,6 +5,7 @@ categories: [Development]
 tags: [bash, cli, scripting, linux]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: Strict mode, argument parsing, logging helpers, and patterns for scripts that behave predictably and fail loudly.
+difficulty: 2
 ---
 
 Shell scripts tend to accumulate tech debt faster than most code. These patterns keep them maintainable.

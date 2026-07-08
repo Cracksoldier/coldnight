@@ -4,6 +4,7 @@ date: 2025-11-04 09:00:00
 categories: [Systems]
 tags: [go, concurrency, memory]
 excerpt: The Go memory model defines when one goroutine is guaranteed to see writes made by another. Getting this wrong leads to races that only show up in production under load.
+effort: 5
 ---
 
 The Go memory model is one of those things you can ignore for a long time — until you can't. Most concurrent Go code works by convention rather than by proof. Understanding what the runtime actually guarantees helps you reason about the cases where convention breaks down.

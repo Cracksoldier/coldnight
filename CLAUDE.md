@@ -114,6 +114,7 @@ series: My Series Name           # optional; groups post into a numbered series 
 abstract: |                      # optional; styled summary block rendered before the post body
   Supports **markdown** inline formatting.
 stale_warning: false             # optional; suppresses the post-age banner on this post
+difficulty: 3                    # optional; integer 1–5 → signal-bar meter (alias: effort:; difficulty wins if both set)
 ---
 ```
 
@@ -150,6 +151,7 @@ cover_image: /images/showroom/x.png
 layout: project                     # required — routes to project.ejs
 date: 2026-01-01                    # controls sort order (newest first)
 ai_assisted: true                   # optional; bare boolean only — never "true", "yes", or 1
+difficulty: 4                       # optional; integer 1–5 → signal-bar meter on card overlay + project page (alias: effort:)
 ---
 ```
 
@@ -184,6 +186,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `search.enabled: false` | Removes search box from navbar |
 | `related_posts: false` | Hides "You might also like" section |
 | `permalink_button: false` | Removes copy-permalink icon from post metadata |
+| `difficulty: false` | Hides the 1–5 difficulty/effort signal-bar meter everywhere |
 | `epub_export: false` | Removes ePub download button (~100 KB JSZip) |
 | `series: false` | Disables series navigation strip |
 | `mermaid.enabled: true` | Renders ` ```mermaid ` blocks as SVG |

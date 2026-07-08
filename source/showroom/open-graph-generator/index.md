@@ -5,6 +5,7 @@ cover_image: /images/showroom/og-generator.png
 layout: project
 date: 2026-03-01
 ai_assisted: true
+difficulty: 4
 ---
 
 A serverless function that generates Open Graph preview images on demand. Pass a title, description, and optional background image in the query string and receive a 1200×630 PNG suitable for social sharing.

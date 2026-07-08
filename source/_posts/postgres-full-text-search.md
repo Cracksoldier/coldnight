@@ -4,6 +4,7 @@ date: 2025-02-11 09:00:00
 categories: [Systems]
 tags: [postgres, sql, search, databases]
 excerpt: Before reaching for Elasticsearch, try Postgres full-text search. For most applications it's fast enough, much simpler to operate, and already in your stack.
+difficulty: 3
 ---
 
 The typical path is: application needs search → reach for Elasticsearch or Typesense → spend two weeks on infrastructure. For most applications that's the wrong trade-off. Postgres full-text search handles a surprising amount of load and costs nothing extra to operate.
