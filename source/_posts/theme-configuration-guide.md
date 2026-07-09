@@ -129,6 +129,18 @@ search:
 
 Keyboard shortcuts: `/` focuses the search box; `↑`/`↓` navigate results; `Esc` closes the dropdown; `?` opens the shortcuts modal.
 
+## llms.txt
+
+```yaml
+llms_txt:
+  enabled: true   # opt-in — default is false
+  full: true      # also emit /llms-full.txt
+```
+
+Emits an [llms.txt](https://llmstxt.org) file at the site root — a markdown index (site title, description, and link lists for all posts, showroom projects, and pages) that LLMs and AI crawlers can consume without parsing HTML. With `full: true` a companion `/llms-full.txt` is also generated, containing the complete markdown body of every post and project along with its URL, date, and tags.
+
+Post descriptions in the index come from front-matter `description:`, falling back to the excerpt and then to the start of the body; projects use their `subtitle:`. Both files are built at generate time — zero runtime cost. This site has it enabled — both files live at the site root: `/llms.txt` and `/llms-full.txt`.
+
 ## Related posts
 
 ```yaml

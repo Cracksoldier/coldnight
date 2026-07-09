@@ -208,6 +208,8 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `view_transitions: false` | Removes the cross-document View Transitions crossfade between pages |
 | `model_viewer.enabled: false` | Disables the Three.js 3D model viewer tag |
 | `model_viewer.background: "#1a1a2e"` | Canvas background colour for model viewer |
+| `llms_txt.enabled: true` | Emits `/llms.txt` — LLM-friendly markdown site index per llmstxt.org (opt-in; this site enables it) |
+| `llms_txt.full: false` | Suppresses the companion `/llms-full.txt` (full markdown of every post/project) |
 
 ## Audio player
 
