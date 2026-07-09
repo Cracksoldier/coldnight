@@ -141,6 +141,8 @@ Emits an [llms.txt](https://llmstxt.org) file at the site root — a markdown in
 
 Post descriptions in the index come from front-matter `description:`, falling back to the excerpt and then to the start of the body; projects use their `subtitle:`. Both files are built at generate time — zero runtime cost. This site has it enabled — both files live at the site root: `/llms.txt` and `/llms-full.txt`.
 
+To keep a specific post, project, or page out of both files — an unlisted page, or a post whose full text you don't want packaged for LLM ingestion — set `llms_txt: false` in its front-matter.
+
 ## Related posts
 
 ```yaml

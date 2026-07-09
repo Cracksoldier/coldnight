@@ -115,6 +115,7 @@ abstract: |                      # optional; styled summary block rendered befor
   Supports **markdown** inline formatting.
 stale_warning: false             # optional; suppresses the post-age banner on this post
 difficulty: 3                    # optional; integer 1–5 → signal-bar meter (alias: effort:; difficulty wins if both set)
+llms_txt: false                  # optional; excludes this post/page from /llms.txt and /llms-full.txt
 ---
 ```
 
@@ -127,7 +128,7 @@ OG and Twitter Card meta tags are generated automatically in `themes/coldnight/l
 | OG tag | Source (in priority order) |
 |--------|---------------------------|
 | `og:title` | `page.title` → `config.title` |
-| `og:description` | `page.description` → `page.excerpt` (HTML-stripped) → `config.description` |
+| `og:description` | `page.description` → `page.excerpt` → start of body (shared `page_description` helper, HTML-stripped + entity-decoded) → `config.description` |
 | `og:image` | `page.cover_image` → `theme.cover.default` (absolute URL via `full_url_for`) |
 | `og:type` | `article` for posts, `website` for all other pages |
 | `og:url` | `page.permalink` → current page URL (trailing `index.html` stripped) |
@@ -152,6 +153,7 @@ layout: project                     # required — routes to project.ejs
 date: 2026-01-01                    # controls sort order (newest first)
 ai_assisted: true                   # optional; bare boolean only — never "true", "yes", or 1
 difficulty: 4                       # optional; integer 1–5 → signal-bar meter on card overlay + project page (alias: effort:)
+llms_txt: false                     # optional; excludes this project from /llms.txt and /llms-full.txt
 ---
 ```
 
