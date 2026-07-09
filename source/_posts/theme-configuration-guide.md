@@ -5,6 +5,8 @@ categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
+updated: 2026-07-09
+difficulty: 1
 ---
 
 All theme options live in `themes/coldnight/_config.yml`. You can override any of them in the root `_config.yml` under `theme_config:` without touching the theme source.
@@ -80,6 +82,16 @@ word_count: true      # "1,240 words" in the post header
 ```
 
 Both strip code blocks before counting so large snippets don't inflate the estimates.
+
+## Difficulty indicator
+
+```yaml
+difficulty: true    # set false to hide the meter everywhere
+```
+
+Posts and showroom projects can declare how demanding their topic is with `difficulty:` (or the `effort:` alias) in front-matter — an integer from 1 to 5. The theme renders it as a small signal-bar pill next to the other post metadata: green bars for levels 1–2, amber for 3, red for 4–5. This post sets `difficulty: 1`, so the meter is visible in the header above.
+
+The tooltip follows the key you used — `effort: 4` reads "Effort: 4 of 5" instead of "Difficulty". If both keys are set, `difficulty` wins. Values that aren't a whole number between 1 and 5 are silently ignored, and the pill simply doesn't render on posts that omit the key. On showroom cards it appears in the top-left corner of the cover, opposite the AI-assisted badge.
 
 ## Table of contents
 
@@ -335,5 +347,6 @@ Requires `pdf_viewer: true` in the theme config (the default).
 | `excerpt` | string | Override the auto-generated excerpt on post cards |
 | `pinned` | boolean | Promote to featured hero on index page 1 |
 | `series` | string | Group post into a numbered series nav strip |
+| `difficulty` | integer | 1–5 signal-bar meter in the post header and on cards (alias: `effort`) |
 
 Use `<!-- more -->` in the post body to set the excerpt boundary instead of the `excerpt` key if you want the card to show a natural cut from the content.
