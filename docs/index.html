@@ -322,6 +322,34 @@
       flex: 1;
       min-width: 260px;
     }
+    .install-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 0 0 4rem;
+    }
+    .install-group .install { margin: 0; }
+    .install-label {
+      display: inline-block;
+      background: rgba(88,166,255,.12);
+      color: var(--accent);
+      border: 1px solid rgba(88,166,255,.25);
+      border-radius: 999px;
+      padding: 0.05rem 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .install-footnote { color: var(--text-3); font-size: 0.8rem; margin: 0.25rem 0 0; }
+    .install-footnote code {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.85em;
+      color: var(--text);
+    }
 
     /* ── CTA section ── */
     .cta {
@@ -504,9 +532,16 @@
 
   <!-- Quick install -->
   <section class="page">
-    <div class="install">
-      <p>Install in seconds:</p>
-      <code>git submodule add https://github.com/Cracksoldier/coldnight-theme.git themes/coldnight</code>
+    <div class="install-group">
+      <div class="install">
+        <p><span class="install-label">npm</span> Just using the theme:</p>
+        <code>npm install hexo-theme-coldnight</code>
+      </div>
+      <div class="install">
+        <p><span class="install-label">git</span> Contributing or tracking main:</p>
+        <code>git submodule add https://github.com/Cracksoldier/coldnight-theme.git themes/coldnight</code>
+      </div>
+      <p class="install-footnote">Either way, set <code>theme: coldnight</code> in your site's <code>_config.yml</code> — Hexo finds the theme in <code>node_modules</code> or <code>themes/</code> automatically. The npm install is configured via a <code>_config.coldnight.yml</code> file in the site root (Hexo&nbsp;5+), so nothing in <code>node_modules</code> is ever edited. Package: <a href="https://www.npmjs.com/package/hexo-theme-coldnight" target="_blank" rel="noopener noreferrer">hexo-theme-coldnight</a> on npm.</p>
     </div>
   </section>
 
