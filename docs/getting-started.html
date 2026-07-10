@@ -236,7 +236,11 @@ cd my-blog
 npm install</code></pre>
       </li>
       <li>
-        <strong>Add the theme</strong> as a git submodule:
+        <strong>Add the theme</strong> — pick one of the two install methods:
+        <p><strong>Option A — npm</strong> (recommended when you just want to use the theme):</p>
+<pre><code>npm install hexo-theme-coldnight</code></pre>
+        <p>Hexo 5+ automatically finds themes installed in <code>node_modules</code> — no <code>themes/</code> folder needed. The package is <a href="https://www.npmjs.com/package/hexo-theme-coldnight" target="_blank" rel="noopener noreferrer">hexo-theme-coldnight</a> on npm; update it later with a normal <code>npm update</code>.</p>
+        <p><strong>Option B — git submodule</strong> (when you want to contribute to the theme or track <code>main</code>):</p>
 <pre><code>git submodule add https://github.com/Cracksoldier/coldnight-theme.git themes/coldnight</code></pre>
         <p>Anyone cloning your site later will need to run <code>git clone --recurse-submodules &lt;url&gt;</code>, or <code>git submodule update --init</code> after a plain clone.</p>
       </li>
@@ -270,6 +274,11 @@ npm install</code></pre>
         Open <a href="http://localhost:4000">http://localhost:4000</a>.
       </li>
     </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <p><strong>Configuring an npm install:</strong> with the npm method there is no <code>themes/</code> folder to edit. Put your overrides in a <code>_config.coldnight.yml</code> file in the site root (Hexo&nbsp;5+) — same keys as <code>theme_config:</code>, just without the wrapper key — or keep using <code>theme_config:</code> in <code>_config.yml</code>. Both work with either install method; nothing in <code>node_modules</code> is ever edited.</p>
+    </div>
 
     <hr>
 
