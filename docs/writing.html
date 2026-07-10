@@ -43,6 +43,7 @@
       <a href="configuration.html#config-misc">Misc toggles</a>
       <a href="configuration.html#config-search">Search</a>
       <a href="configuration.html#config-og">Open Graph / SEO</a>
+      <a href="configuration.html#config-llms-txt">llms.txt</a>
       <a href="configuration.html#config-related-posts">Related posts</a>
       <a href="configuration.html#config-pinned">Featured post</a>
       <a href="configuration.html#config-series">Series posts</a>
@@ -116,6 +117,7 @@
 <span class="nb">pinned</span><span class="pn">:</span>         <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
 <span class="nb">series</span><span class="pn">:</span>         <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
 <span class="nb">abstract</span><span class="pn">:</span>       <span class="str">"Short summary shown above the post body."</span>  <span class="cm"># optional; Markdown supported</span>
+<span class="nb">llms_txt</span><span class="pn">:</span>       <span class="val">false</span>                 <span class="cm"># optional; excludes this post from /llms.txt and /llms-full.txt</span>
 <span class="pn">---</span></code></pre>
 
     <table>
@@ -132,6 +134,7 @@
         <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
         <tr><td class="opt-key">series</td><td>A string that groups this post with others sharing the same value. All matching posts appear in a numbered nav strip above the post body, sorted by date. See <a href="configuration.html#config-series">Series posts</a>.</td></tr>
         <tr><td class="opt-key">abstract</td><td>A short summary rendered as a styled callout between the post header and body. Supports inline Markdown. See <a href="#abstract">Abstract block</a>.</td></tr>
+        <tr><td class="opt-key">llms_txt</td><td>Set to <code>false</code> to exclude this post from the generated <code>/llms.txt</code> and <code>/llms-full.txt</code> files. Works on pages and showroom projects too. See <a href="configuration.html#config-llms-txt">llms.txt</a>.</td></tr>
       </tbody>
     </table>
 

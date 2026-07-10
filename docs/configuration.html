@@ -43,6 +43,7 @@
       <a href="#config-misc">Misc toggles</a>
       <a href="#config-search">Search</a>
       <a href="#config-og">Open Graph / SEO</a>
+      <a href="#config-llms-txt">llms.txt</a>
       <a href="#config-related-posts">Related posts</a>
       <a href="#config-pinned">Featured post</a>
       <a href="#config-series">Series posts</a>
@@ -529,7 +530,7 @@
       <thead><tr><th>Meta tag</th><th>Source</th></tr></thead>
       <tbody>
         <tr><td class="opt-key">og:title / twitter:title</td><td><code>page.title</code>, falls back to <code>config.title</code></td></tr>
-        <tr><td class="opt-key">og:description / twitter:description / meta description</td><td><code>page.description</code> → <code>page.excerpt</code> (strips HTML + decodes entities) → <code>config.description</code>. Capped at 160 characters.</td></tr>
+        <tr><td class="opt-key">og:description / twitter:description / meta description</td><td><code>page.description</code> → <code>page.excerpt</code> → start of the post body (all HTML-stripped + entity-decoded) → <code>config.description</code>. Capped at 160 characters.</td></tr>
         <tr><td class="opt-key">og:image / twitter:image</td><td><code>cover_image</code> front-matter → <code>theme.cover.default</code>; resolved to an absolute URL using <code>config.url</code></td></tr>
         <tr><td class="opt-key">og:type</td><td><code>article</code> on post pages, <code>website</code> everywhere else</td></tr>
         <tr><td class="opt-key">og:site_name</td><td><code>config.title</code></td></tr>
@@ -543,7 +544,7 @@
     <h3>How it works</h3>
     <p>All meta computation runs in a single <code>&lt;% %&gt;</code> block at the very top of <code>_partial/head.ejs</code>, before any HTML output. EJS templates are executed sequentially, so variables must be fully resolved before the HTML that references them is rendered.</p>
 
-    <p><strong>Description fallback chain</strong> — the theme computes <code>rawExcerpt</code> by taking <code>page.excerpt</code> (set by <code>&lt;!-- more --&gt;</code> in the post or by the front-matter <code>excerpt:</code> field), stripping all HTML tags with a regex, and then decoding the six most common HTML entities: <code>&amp;amp;</code>, <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;quot;</code>, <code>&amp;#39;</code>, and <code>&amp;nbsp;</code>. Multiple whitespace characters are collapsed to a single space and the result is trimmed. This prevents Markdown-rendered HTML entities from leaking into the OG description string as raw text. <code>metaDesc</code> is then built as <code>(page.description || rawExcerpt || config.description || '').slice(0, 160)</code>.</p>
+    <p><strong>Description fallback chain</strong> — descriptions come from the shared <code>page_description</code> helper (registered in <code>scripts/helpers.js</code> and also used by the <a href="#config-llms-txt">llms.txt generator</a>): front-matter <code>description:</code> → the excerpt (set by <code>&lt;!-- more --&gt;</code> or the <code>excerpt:</code> field) → the start of the post body. Each candidate is HTML-stripped, entity-decoded (<code>&amp;amp;</code>, <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;quot;</code>, <code>&amp;#39;</code>, <code>&amp;nbsp;</code>), whitespace-collapsed, and trimmed <em>before</em> the fallback decision, so an excerpt that is only an image or code block falls through to the body instead of producing an empty description. <code>metaDesc</code> is then built as <code>(page_description(page) || config.description || '').slice(0, 160)</code>.</p>
 
     <p><strong>Conditional meta tags</strong> — <code>og:image</code> and <code>twitter:image</code> are only emitted when a cover image is actually resolved (to avoid serving an empty <code>content=""</code> attribute that some crawlers treat as an error). <code>article:published_time</code>, <code>article:author</code>, and the post-tag keyword list are only emitted on <code>page.layout === 'post'</code> pages. <code>twitter:site</code> is only emitted when <code>theme.social.twitter</code> is non-empty.</p>
 
@@ -551,6 +552,50 @@
       <span class="callout-icon">💡</span>
       <p>Set <code>url:</code> in the site <code>_config.yml</code> to your production domain (e.g. <code>https://example.com</code>) so that <code>og:image</code> and <code>canonical</code> links are absolute URLs.</p>
     </div>
+
+    <hr>
+
+    <!-- llms.txt -->
+    <h2 id="config-llms-txt">llms.txt</h2>
+
+    <p>Opt-in support for the <a href="https://llmstxt.org" target="_blank" rel="noopener noreferrer">llms.txt convention</a> — a Markdown index of the site at <code>/llms.txt</code> that LLMs and AI crawlers can consume without parsing HTML, plus an optional companion <code>/llms-full.txt</code> containing the complete Markdown body of every post and showroom project. Both files are generated at build time; nothing is loaded at runtime.</p>
+
+<pre><code><span class="nb">llms_txt</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">false</span>   <span class="cm"># opt-in — emit /llms.txt</span>
+  <span class="nb">full</span><span class="pn">:</span>    <span class="val">true</span>    <span class="cm"># when enabled, also emit /llms-full.txt</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">llms_txt.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Emit <code>/llms.txt</code>: site title and description, then link lists for all posts (newest first), showroom projects, and remaining pages, each with a one-line description.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">llms_txt.full</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Also emit <code>/llms-full.txt</code> — each post's and project's raw Markdown body with its URL, date, and tags. Set to <code>false</code> to publish only the index.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Per-page opt-out</h3>
+    <p>Set <code>llms_txt: false</code> in any post's, project's, or page's front-matter to exclude it from <strong>both</strong> files — for unlisted pages you don't want advertised, or posts whose full text should not be packaged for LLM ingestion.</p>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p><strong>Raw source is exported:</strong> <code>/llms-full.txt</code> contains each post's pre-render Markdown source. Render-time transformations — including content-protection plugins that encrypt the rendered HTML — do not apply to it. Opt affected posts out with <code>llms_txt: false</code> front-matter.</p>
+    </div>
+
+    <h3>How it works</h3>
+    <p>The generator is registered in <code>scripts/helpers.js</code> and returns plain-string routes, which Hexo serves as <code>text/plain</code>. It runs once per <code>hexo generate</code>; when disabled it returns immediately.</p>
+
+    <p><strong>Index descriptions</strong> — each entry's one-liner comes from the same shared <code>page_description</code> chain used for <a href="#config-og">og:description</a> (front-matter <code>description:</code> → excerpt → start of the body, HTML-stripped and entity-decoded), capped at 200 characters on a word boundary. Projects use their <code>subtitle:</code> front-matter first. Link labels escape <code>[</code>&nbsp;<code>]</code> and link targets percent-encode parentheses and whitespace so titles and custom permalinks cannot break the Markdown link syntax.</p>
+
+    <p><strong>Full file</strong> — <code>/llms-full.txt</code> uses each entry's raw Markdown source (<code>page._content</code>) rather than stripped HTML, so code blocks survive intact; <code>&lt;!-- more --&gt;</code> markers are removed. Theme tag plugins (<code>{% note %}</code>, <code>{% tabs %}</code>, …) appear unrendered.</p>
 
     <hr>
 
