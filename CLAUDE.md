@@ -178,6 +178,11 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 
 | Key | Effect |
 |-----|--------|
+| `navbar.icon: "❄"` | Brand icon before the navbar title — image path (`/images/logo.png`) or emoji/short text; empty = built-in SVG logo. Image vs text is auto-detected by file extension |
+| `navbar.icon_color: "#60a5fa"` | Font color for a text `navbar.icon` (hex, keyword, or rgb()/hsl(); allowlist-validated). Ignored for images; color-emoji glyphs ignore it |
+| `navbar.icon_after: "🌙"` | Optional image path or emoji/text rendered after the navbar title (hides on mobile together with the title) |
+| `navbar.icon_after_color: "#fbbf24"` | Font color for a text `navbar.icon_after`; same rules as `icon_color` |
+| `favicon: /favicon.png` | Favicon image path; empty = theme default `favicon.svg`/`.ico` |
 | `sidebar.position: hidden` | Hides the sidebar on all pages |
 | `grid.columns: N` | Index grid columns (1 = list view) |
 | `grid.rows: N` | Rows per page in grid mode |
