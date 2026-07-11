@@ -204,6 +204,8 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `reading_time: false` | Removes reading-time estimates everywhere |
 | `lightgallery.enabled: false` | Removes all LightGallery CDN requests |
 | `code.copy_button: false` | Disables copy-to-clipboard on code blocks |
+| `code.collapse: false` | Disables auto-collapse of long code blocks ("Show N more lines" button) |
+| `code.collapse_lines: 25` | Visible lines when collapsed; blocks collapse only when longer by 5+ lines |
 | `pdf_viewer: false` | Prevents `pdf-viewer.js` from loading on post pages |
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
