@@ -219,6 +219,8 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `model_viewer.background: "#1a1a2e"` | Canvas background colour for model viewer |
 | `llms_txt.enabled: true` | Emits `/llms.txt` — LLM-friendly markdown site index per llmstxt.org (opt-in; this site enables it) |
 | `llms_txt.full: false` | Suppresses the companion `/llms-full.txt` (full markdown of every post/project) |
+| `heatmap.enabled: false` | Hides the GitHub-style posting-activity calendar on the archive page |
+| `heatmap.weeks: 52` | Number of weeks shown in the heatmap, ending on the current week |
 
 ## Audio player
 

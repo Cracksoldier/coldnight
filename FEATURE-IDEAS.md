@@ -29,8 +29,8 @@ The `{% video %}` tag embeds the YouTube/Vimeo iframe eagerly — the single big
 ### 7. Speculation Rules prerendering
 The theme already does cross-document View Transitions; adding a `<script type="speculationrules">` block (prerender links on hover / moderate eagerness) makes internal navigation feel instant and makes the crossfade look even better. Progressive enhancement, exactly like the view-transitions block in `head.ejs`.
 
-### 8. Posting-activity heatmap on the archive page
-A GitHub-style contribution calendar built at generate time from `site.posts` (zero client JS needed beyond tooltips). The archive already has filter chips; this would make it a real "browse the blog's history" page.
+### 8. Posting-activity heatmap on the archive page — ✅ done
+Implemented 2026-07-13. GitHub-style contribution calendar built at generate time from `site.posts` via the `heatmap_data()` helper (`scripts/helpers.js`); no client JS at all — tooltips use the native `title` attribute. Toggle with `heatmap.enabled` / `heatmap.weeks` in theme config.
 
 ## Bigger features, worth considering
 
