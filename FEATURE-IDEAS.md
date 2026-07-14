@@ -16,7 +16,7 @@ Filename label and `mark:` line highlighting already existed; the collapse toggl
 `?` opens a native `<dialog>` listing `/`, `Esc`, `?`, and ←/→ (post pages). Shipped in `search.js`.
 
 ### 4. Styled RSS feed
-An XSL stylesheet so `/atom.xml` renders as a nice branded page in the browser instead of raw XML, with a "what is RSS" blurb and subscribe instructions. Cheap, distinctive, and `social.rss` is already on by default.
+An XSL stylesheet so `/atom.xml` renders as a nice branded page in the browser instead of raw XML, with a "what is RSS" blurb and subscribe instructions. Cheap, distinctive, and `social.rss` is already on by default. *Update 2026-07-14: `/atom.xml` now actually exists — the demo site installed `hexo-generator-feed` after the new link checker flagged the sitewide dead link — so this idea is fully actionable.*
 
 ## Medium effort, high payoff
 
@@ -48,18 +48,18 @@ Render a branded 1200×630 card (title, site name, difficulty pill) per post for
 ### Quick wins
 
 #### 12. Mastodon + Bluesky share buttons — ✅ done 2026-07-14
-`post.ejs` currently offers X/Twitter, LinkedIn, and copy-link. Bluesky is a fixed intent URL (`bsky.app/intent/compose?text=`); Mastodon needs a small instance prompt or a configurable home instance in theme config. ~20 lines, on-brand for an indie blog.
+Bluesky ships as a plain `bsky.app/intent/compose` anchor (zero JS); Mastodon prompts for an instance domain (validated, hardcoded `https://` scheme, remembered in localStorage under `coldnight:mastodon-instance`). Gated by the existing `social.share`, no new config key.
 
 #### 13. JSON Feed (`/feed.json`) — ✅ done 2026-07-14
-Same plain-string route pattern as the llms.txt generator — Hexo serves string routes verbatim. Pairs naturally with idea #4 (styled RSS); the spec is trivial and modern feed readers support it.
+JSON Feed 1.1 via the plain-string route pattern (like llms.txt). `json_feed.enabled` default on, independent of `social.rss`; `json_feed.limit` caps items (default 20). Root-relative URLs in `content_html` are absolutised; `date_modified` only with explicit `updated:` front-matter. Pairs naturally with idea #4 (styled RSS).
 
 #### 14. Glossary tooltips — ✅ done 2026-07-14
-A `source/_data/glossary.yml` plus a build-time filter that wraps first occurrences of each term in `<abbr title="…">`. Zero client JS, zero reader-facing config.
+`source/_data/glossary.yml` + an `after_post_render` filter wrapping the first occurrence per post in `<abbr title="…">` — never inside code, links, or headings (protected-region split). Zero client JS; disable with `glossary: false`. Known limitation: ASCII `\b` boundaries, so symbol-edged terms like `C++` won't match.
 
 ### Medium effort
 
 #### 15. Stats page (`/stats/`) — ✅ done 2026-07-14
-The natural companion to the archive heatmap: total posts/words, posts-per-year bars, longest streak, top tags/categories. All computable at build time in a generator (same pattern as showroom), zero client JS.
+Build-time generator (showroom pattern) + `layout/stats.ejs`: totals (posts/words/tags/categories), posts-per-year bars, top 10 tags, longest streak (consecutive months with ≥1 post). Zero client JS. Opt-in via `stats.enabled` — the demo site enables it plus a Stats navbar link.
 
 #### 16. Reading-position restore
 Small localStorage script offering "Continue where you left off" on long posts. Fits the conditional-loading philosophy — only load on posts above a length threshold.
@@ -70,7 +70,7 @@ Small localStorage script offering "Continue where you left off" on long posts. 
 ### Dev QoL
 
 #### 18. Build-time internal link checker — ✅ done 2026-07-14
-An `after_generate` filter that warns on internal hrefs with no matching route. Catches broken cross-post links before deploy; no runtime cost.
+Warns on internal hrefs with no matching route; catches broken cross-post links before deploy, no runtime cost. Shipped as collect-in-`after_render:html` + validate-in-`before_exit` (not `after_generate` — reading lazy route streams there would double-render), aggregated by missing target; `link_check.fail: true` exits 1 for CI. First real catch: the sitewide `/atom.xml` dead link.
 
 ### Checked and already covered (do not re-suggest)
 
