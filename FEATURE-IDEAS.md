@@ -43,6 +43,40 @@ Show the footnote text in a small popover on hover/tap instead of forcing a jump
 ### 11. Build-time OG image generation
 Render a branded 1200×630 card (title, site name, difficulty pill) per post for pages without a `cover_image`, instead of the one static fallback. Needs a Node canvas/satori dependency, so it's the heaviest item here — could be an optional peer dependency.
 
+## Added 2026-07-14 (verified against the code first)
+
+### Quick wins
+
+#### 12. Mastodon + Bluesky share buttons — ✅ done 2026-07-14
+`post.ejs` currently offers X/Twitter, LinkedIn, and copy-link. Bluesky is a fixed intent URL (`bsky.app/intent/compose?text=`); Mastodon needs a small instance prompt or a configurable home instance in theme config. ~20 lines, on-brand for an indie blog.
+
+#### 13. JSON Feed (`/feed.json`) — ✅ done 2026-07-14
+Same plain-string route pattern as the llms.txt generator — Hexo serves string routes verbatim. Pairs naturally with idea #4 (styled RSS); the spec is trivial and modern feed readers support it.
+
+#### 14. Glossary tooltips — ✅ done 2026-07-14
+A `source/_data/glossary.yml` plus a build-time filter that wraps first occurrences of each term in `<abbr title="…">`. Zero client JS, zero reader-facing config.
+
+### Medium effort
+
+#### 15. Stats page (`/stats/`) — ✅ done 2026-07-14
+The natural companion to the archive heatmap: total posts/words, posts-per-year bars, longest streak, top tags/categories. All computable at build time in a generator (same pattern as showroom), zero client JS.
+
+#### 16. Reading-position restore
+Small localStorage script offering "Continue where you left off" on long posts. Fits the conditional-loading philosophy — only load on posts above a length threshold.
+
+#### 17. Per-series ePub export
+`epub-export.js` already bundles a single post; a "Download series" button on the series nav strip that packs all parts into one book with chapters is a distinctive extension of existing code.
+
+### Dev QoL
+
+#### 18. Build-time internal link checker — ✅ done 2026-07-14
+An `after_generate` filter that warns on internal hrefs with no matching route. Catches broken cross-post links before deploy; no runtime cost.
+
+### Checked and already covered (do not re-suggest)
+
+- **Search index lazy-loading** — `search.js` already fetches `search.json` on first focus via a guarded promise.
+- **TOC scrollspy** — `toc.js` already highlights the active heading via IntersectionObserver.
+
 ## Deliberately not suggested
 
 - **Light-mode toggle** — the dark identity is the brand ("coldnight").

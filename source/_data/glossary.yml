@@ -1,0 +1,7 @@
+# Terms wrapped in <abbr> tooltips on first occurrence per post (theme glossary feature).
+# Key = term (word-boundary, case-insensitive match); value = tooltip definition.
+Hexo: A fast Node.js static site generator that turns Markdown into HTML at build time.
+KaTeX: A fast math typesetting library that renders LaTeX formulas — here at build time, no client JS.
+submodule: A git repository embedded at a fixed commit inside another repository.
+front-matter: The YAML block between --- markers at the top of a Markdown file holding page metadata.
+"static site generator": A tool that builds every page as plain HTML at deploy time — no server-side rendering per request.

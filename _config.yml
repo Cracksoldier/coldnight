@@ -119,6 +119,10 @@ theme_config:
     default: /images/og-default.jpg
   llms_txt:
     enabled: true
+  stats:
+    enabled: true
+  social:
+    share: true
   favicon: /favicon.svg
   navbar:
     icon: "❄"
@@ -129,6 +133,8 @@ theme_config:
         url: /
       - name: Archive
         url: /archives
+      - name: Stats
+        url: /stats
       - name: Links
         url: /links
       - name: Showroom

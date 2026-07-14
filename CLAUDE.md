@@ -221,6 +221,23 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `llms_txt.full: false` | Suppresses the companion `/llms-full.txt` (full markdown of every post/project) |
 | `heatmap.enabled: false` | Hides the GitHub-style posting-activity calendar on the archive page |
 | `heatmap.weeks: 52` | Number of weeks shown in the heatmap, ending on the current week |
+| `json_feed.enabled: false` | Suppresses `/feed.json` (JSON Feed 1.1) and its `<link rel="alternate">`; independent of `social.rss` |
+| `json_feed.limit: 20` | Number of newest posts in `/feed.json`; invalid/missing = 20 |
+| `glossary: false` | Disables `<abbr>` tooltips for terms defined in `source/_data/glossary.yml` (first occurrence per post) |
+| `stats.enabled: true` | Emits a `/stats/` page with build-time posting statistics (opt-in; this site enables it + a Stats navbar link) |
+| `link_check.enabled: false` | Disables the build-time internal link checker (warns about hrefs with no matching route) |
+| `link_check.fail: true` | Broken internal links fail the build with exit code 1 (for CI); default is warn-only |
+
+## Glossary terms
+
+`source/_data/glossary.yml` is a flat map of term → definition (quote multi-word keys):
+
+```yaml
+Hexo: A fast static site generator powered by Node.js.
+"static site generator": A tool that builds all HTML at deploy time.
+```
+
+The theme wraps the first occurrence of each term per post in an `<abbr>` tooltip — never inside code blocks, links, or headings. Disable with `glossary: false` in `theme_config`.
 
 ## Audio player
 
