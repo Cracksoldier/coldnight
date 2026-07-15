@@ -14,7 +14,7 @@ This repository is the example/demo site for the **[coldnight Hexo theme](https:
 | Featured post hero | `pinned: true` promotes a post to a full-width hero above the grid |
 | Full-text search | Instant navbar dropdown — lazy-fetched, AND-matched, keyboard-navigable |
 | LightGallery v2 | Full-screen image viewer with zoom and thumbnail strip |
-| Code blocks | Language label, one-click copy, optional filename chip, diff highlighting |
+| Code blocks | Language label, one-click copy, optional click-to-download filename chip, diff highlighting |
 | Table of contents | Build-time heading list with scroll-spy |
 | Mermaid diagrams | ` ```mermaid ` blocks rendered to SVG — all assets self-hosted |
 | KaTeX math | `$...$` and `$$...$$` rendered at build time — zero runtime JS |

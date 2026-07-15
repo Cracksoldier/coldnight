@@ -1,6 +1,7 @@
 ---
 title: Syntax Highlighting Showcase
 date: 2026-05-15 10:00:00
+updated: 2026-07-15
 categories: [Development]
 tags: [syntax-highlighting, code, javascript, python]
 cover_image: https://placeholdpicsum.dev/800x450
@@ -192,4 +193,18 @@ WHERE p.published = TRUE
 GROUP BY p.id, p.slug, p.title
 ORDER BY views DESC
 LIMIT 10;
+```
+
+## Downloadable filename chip
+
+A first-line `// filename: ...` comment (or `#`/`/* */` for other languages) tags a block with a source filename. It renders as a chip in the toolbar — click it to download the block's contents as that file.
+
+```javascript
+// filename: fib.js
+function fib(n, memo = {}) {
+  if (n in memo) return memo[n]
+  if (n <= 1) return n
+  memo[n] = fib(n - 1, memo) + fib(n - 2, memo)
+  return memo[n]
+}
 ```
