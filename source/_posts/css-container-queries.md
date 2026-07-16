@@ -6,6 +6,10 @@ tags: [css, responsive-design, frontend]
 excerpt: Container queries let components respond to the size of their container rather than the viewport. After a year of using them in production, here's what actually changes about how you write CSS.
 ---
 
+{% note info %}
+This post has no `cover_image` in its front-matter — the cover on its index card is the site-wide `cover.default` fallback (`/images/og-default.jpg`), which also serves as the `og:image` for social previews.
+{% endnote %}
+
 Container queries landed in all major browsers in late 2023. A year of using them in real projects has clarified where they genuinely help and where media queries are still the right tool.
 
 ## The problem they solve

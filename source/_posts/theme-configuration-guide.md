@@ -5,7 +5,7 @@ categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
-updated: 2026-07-09
+updated: 2026-07-16
 difficulty: 1
 ---
 
@@ -267,6 +267,12 @@ cover:
 ```
 
 Set `cover_image` in a post's front-matter to use a per-post image. If omitted, `cover.default` is used. If that is also empty, the card renders without a cover strip.
+
+The same fallback chain feeds the `og:image` meta tag, so `cover.default` doubles as your site-wide social-preview image (1200×630 px recommended). This demo site sets it to `/images/og-default.jpg`.
+
+{% note warning %}
+If you set `cover.default`, make sure the file actually exists in your site's `source/` directory. The theme trusts the configured path — a missing file means every post without its own `cover_image` shows a broken image in its card cover, and social previews point at a 404.
+{% endnote %}
 
 ---
 

@@ -6,6 +6,10 @@ tags: [terminal, zsh, productivity, dotfiles]
 excerpt: The shell, prompt, and tooling that make up my terminal environment — what I use, why, and the bits that took the most iteration to get right.
 ---
 
+{% note info %}
+Like a handful of other posts on this demo site, this one deliberately omits `cover_image` to show the `cover.default` fallback in action on post cards.
+{% endnote %}
+
 My terminal setup is stable enough that I haven't made major changes in about a year. Here's what it looks like and why each piece is there.
 
 ## Shell: zsh with minimal config
