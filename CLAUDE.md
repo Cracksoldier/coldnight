@@ -291,6 +291,7 @@ All parameters except `src` are optional:
 | `bg` | from `model_viewer.background` | CSS colour for canvas background |
 | `view` | `front` | Starting camera angle: `front` (Z-axis) or `iso` ((1,1,1) diagonal) |
 | `autorotate` | — | Any non-empty value (e.g. `"true"`) enables continuous Y-axis spin |
+| `thumbnail` | — | Path to a preview image; shows a poster with a "Load 3D model" button — model file is only fetched on click |
 | `caption` | — | Plain-text caption rendered below the viewer |
 
 Three.js (~680 KB) and loader scripts are only loaded on posts that contain a `{% model %}` tag. Vendor files live at `themes/coldnight/source/vendor/three/`.
