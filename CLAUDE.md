@@ -104,7 +104,7 @@ title: My Post
 date: 2026-01-01
 categories: [Dev]
 tags: [javascript, hexo]
-cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default
+cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default — bare boolean false hides the card/hero thumbnail for this post (og:image fallback unaffected)
 cover_caption: "Photo by Jane Doe"  # optional; wraps cover in <figure><figcaption>
 excerpt: "Override the auto-excerpt shown on post cards."
 description: "Custom og:description / meta description."  # optional; overrides excerpt for OG/SEO
@@ -210,6 +210,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `external_links: true` | Adds `target="_blank"` + ↗ icon to external links in posts |
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
 | `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
+| `cover.fallback: false` | Posts without `cover_image` render no card/hero thumbnail instead of `cover.default`; `og:image` keeps the fallback |
 | `audio_player: false` | Prevents `audio-player.js` from loading; `{% audio %}` tag returns empty string |
 | `compare_slider: false` | Prevents `compare-slider.js` from loading; `{% compare %}` tag returns empty string |
 | `stale_warning.enabled: true` | Shows an "information may be outdated" banner on old posts (opt-in) |

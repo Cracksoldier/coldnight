@@ -263,12 +263,20 @@ Set `auto_mount: false` to opt out of automatic wiring and use only explicit gal
 ```yaml
 cover:
   default: ""          # fallback when no cover_image in front-matter
+  fallback: true       # false = no thumbnail instead of cover.default
   aspect_ratio: "16/9"
 ```
 
 Set `cover_image` in a post's front-matter to use a per-post image. If omitted, `cover.default` is used. If that is also empty, the card renders without a cover strip.
 
-The same fallback chain feeds the `og:image` meta tag, so `cover.default` doubles as your site-wide social-preview image (1200×630 px recommended). This demo site sets it to `/images/og-default.jpg`.
+A similar fallback chain feeds the `og:image` meta tag, so `cover.default` doubles as your site-wide social-preview image (1200×630 px recommended). This demo site sets it to `/images/og-default.jpg`.
+
+Thumbnails are entirely optional — two switches decouple them from the social-preview fallback:
+
+- `cover.fallback: false` — posts without a `cover_image` render no card or hero thumbnail at all, instead of falling back to `cover.default`.
+- `cover_image: false` in a post's front-matter (bare boolean, not `"false"`) — hides the thumbnail for that single post while the rest of the site keeps the fallback.
+
+In both cases `og:image` still uses `cover.default`, so social previews keep working for posts that opt out of the visible thumbnail.
 
 {% note warning %}
 If you set `cover.default`, make sure the file actually exists in your site's `source/` directory. The theme trusts the configured path — a missing file means every post without its own `cover_image` shows a broken image in its card cover, and social previews point at a 404.
