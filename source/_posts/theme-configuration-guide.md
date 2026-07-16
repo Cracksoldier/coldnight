@@ -7,6 +7,7 @@ cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
 updated: 2026-07-16
 difficulty: 1
+pinned: true
 ---
 
 All theme options live in `themes/coldnight/_config.yml`. You can override any of them in the root `_config.yml` under `theme_config:` without touching the theme source.

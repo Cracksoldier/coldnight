@@ -5,6 +5,7 @@ categories: [Development]
 tags: [javascript, async, promises, patterns]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: A practical reference for async/await, Promise combinators, AbortController, and async generators — with annotated examples.
+pinned: true
 ---
 
 Asynchronous JavaScript has evolved significantly. This post collects the patterns worth knowing in 2026.
