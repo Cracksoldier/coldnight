@@ -44,9 +44,16 @@
       <a href="configuration.html#config-search">Search</a>
       <a href="configuration.html#config-og">Open Graph / SEO</a>
       <a href="configuration.html#config-llms-txt">llms.txt</a>
+      <a href="configuration.html#config-json-feed">JSON Feed</a>
+      <a href="configuration.html#config-stats">Stats page</a>
+      <a href="configuration.html#config-heatmap">Archive heatmap</a>
+      <a href="configuration.html#config-link-check">Link checker</a>
       <a href="configuration.html#config-related-posts">Related posts</a>
       <a href="configuration.html#config-pinned">Featured post</a>
       <a href="configuration.html#config-series">Series posts</a>
+      <a href="configuration.html#config-glossary">Glossary tooltips</a>
+      <a href="configuration.html#config-stale-warning">Stale-post warning</a>
+      <a href="configuration.html#config-difficulty">Difficulty meter</a>
       <a href="configuration.html#config-permalink-button">Permalink button</a>
       <a href="configuration.html#config-epub">ePub export</a>
       <a href="configuration.html#config-pdf-viewer">PDF viewer</a>
@@ -74,6 +81,7 @@
       <a href="#tag-pdf">{% pdf %}</a>
       <a href="#tag-model">{% model %}</a>
       <a href="#tag-audio">{% audio %}</a>
+      <a href="#tag-compare">{% compare %}</a>
       <a href="#code-filename">Code filename label</a>
       <a href="#mermaid">Mermaid diagrams</a>
       <a href="#math">KaTeX math</a>
@@ -111,12 +119,15 @@
 <span class="nb">updated</span><span class="pn">:</span>        <span class="val">2026-03-10</span>            <span class="cm"># optional; shows "↻ Updated YYYY-MM-DD" in post metadata when it differs from date</span>
 <span class="nb">categories</span><span class="pn">:</span>    <span class="pn">[</span><span class="str">Dev</span><span class="pn">]</span>
 <span class="nb">tags</span><span class="pn">:</span>           <span class="pn">[</span><span class="str">javascript</span><span class="pn">,</span> <span class="str">hexo</span><span class="pn">]</span>
-<span class="nb">cover_image</span><span class="pn">:</span>    <span class="str">/images/cover.jpg</span>     <span class="cm"># optional; falls back to cover.default</span>
+<span class="nb">cover_image</span><span class="pn">:</span>    <span class="str">/images/cover.jpg</span>     <span class="cm"># optional; falls back to cover.default — false (bare boolean) hides the card/hero thumbnail</span>
 <span class="nb">cover_caption</span><span class="pn">:</span>  <span class="str">"Photo by Jane Doe"</span>   <span class="cm"># optional; wraps cover in &lt;figure&gt;&lt;figcaption&gt;</span>
 <span class="nb">excerpt</span><span class="pn">:</span>        <span class="str">"Override the auto-excerpt shown on post cards."</span>
+<span class="nb">description</span><span class="pn">:</span>    <span class="str">"Custom og:description / meta description."</span>  <span class="cm"># optional; overrides excerpt for OG/SEO</span>
 <span class="nb">pinned</span><span class="pn">:</span>         <span class="val">true</span>                  <span class="cm"># optional; promotes post to featured hero on the index page</span>
 <span class="nb">series</span><span class="pn">:</span>         <span class="str">"My Series Name"</span>      <span class="cm"># optional; groups post into a numbered series nav strip</span>
 <span class="nb">abstract</span><span class="pn">:</span>       <span class="str">"Short summary shown above the post body."</span>  <span class="cm"># optional; Markdown supported</span>
+<span class="nb">difficulty</span><span class="pn">:</span>     <span class="val">3</span>                     <span class="cm"># optional; integer 1–5 → signal-bar meter (alias: effort:)</span>
+<span class="nb">stale_warning</span><span class="pn">:</span>  <span class="val">false</span>                 <span class="cm"># optional; suppresses the post-age banner on this post</span>
 <span class="nb">llms_txt</span><span class="pn">:</span>       <span class="val">false</span>                 <span class="cm"># optional; excludes this post from /llms.txt and /llms-full.txt</span>
 <span class="pn">---</span></code></pre>
 
@@ -128,12 +139,15 @@
         <tr><td class="opt-key">categories</td><td>Array of category names. The first is the primary category used in post cards and related-post scoring.</td></tr>
         <tr><td class="opt-key">tags</td><td>Array of tag names. Used in the tag cloud widget, tag pages, related-post scoring, and OG keywords.</td></tr>
         <tr><td class="opt-key">updated</td><td>Explicit last-modified date. When set and different from <code>date</code>, a "↻ Updated YYYY-MM-DD" badge appears in the post metadata row. If omitted Hexo falls back to the file's mtime — set this explicitly to avoid false badges on fresh <code>git clone</code>s.</td></tr>
-        <tr><td class="opt-key">cover_image</td><td>Path to the post's cover image. Used on post cards, the post header, the pinned hero, and as <code>og:image</code>. Falls back to <code>theme.cover.default</code> if omitted.</td></tr>
+        <tr><td class="opt-key">cover_image</td><td>Path to the post's cover image. Used on post cards, the post header, the pinned hero, and as <code>og:image</code>. Falls back to <code>theme.cover.default</code> if omitted. Set to <code>false</code> (bare YAML boolean) to render this post without a card/hero thumbnail — <code>og:image</code> still falls back to <code>cover.default</code>. Site-wide, <code>cover.fallback: false</code> in the theme config does the same for every post without a <code>cover_image</code>.</td></tr>
         <tr><td class="opt-key">cover_caption</td><td>Attribution text shown below the cover image. When present the cover is wrapped in a <code>&lt;figure&gt;&lt;figcaption&gt;</code> element and the <code>img</code> gets <code>alt=""</code> so screen readers don't announce both the caption and the alt text.</td></tr>
         <tr><td class="opt-key">excerpt</td><td>Override the auto-excerpt shown on post cards and in <code>og:description</code>. If omitted, Hexo uses the text up to the first <code>&lt;!-- more --&gt;</code> tag, or the start of the post body.</td></tr>
+        <tr><td class="opt-key">description</td><td>Custom <code>og:description</code> / meta description. Takes priority over <code>excerpt</code> in the OG/SEO chain; does not affect what post cards display. See <a href="configuration.html#config-og">Open Graph / SEO</a>.</td></tr>
         <tr><td class="opt-key">pinned</td><td>Set to <code>true</code> to promote this post to the featured hero card on index page 1. See <a href="configuration.html#config-pinned">Featured post</a>.</td></tr>
         <tr><td class="opt-key">series</td><td>A string that groups this post with others sharing the same value. All matching posts appear in a numbered nav strip above the post body, sorted by date. See <a href="configuration.html#config-series">Series posts</a>.</td></tr>
         <tr><td class="opt-key">abstract</td><td>A short summary rendered as a styled callout between the post header and body. Supports inline Markdown. See <a href="#abstract">Abstract block</a>.</td></tr>
+        <tr><td class="opt-key">difficulty</td><td>Integer 1–5, rendered as a signal-bar meter on post cards, the featured hero, and the post header. <code>effort:</code> is an alias with an "Effort" label; if both are set, <code>difficulty</code> wins. Invalid values render nothing. See <a href="configuration.html#config-difficulty">Difficulty meter</a>.</td></tr>
+        <tr><td class="opt-key">stale_warning</td><td>Set to <code>false</code> to suppress the post-age banner on this post when <code>stale_warning.enabled</code> is on site-wide. See <a href="configuration.html#config-stale-warning">Stale-post warning</a>.</td></tr>
         <tr><td class="opt-key">llms_txt</td><td>Set to <code>false</code> to exclude this post from the generated <code>/llms.txt</code> and <code>/llms-full.txt</code> files. Works on pages and showroom projects too. See <a href="configuration.html#config-llms-txt">llms.txt</a>.</td></tr>
       </tbody>
     </table>
@@ -622,6 +636,7 @@ function binarySearch(arr, target) {
         <tr><td class="opt-key">bg</td><td>No</td><td><code>#1a1a2e</code></td><td>Canvas background colour. Accepts any CSS colour value. Defaults to the <code>model_viewer.background</code> config setting.</td></tr>
         <tr><td class="opt-key">view</td><td>No</td><td><code>front</code></td><td>Starting camera orientation. <code>front</code> = camera on the Z axis (default). <code>iso</code> = camera on the (1,1,1) diagonal for an isometric perspective.</td></tr>
         <tr><td class="opt-key">autorotate</td><td>No</td><td>—</td><td>Any non-empty value enables continuous spin around the Y-axis (canonical form: <code>"true"</code>). Dragging pauses the rotation; releasing resumes it.</td></tr>
+        <tr><td class="opt-key">thumbnail</td><td>No</td><td>—</td><td>Path to a preview image. The viewer renders a static poster with a "Load 3D model" button instead of fetching the model on page load — the model file (and its render loop) only loads on click. Ideal for heavy <code>.glb</code> files.</td></tr>
         <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Optional caption rendered below the viewer. Plain text only (HTML-escaped).</td></tr>
       </tbody>
     </table>
@@ -643,7 +658,10 @@ function binarySearch(arr, target) {
 <span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/robot.glb"</span> <span class="nb">autorotate</span><span class="pn">=</span><span class="str">"true"</span> <span class="pn">%}</span>
 
 <span class="cm">{# Iso view + auto-rotate combined #}</span>
-<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">view</span><span class="pn">=</span><span class="str">"iso"</span> <span class="nb">autorotate</span><span class="pn">=</span><span class="str">"true"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Bracket assembly"</span> <span class="pn">%}</span></code></pre>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/part.stl"</span> <span class="nb">view</span><span class="pn">=</span><span class="str">"iso"</span> <span class="nb">autorotate</span><span class="pn">=</span><span class="str">"true"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Bracket assembly"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Click-to-load poster — model is only fetched when the reader clicks #}</span>
+<span class="pn">{%</span> <span class="kw">model</span> <span class="nb">src</span><span class="pn">=</span><span class="str">"/models/heavy-scene.glb"</span> <span class="nb">thumbnail</span><span class="pn">=</span><span class="str">"/images/scene-preview.jpg"</span> <span class="pn">%}</span></code></pre>
 
     <h3>How it works</h3>
     <p><code>scripts/helpers.js</code> registers <code>model</code> as an inline Hexo tag. It emits a <code>.model-viewer-wrap</code> container holding a <code>.model-viewer</code> div with <code>data-src</code>, <code>data-bg</code>, and an inline <code>style="height:…"</code>. The height value is validated against an allowlist regex (<code>/^\d+(\.\d+)?(px|em|rem|vh|vw|%)$/</code>) before interpolation — any value with disallowed characters falls back to <code>400px</code> to prevent CSS injection.</p>
@@ -708,6 +726,44 @@ function binarySearch(arr, target) {
     <div class="callout callout-warning">
       <span class="callout-icon">⚠️</span>
       <p>Set <code>audio_player: false</code> in the theme config to disable the tag globally. The tag returns an empty string and <code>audio-player.js</code> is never loaded. See <a href="configuration.html#config-audio-player">audio_player configuration</a>.</p>
+    </div>
+
+    <hr>
+
+    <!-- Compare slider tag -->
+    <h2 id="tag-compare">{% compare %} tag</h2>
+    <p>Embeds a before/after image comparison slider — two stacked images with a draggable divider. Drag, touch, or use the arrow keys to move the split. <code>compare-slider.js</code> is only injected on post pages that contain at least one <code>{% compare %}</code> tag.</p>
+
+    <h3>Syntax</h3>
+<pre><code><span class="pn">{%</span> <span class="kw">compare</span> <span class="nb">before</span><span class="pn">=</span><span class="str">"/images/old.png"</span> <span class="nb">after</span><span class="pn">=</span><span class="str">"/images/new.png"</span> <span class="pn">%}</span>
+<span class="pn">{%</span> <span class="kw">compare</span> <span class="nb">before</span><span class="pn">=</span><span class="str">"/images/old.png"</span> <span class="nb">after</span><span class="pn">=</span><span class="str">"/images/new.png"</span> <span class="nb">label_before</span><span class="pn">=</span><span class="str">"v1"</span> <span class="nb">label_after</span><span class="pn">=</span><span class="str">"v2"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Redesign"</span> <span class="pn">%}</span></code></pre>
+
+    <table>
+      <thead><tr><th>Attribute</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td class="opt-key">before</td><td>Yes</td><td>—</td><td>Root-relative path to the "before" image.</td></tr>
+        <tr><td class="opt-key">after</td><td>Yes</td><td>—</td><td>Root-relative path to the "after" image. Both images should share the same aspect ratio — the frame sizes itself to the <em>after</em> image.</td></tr>
+        <tr><td class="opt-key">label_before</td><td>No</td><td><code>Before</code></td><td>Corner label over the left side. Also used as the image's <code>alt</code> text.</td></tr>
+        <tr><td class="opt-key">label_after</td><td>No</td><td><code>After</code></td><td>Corner label over the right side. Also used as the image's <code>alt</code> text.</td></tr>
+        <tr><td class="opt-key">caption</td><td>No</td><td>—</td><td>Muted text rendered below the frame as a <code>&lt;figcaption&gt;</code>. Plain text only (HTML-escaped).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Examples</h3>
+<pre><code><span class="cm">{# Minimal — default "Before" / "After" labels #}</span>
+<span class="pn">{%</span> <span class="kw">compare</span> <span class="nb">before</span><span class="pn">=</span><span class="str">"/images/photo-raw.jpg"</span> <span class="nb">after</span><span class="pn">=</span><span class="str">"/images/photo-edited.jpg"</span> <span class="pn">%}</span>
+
+<span class="cm">{# Custom labels and caption #}</span>
+<span class="pn">{%</span> <span class="kw">compare</span> <span class="nb">before</span><span class="pn">=</span><span class="str">"/images/site-2019.png"</span> <span class="nb">after</span><span class="pn">=</span><span class="str">"/images/site-2026.png"</span> <span class="nb">label_before</span><span class="pn">=</span><span class="str">"2019"</span> <span class="nb">label_after</span><span class="pn">=</span><span class="str">"2026"</span> <span class="nb">caption</span><span class="pn">=</span><span class="str">"Homepage redesign"</span> <span class="pn">%}</span></code></pre>
+
+    <h3>How it works</h3>
+    <p><code>scripts/helpers.js</code> registers <code>compare</code> as an inline Hexo tag. It emits a <code>&lt;figure class="compare-slider"&gt;</code> containing both images, a divider line, corner labels, and a native <code>&lt;input type="range"&gt;</code> stretched invisibly over the whole frame. The <em>before</em> image is clipped via a CSS custom property (<code>--compare-pos</code>) that the range input updates — <code>compare-slider.js</code> just syncs <code>input</code> events to the custom property.</p>
+
+    <p>Because the control is a real range input, keyboard support (<kbd>←</kbd>/<kbd>→</kbd>), touch, and screen-reader semantics come for free. Without JavaScript the slider renders as a static 50/50 split — the images and labels are all server-rendered HTML.</p>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">⚠️</span>
+      <p>Set <code>compare_slider: false</code> in the theme config to disable the tag globally. The tag returns an empty string and <code>compare-slider.js</code> is never loaded. See <a href="configuration.html#config-misc">Misc toggles</a>.</p>
     </div>
 
     <hr>

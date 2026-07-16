@@ -44,9 +44,16 @@
       <a href="#config-search">Search</a>
       <a href="#config-og">Open Graph / SEO</a>
       <a href="#config-llms-txt">llms.txt</a>
+      <a href="#config-json-feed">JSON Feed</a>
+      <a href="#config-stats">Stats page</a>
+      <a href="#config-heatmap">Archive heatmap</a>
+      <a href="#config-link-check">Link checker</a>
       <a href="#config-related-posts">Related posts</a>
       <a href="#config-pinned">Featured post</a>
       <a href="#config-series">Series posts</a>
+      <a href="#config-glossary">Glossary tooltips</a>
+      <a href="#config-stale-warning">Stale-post warning</a>
+      <a href="#config-difficulty">Difficulty meter</a>
       <a href="#config-permalink-button">Permalink button</a>
       <a href="#config-epub">ePub export</a>
       <a href="#config-pdf-viewer">PDF viewer</a>
@@ -74,6 +81,7 @@
       <a href="writing.html#tag-pdf">{% pdf %}</a>
       <a href="writing.html#tag-model">{% model %}</a>
       <a href="writing.html#tag-audio">{% audio %}</a>
+      <a href="writing.html#tag-compare">{% compare %}</a>
       <a href="writing.html#code-filename">Code filename label</a>
       <a href="writing.html#mermaid">Mermaid diagrams</a>
       <a href="writing.html#math">KaTeX math</a>
@@ -106,6 +114,10 @@
     <p>Controls the top navigation bar. Links accept any absolute path or external URL.</p>
 <pre><code><span class="nb">navbar</span><span class="pn">:</span>
   <span class="nb">title</span><span class="pn">:</span> <span class="str">"My Blog"</span>        <span class="cm"># site name shown left of the navbar</span>
+  <span class="nb">icon</span><span class="pn">:</span> <span class="str">"❄"</span>               <span class="cm"># brand icon before the title — image path or emoji/text; empty = built-in SVG logo</span>
+  <span class="nb">icon_color</span><span class="pn">:</span> <span class="str">"#60a5fa"</span>   <span class="cm"># font colour for a text icon; ignored for images</span>
+  <span class="nb">icon_after</span><span class="pn">:</span> <span class="str">""</span>          <span class="cm"># optional second icon after the title (hides on mobile)</span>
+  <span class="nb">icon_after_color</span><span class="pn">:</span> <span class="str">""</span>    <span class="cm"># font colour for a text icon_after</span>
   <span class="nb">links</span><span class="pn">:</span>
     <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">Home</span>
       <span class="nb">url</span><span class="pn">:</span>  <span class="str">/</span>
@@ -113,6 +125,42 @@
       <span class="nb">url</span><span class="pn">:</span>  <span class="str">/archives</span>
     <span class="pn">-</span> <span class="nb">name</span><span class="pn">:</span> <span class="str">About</span>
       <span class="nb">url</span><span class="pn">:</span>  <span class="str">/about</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">navbar.icon</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Brand icon rendered before the navbar title. Accepts an image path (<code>/images/logo.png</code> — detected by extension: <code>svg&nbsp;png&nbsp;jpg/jpeg&nbsp;gif&nbsp;webp&nbsp;ico&nbsp;avif</code>) or an emoji / short text snippet. Empty falls back to the theme's built-in SVG logo. Inline SVG in config is not supported — ship a file instead.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">navbar.icon_color</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Font colour for a <em>text</em> <code>navbar.icon</code> — hex, keyword, or modern colour functions incl. <code>rgb(… / …)</code>, <code>oklch()</code>, <code>var()</code> (allowlist-validated; invalid values are silently dropped). Ignored for image icons; colour-emoji glyphs ignore CSS <code>color</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">navbar.icon_after</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Optional image path or emoji/text rendered <em>after</em> the navbar title. Hides on mobile together with the title (the before-icon stays visible).</td>
+        </tr>
+        <tr>
+          <td class="opt-key">navbar.icon_after_color</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Font colour for a text <code>navbar.icon_after</code>; same rules as <code>navbar.icon_color</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">favicon</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Top-level key (not under <code>navbar:</code>). Favicon image path; the MIME type is derived from the extension. Empty or not an image path falls back to the theme's default <code>favicon.svg</code>&nbsp;+&nbsp;<code>favicon.ico</code> pair.</td>
+        </tr>
+      </tbody>
+    </table>
 
     <hr>
 
@@ -177,7 +225,7 @@
           <td class="opt-key">social.share</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">false</td>
-          <td>Show a row of share buttons (X&nbsp;/&nbsp;Twitter, LinkedIn, Copy link) in the post footer below the tags. Set to <code>true</code> to enable. The copy-link button reuses the same clipboard helper as the permalink button and shows a toast on success.</td>
+          <td>Show a row of share buttons (X&nbsp;/&nbsp;Twitter, LinkedIn, Bluesky, Mastodon, Copy link) in the post footer below the tags. Set to <code>true</code> to enable. X&nbsp;/&nbsp;Twitter, LinkedIn, and Bluesky are plain intent-URL anchors — zero JavaScript. Mastodon has no central instance, so the button prompts for your instance domain (remembered in <code>localStorage</code>). The copy-link button reuses the same clipboard helper as the permalink button and shows a toast on success.</td>
         </tr>
       </tbody>
     </table>
@@ -203,6 +251,12 @@
           <td>Absolute path to a fallback image used when a post has no <code>cover_image</code> in its front-matter.</td>
         </tr>
         <tr>
+          <td class="opt-key">cover.fallback</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Set to <code>false</code> to render posts without a <code>cover_image</code> with no card/hero thumbnail at all, instead of falling back to <code>cover.default</code>. The <code>og:image</code> meta tag keeps using <code>cover.default</code> either way, so social previews are unaffected.</td>
+        </tr>
+        <tr>
           <td class="opt-key">cover.aspect_ratio</td>
           <td class="opt-type">string</td>
           <td class="opt-default">"16/9"</td>
@@ -213,7 +267,10 @@
 
 <pre><code><span class="nb">cover</span><span class="pn">:</span>
   <span class="nb">default</span><span class="pn">:</span>      <span class="str">"/images/default-cover.jpg"</span>
+  <span class="nb">fallback</span><span class="pn">:</span>     <span class="val">true</span>
   <span class="nb">aspect_ratio</span><span class="pn">:</span> <span class="str">"16/9"</span></code></pre>
+
+    <p>Individual posts can opt out of the thumbnail with <code>cover_image: false</code> in their front-matter (bare YAML boolean, not <code>"false"</code>) — the card and pinned hero render without a cover strip while <code>og:image</code> still falls back to <code>cover.default</code>.</p>
 
     <hr>
 
@@ -234,6 +291,18 @@
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
           <td>Display the detected language name in the top-right corner of each code block.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">code.collapse</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Auto-collapse long code blocks behind a &ldquo;Show N more lines&rdquo; button. Blocks only collapse when they exceed <code>collapse_lines</code> by at least 5 lines, so a block is never truncated for a trivial win.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">code.collapse_lines</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">25</td>
+          <td>Number of lines visible while a block is collapsed.</td>
         </tr>
       </tbody>
     </table>
@@ -478,6 +547,42 @@
           <td class="opt-default">true</td>
           <td>Enable the series navigation strip on post pages. When a post has a <code>series:</code> front-matter value, this strip lists all posts in the series with the current post highlighted. Set to <code>false</code> to disable globally. See <a href="#config-series">Series posts</a>.</td>
         </tr>
+        <tr>
+          <td class="opt-key">compare_slider</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Load <code>compare-slider.js</code> on post pages that use the <code>{% compare %}</code> before/after image slider tag. Set to <code>false</code> to disable the tag globally and prevent the script from loading. See <a href="writing.html#tag-compare">Image compare slider</a>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">view_transitions</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable the cross-document View Transitions crossfade between pages (<code>@view-transition { navigation: auto }</code>). Pure CSS — browsers without support simply navigate normally. Set to <code>false</code> to remove the rule.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">external_links</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Add <code>target="_blank" rel="noopener noreferrer"</code> and a small ↗ icon to external links inside post bodies at build time. Internal links, anchors, and mailto links are untouched.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">image_captions</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Convert standalone <code>&lt;p&gt;&lt;img alt="…"&gt;&lt;/p&gt;</code> paragraphs to <code>&lt;figure&gt;&lt;figcaption&gt;</code> at build time, using the image's <code>alt</code> text as a visible caption. Images without alt text are left unchanged.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">glossary</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Wrap the first occurrence of each term from <code>source/_data/glossary.yml</code> in an <code>&lt;abbr&gt;</code> tooltip per post. Set to <code>false</code> to disable. See <a href="#config-glossary">Glossary tooltips</a>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">difficulty</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the 1–5 signal-bar difficulty meter for posts and showroom projects that set <code>difficulty:</code> (or <code>effort:</code>) front-matter. Set to <code>false</code> to hide it everywhere. See <a href="#config-difficulty">Difficulty meter</a>.</td>
+        </tr>
       </tbody>
     </table>
 
@@ -531,7 +636,7 @@
       <tbody>
         <tr><td class="opt-key">og:title / twitter:title</td><td><code>page.title</code>, falls back to <code>config.title</code></td></tr>
         <tr><td class="opt-key">og:description / twitter:description / meta description</td><td><code>page.description</code> → <code>page.excerpt</code> → start of the post body (all HTML-stripped + entity-decoded) → <code>config.description</code>. Capped at 160 characters.</td></tr>
-        <tr><td class="opt-key">og:image / twitter:image</td><td><code>cover_image</code> front-matter → <code>theme.cover.default</code>; resolved to an absolute URL using <code>config.url</code></td></tr>
+        <tr><td class="opt-key">og:image / twitter:image</td><td><code>cover_image</code> front-matter → <code>theme.cover.default</code>; resolved to an absolute URL using <code>config.url</code>. The thumbnail opt-outs (<code>cover.fallback: false</code>, <code>cover_image: false</code>) do not affect this chain</td></tr>
         <tr><td class="opt-key">og:type</td><td><code>article</code> on post pages, <code>website</code> everywhere else</td></tr>
         <tr><td class="opt-key">og:site_name</td><td><code>config.title</code></td></tr>
         <tr><td class="opt-key">canonical</td><td><code>page.permalink</code></td></tr>
@@ -596,6 +701,126 @@
     <p><strong>Index descriptions</strong> — each entry's one-liner comes from the same shared <code>page_description</code> chain used for <a href="#config-og">og:description</a> (front-matter <code>description:</code> → excerpt → start of the body, HTML-stripped and entity-decoded), capped at 200 characters on a word boundary. Projects use their <code>subtitle:</code> front-matter first. Link labels escape <code>[</code>&nbsp;<code>]</code> and link targets percent-encode parentheses and whitespace so titles and custom permalinks cannot break the Markdown link syntax.</p>
 
     <p><strong>Full file</strong> — <code>/llms-full.txt</code> uses each entry's raw Markdown source (<code>page._content</code>) rather than stripped HTML, so code blocks survive intact; <code>&lt;!-- more --&gt;</code> markers are removed. Theme tag plugins (<code>{% note %}</code>, <code>{% tabs %}</code>, …) appear unrendered.</p>
+
+    <hr>
+
+    <!-- JSON Feed -->
+    <h2 id="config-json-feed">JSON Feed</h2>
+    <p>The theme emits <code>/feed.json</code> — a <a href="https://www.jsonfeed.org/" target="_blank" rel="noopener">JSON Feed 1.1</a> — at build time, with a matching <code>&lt;link rel="alternate" type="application/feed+json"&gt;</code> in the page head. No plugin is required, and the feature is independent of <code>social.rss</code>: that key only controls the atom feed link, and the atom feed itself requires <code>hexo-generator-feed</code>.</p>
+
+<pre><code><span class="nb">json_feed</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>    <span class="cm"># emit /feed.json (JSON Feed 1.1)</span>
+  <span class="nb">limit</span><span class="pn">:</span>   <span class="val">20</span>      <span class="cm"># number of newest posts included</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">json_feed.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Emit <code>/feed.json</code> and its <code>&lt;link rel="alternate"&gt;</code>. Set to <code>false</code> to suppress both.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">json_feed.limit</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">20</td>
+          <td>Number of newest posts included in the feed. Invalid or missing values fall back to 20.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>A generator in <code>scripts/helpers.js</code> serialises the newest posts to the JSON Feed 1.1 schema: <code>id</code>/<code>url</code> (canonical permalink), <code>title</code>, <code>content_html</code>, <code>date_published</code>, <code>summary</code> (same shared <code>page_description</code> chain as <a href="#config-og">og:description</a>), and <code>tags</code>. Root-relative <code>href</code>/<code>src</code> attributes in the content are rewritten to absolute URLs — feed readers resolve relative paths against their own origin, not yours.</p>
+    <p><code>date_modified</code> is only set when the post has an <em>explicit</em> <code>updated:</code> in its front-matter — the same rule the "↻ Updated" badge and JSON-LD <code>dateModified</code> follow — so file-mtime noise on fresh clones never leaks into the feed.</p>
+
+    <hr>
+
+    <!-- Stats page -->
+    <h2 id="config-stats">Stats page</h2>
+    <p>Opt-in: emits a <code>/stats/</code> page with build-time posting statistics — total posts, total words, tag/category counts, posts-per-year bar chart, top-10 tag list, and the longest streak of consecutive months with at least one post. Zero client-side JavaScript: the bars are server-computed integer percentages.</p>
+
+<pre><code><span class="nb">stats</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>    <span class="cm"># opt-in — emit /stats/</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">stats.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Emit the <code>/stats/</code> page. The page is not linked anywhere automatically — add a navbar link (<code>{ name: Stats, url: /stats }</code>) if you want it discoverable.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>A generator in <code>scripts/helpers.js</code> walks all posts once, counting words (code blocks excluded, same counter as <code>word_count</code>) and bucketing dates by year and month. Dates run through the same <code>config.timezone</code> chain as the <a href="#config-heatmap">archive heatmap</a>, so both features agree on which day a post belongs to. The result is rendered by <code>layout/stats.ejs</code>. When there are no posts, or <code>stats.enabled</code> is false, no route is emitted at all.</p>
+    <p>The streak metric counts consecutive <em>months</em> with at least one post rather than days — day streaks degenerate to 1 on a typical blog cadence.</p>
+
+    <hr>
+
+    <!-- Archive heatmap -->
+    <h2 id="config-heatmap">Archive heatmap</h2>
+    <p>A GitHub-style posting-activity calendar rendered at the top of the archive page: one cell per day, coloured by how many posts were published that day, with month labels and a total count.</p>
+
+<pre><code><span class="nb">heatmap</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>    <span class="cm"># posting-activity calendar on the archive page</span>
+  <span class="nb">weeks</span><span class="pn">:</span>   <span class="val">52</span>      <span class="cm"># window size, ending on the current week</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">heatmap.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Show the heatmap on the archive page. Set to <code>false</code> to hide it.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">heatmap.weeks</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">52</td>
+          <td>Number of weeks shown, ending on the current week.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>The <code>heatmap_data</code> helper in <code>scripts/helpers.js</code> counts posts per calendar day (respecting <code>config.timezone</code>), builds the week grid entirely at build time, and caches the result so paginated archive pages don't recompute it. Colour intensity (levels 1–4) is normalised against the maximum count <em>inside the visible window</em> — a historical high-volume day outside the window can't dim the current view. Future days in the current week render as empty placeholders. The cells are plain HTML/CSS with <code>title</code> tooltips; no client-side JavaScript is involved.</p>
+
+    <hr>
+
+    <!-- Internal link checker -->
+    <h2 id="config-link-check">Internal link checker</h2>
+    <p>A build-time checker that warns about internal <code>&lt;a href&gt;</code> targets with no matching generated route — catching typos, renamed posts, and stale cross-references before they ship. External links are never touched (no network requests).</p>
+
+<pre><code><span class="nb">link_check</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>    <span class="cm"># warn about internal links with no matching route</span>
+  <span class="nb">fail</span><span class="pn">:</span>    <span class="val">false</span>   <span class="cm"># true = exit code 1 on broken links (for CI)</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">link_check.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Collect and validate internal links during <code>hexo generate</code>. Warnings are printed via the Hexo logger.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">link_check.fail</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Fail the build with exit code 1 when broken links are found — intended for CI pipelines. Default is warn-only.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>Two phases in <code>scripts/helpers.js</code>: an <code>after_render:html</code> filter collects every <code>href</code> as each page renders, and a <code>before_exit</code> filter validates them against the full route list once generation finishes. Absolute URLs pointing at the site's own origin are checked too; <code>mailto:</code>, <code>tel:</code>, anchors, and protocol-relative URLs are skipped. Page-relative links are resolved against the linking page's directory, and <code>config.root</code> is stripped so subdirectory deployments validate correctly.</p>
+    <p>Warnings are aggregated by missing target rather than by page — a sitewide broken footer link reports once with a page count instead of flooding the log. <code>hexo server</code> collects but never validates (there is no exit), so the checker only speaks during <code>hexo generate</code>.</p>
 
     <hr>
 
@@ -707,6 +932,91 @@
     <p>The current post renders as a <code>&lt;span&gt;</code> rather than an <code>&lt;a&gt;</code>. This prevents a self-link, keeps the tab order clean, and provides the visual distinction of the <code>.series-nav__item--active</code> style (bolder, <code>$text-primary</code> color).</p>
 
     <p>Styles live in <code>_components.scss</code> under <code>// ─── Series nav</code>. The left accent border (<code>border-left: 3px solid $accent</code>) and the "Series" badge reuse the same <code>$accent</code> / <code>$accent-glow</code> token pairing used by other callout-style components throughout the theme.</p>
+
+    <hr>
+
+    <!-- Glossary tooltips -->
+    <h2 id="config-glossary">Glossary tooltips</h2>
+    <p>Define terms once in <code>source/_data/glossary.yml</code> and the theme wraps the <em>first occurrence</em> of each term per post in a dotted-underline <code>&lt;abbr&gt;</code> tooltip showing the definition on hover.</p>
+
+<pre><code><span class="cm"># source/_data/glossary.yml — flat map of term → definition</span>
+<span class="nb">Hexo</span><span class="pn">:</span> <span class="str">A fast static site generator powered by Node.js.</span>
+<span class="nb">"static site generator"</span><span class="pn">:</span> <span class="str">A tool that builds all HTML at deploy time.</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">glossary</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Enable glossary tooltips. A no-op when <code>source/_data/glossary.yml</code> doesn't exist, so the default costs nothing.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>An <code>after_post_render</code> filter in <code>scripts/helpers.js</code> builds a single case-insensitive regex from all terms (longest first, so <code>static site generator</code> beats <code>static site</code>) and walks the rendered HTML. Protected regions pass through untouched: code and <code>&lt;pre&gt;</code> blocks, existing links and <code>&lt;abbr&gt;</code> elements, headings, whole <code>&lt;figure&gt;</code>s, and every tag — matching only ever happens in plain inter-tag text, never inside attributes. Definitions are HTML-escaped before landing in the <code>title</code> attribute.</p>
+    <p>Only the first occurrence per post is wrapped — a term used twenty times gets one tooltip, not twenty. Quote multi-word keys in the YAML. Word matching uses ASCII boundaries, so symbol-edged terms like <code>C++</code> won't match (documented limitation).</p>
+
+    <hr>
+
+    <!-- Stale-post warning -->
+    <h2 id="config-stale-warning">Stale-post warning</h2>
+    <p>Opt-in: shows an "information may be outdated" banner at the top of posts older than a configurable threshold — useful for technical blogs where old instructions rot silently.</p>
+
+<pre><code><span class="nb">stale_warning</span><span class="pn">:</span>
+  <span class="nb">enabled</span><span class="pn">:</span> <span class="val">true</span>    <span class="cm"># opt-in — banner on old posts</span>
+  <span class="nb">months</span><span class="pn">:</span>  <span class="val">24</span>      <span class="cm"># age threshold</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">stale_warning.enabled</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">false</td>
+          <td>Show the banner on posts older than <code>months</code>. Suppress it on an individual post with <code>stale_warning: false</code> in its front-matter.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">stale_warning.months</td>
+          <td class="opt-type">number</td>
+          <td class="opt-default">24</td>
+          <td>Age threshold in months, evaluated at build time.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>The age check runs at build time in <code>layout/post.ejs</code>. The reference date is the post's explicit <code>updated:</code> front-matter when present, otherwise <code>date:</code> — the same <code>has_explicit_updated</code> rule used by the "↻ Updated" badge, so file mtimes on fresh clones never trigger the banner. The message rounds to years when the age exceeds twelve months ("over 2 years old") and renders as a warning-style note above the post body.</p>
+    <p>Because the age is computed at <em>build</em> time, a site that is never rebuilt won't grow new banners — they appear as posts cross the threshold on subsequent builds.</p>
+
+    <hr>
+
+    <!-- Difficulty meter -->
+    <h2 id="config-difficulty">Difficulty meter</h2>
+    <p>A 1–5 signal-bar meter (like phone reception bars) rendered next to post and showroom-project metadata — a quick visual cue for how advanced a post is or how involved a project was. Posts opt in individually via front-matter:</p>
+
+<pre><code><span class="cm"># post or project front-matter</span>
+<span class="nb">difficulty</span><span class="pn">:</span> <span class="val">3</span>       <span class="cm"># integer 1–5 — "Difficulty: 3 of 5"</span>
+<span class="cm"># or, alternatively:</span>
+<span class="nb">effort</span><span class="pn">:</span> <span class="val">4</span>           <span class="cm"># same meter, labelled "Effort: 4 of 5"</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">difficulty</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Master switch. Set to <code>false</code> in the theme config to hide the meter everywhere regardless of front-matter.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How it works</h3>
+    <p>The <code>difficulty_meter</code> helper in <code>scripts/helpers.js</code> reads <code>difficulty:</code> front-matter first, falling back to <code>effort:</code> (if both are set, <code>difficulty</code> wins and determines the label). Values must be integers 1–5 — strings like <code>"3"</code> are tolerated, anything else renders nothing. The meter appears on post cards, the featured-post hero, post headers, showroom card overlays, and project pages.</p>
+    <p>Accessibility: the meter carries <code>role="img"</code> with an <code>aria-label</code> like "Difficulty: 3 of 5"; inside card overlay links it switches to <code>aria-hidden</code> so the level doesn't pollute the link's accessible name.</p>
 
     <hr>
 
