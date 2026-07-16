@@ -4,6 +4,8 @@ This repository is the example/demo site for the **[coldnight Hexo theme](https:
 
 **[Live Demo](https://cracksoldier.github.io/coldnight-demo/) · [Documentation](https://cracksoldier.github.io/coldnight/) · [Theme repo](https://github.com/Cracksoldier/coldnight-theme)**
 
+> **Note:** This project is developed and maintained with the assistance of generative AI / coding agents.
+
 ---
 
 ## Theme features
