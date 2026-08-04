@@ -52,6 +52,7 @@
       <a href="#config-pinned">Featured post</a>
       <a href="#config-series">Series posts</a>
       <a href="#config-glossary">Glossary tooltips</a>
+      <a href="#config-category-tooltips">Category tooltips</a>
       <a href="#config-stale-warning">Stale-post warning</a>
       <a href="#config-difficulty">Difficulty meter</a>
       <a href="#config-permalink-button">Permalink button</a>
@@ -578,6 +579,12 @@
           <td>Wrap the first occurrence of each term from <code>source/_data/glossary.yml</code> in an <code>&lt;abbr&gt;</code> tooltip per post. Set to <code>false</code> to disable. See <a href="#config-glossary">Glossary tooltips</a>.</td>
         </tr>
         <tr>
+          <td class="opt-key">category_descriptions</td>
+          <td class="opt-type">map</td>
+          <td class="opt-default">{}</td>
+          <td>Map of category name → description, shown as a hover/focus tooltip on category links. An empty or absent map disables the feature entirely. See <a href="#config-category-tooltips">Category tooltips</a>.</td>
+        </tr>
+        <tr>
           <td class="opt-key">difficulty</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">true</td>
@@ -958,6 +965,35 @@
     <h3>How it works</h3>
     <p>An <code>after_post_render</code> filter in <code>scripts/helpers.js</code> builds a single case-insensitive regex from all terms (longest first, so <code>static site generator</code> beats <code>static site</code>) and walks the rendered HTML. Protected regions pass through untouched: code and <code>&lt;pre&gt;</code> blocks, existing links and <code>&lt;abbr&gt;</code> elements, headings, whole <code>&lt;figure&gt;</code>s, and every tag — matching only ever happens in plain inter-tag text, never inside attributes. Definitions are HTML-escaped before landing in the <code>title</code> attribute.</p>
     <p>Only the first occurrence per post is wrapped — a term used twenty times gets one tooltip, not twenty. Quote multi-word keys in the YAML. Word matching uses ASCII boundaries, so symbol-edged terms like <code>C++</code> won't match (documented limitation).</p>
+
+    <hr>
+
+    <!-- Category tooltips -->
+    <h2 id="config-category-tooltips">Category tooltips</h2>
+    <p>Categories are bare links by default — a reader has no idea what <code>Systems</code> or <code>Design</code> collects until they click it. Give a category a one-line description and hovering or keyboard-focusing it shows a themed floating tooltip.</p>
+
+<pre><code><span class="nb">category_descriptions</span><span class="pn">:</span>
+  <span class="nb">Development</span><span class="pn">:</span> <span class="str">Programming, languages and day-to-day engineering practice.</span>
+  <span class="nb">Design</span><span class="pn">:</span>      <span class="str">Typography, layout and visual craft.</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">category_descriptions</td>
+          <td class="opt-type">map</td>
+          <td class="opt-default">{}</td>
+          <td>Category name → tooltip text. There is no separate on/off switch: an empty or absent map disables the feature completely, and categories you simply don't list get no tooltip.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Tooltips appear on the category pills in a post's metadata row and on the category label of every post card — the index grid, the pinned hero, and the related-posts strip. They are deliberately <em>not</em> attached to the archive filter chips or the category archive page header, where the category name is the subject of the page rather than an aside.</p>
+
+    <h3>How it works</h3>
+    <p>A cached lookup in <code>scripts/helpers.js</code> reads the map once per generation. Names are matched case-insensitively after trimming, so <code>Development</code> in the config still finds a post categorised as <code>development</code>. Values that aren't strings — a bare YAML boolean or number — are ignored rather than stringified.</p>
+    <p>When a category has a description, the template emits an HTML-escaped <code>data-category-desc</code> attribute on the link and the page loads <code>category-tooltip.js</code>. When the map is empty neither appears, so an unconfigured site pays nothing: no attribute, no script request.</p>
+    <p>The tooltip itself is a single shared element positioned with <code>position: fixed</code>, clamped inside the viewport and flipped below the link when there is no room above. It shows on hover <em>and</em> on keyboard focus, sets <code>aria-describedby</code> on the active link only while visible, and dismisses on <kbd>Escape</kbd>, blur, or scroll. Its surface is shared with the footnote tooltip via a single SCSS placeholder, so both stay visually identical. Touch devices have no hover state — the tooltip simply doesn't appear and the link navigates as usual.</p>
 
     <hr>
 
