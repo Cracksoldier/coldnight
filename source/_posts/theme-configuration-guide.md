@@ -5,7 +5,7 @@ categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
-updated: 2026-07-16
+updated: 2026-08-04
 difficulty: 1
 pinned: true
 ---
@@ -238,6 +238,18 @@ external_links: true
 ```
 
 Every link in a post body pointing to an external domain automatically receives `target="_blank" rel="noopener noreferrer"` and a small `↗` icon. Internal links and links with an existing `target` are left untouched.
+
+## Category tooltips
+
+```yaml
+category_descriptions:
+  Development: Programming, languages and day-to-day engineering practice.
+  Documentation: Reference guides for the coldnight theme and this demo site.
+```
+
+Give a category a one-line description and it appears as a small tooltip when the reader hovers or keyboard-focuses that category — on the pills in a post's metadata row and on the category label of every post card, including the pinned hero and the related-posts strip.
+
+There is no separate on/off switch: categories you don't list simply have no tooltip, and if the map is empty the feature adds nothing to the page at all — no markup, no stylesheet weight, no script. Names are matched case-insensitively, so `Development` in the config finds a post categorised as `development`.
 
 ## Permalink button
 

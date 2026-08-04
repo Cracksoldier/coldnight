@@ -225,6 +225,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `json_feed.enabled: false` | Suppresses `/feed.json` (JSON Feed 1.1) and its `<link rel="alternate">`; independent of `social.rss` |
 | `json_feed.limit: 20` | Number of newest posts in `/feed.json`; invalid/missing = 20 |
 | `glossary: false` | Disables `<abbr>` tooltips for terms defined in `source/_data/glossary.yml` (first occurrence per post) |
+| `category_descriptions:` | Map of category name → tooltip text shown on hover/focus of category pills (post pages) and card categories (index, pinned hero, related posts); empty/absent = no tooltips anywhere |
 | `stats.enabled: true` | Emits a `/stats/` page with build-time posting statistics (opt-in; this site enables it + a Stats navbar link) |
 | `link_check.enabled: false` | Disables the build-time internal link checker (warns about hrefs with no matching route) |
 | `link_check.fail: true` | Broken internal links fail the build with exit code 1 (for CI); default is warn-only |

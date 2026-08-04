@@ -123,6 +123,14 @@ theme_config:
     enabled: true
   social:
     share: true
+  category_descriptions:
+    Development: Programming, languages and day-to-day engineering practice.
+    Documentation: Reference guides for the coldnight theme and this demo site.
+    Demo: Live demonstrations of the theme's tag plugins and widgets.
+    Design: Typography, layout and visual craft.
+    Systems: Databases, infrastructure and how things behave under load.
+    Tools: Editors, shells and the rest of the local toolchain.
+    Web: Browser platform features and frontend techniques.
   favicon: /favicon.svg
   navbar:
     icon: "❄"
