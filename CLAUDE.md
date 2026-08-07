@@ -213,6 +213,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `cover.fallback: false` | Posts without `cover_image` render no card/hero thumbnail instead of `cover.default`; `og:image` keeps the fallback |
 | `audio_player: false` | Prevents `audio-player.js` from loading; `{% audio %}` tag returns empty string |
 | `compare_slider: false` | Prevents `compare-slider.js` from loading; `{% compare %}` tag returns empty string |
+| `video_facade: false` | Restores eager YouTube/Vimeo iframes for `{% video %}` (facade is default; tag stays enabled either way) |
 | `stale_warning.enabled: true` | Shows an "information may be outdated" banner on old posts (opt-in) |
 | `stale_warning.months: 24` | Age threshold for the banner; counted from explicit `updated:` or `date:` at build time |
 | `view_transitions: false` | Removes the cross-document View Transitions crossfade between pages |

@@ -23,8 +23,8 @@ An XSL stylesheet so `/atom.xml` renders as a nice branded page in the browser i
 ### 5. "Copy page as Markdown" button
 The theme already ships llms.txt and has the raw markdown (`page._content`) at build time. A post-footer button that copies the post as clean markdown (or an "open in Claude/ChatGPT" link) is the per-page companion to llms.txt and currently trending on docs sites.
 
-### 6. Click-to-load video facade
-The `{% video %}` tag embeds the YouTube/Vimeo iframe eagerly — the single biggest third-party payload a post can carry, and a GDPR concern in the EU. A lite-youtube-style facade (thumbnail + play button, iframe injected on click) fits the theme's existing "load JS only when the tag is used" philosophy.
+### 6. Click-to-load video facade — ✅ done
+Implemented 2026-07-11 (`video_facade`, default on): thumbnail + play button, iframe injected on click only. YouTube uses cookie-free `i.ytimg.com` thumbnails and the `youtube-nocookie.com` embed domain; Vimeo gets a first-party themed placeholder (zero external requests before click). No-JS fallback is a plain link to the watch page.
 
 ### 7. Speculation Rules prerendering
 The theme already does cross-document View Transitions; adding a `<script type="speculationrules">` block (prerender links on hover / moderate eagerness) makes internal navigation feel instant and makes the crossfade look even better. Progressive enhancement, exactly like the view-transitions block in `head.ejs`.
