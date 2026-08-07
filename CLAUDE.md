@@ -184,6 +184,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `navbar.icon_after_color: "#fbbf24"` | Font color for a text `navbar.icon_after`; same rules as `icon_color` |
 | `favicon: /favicon.png` | Favicon image path; empty or not an image path = theme default `favicon.svg`/`.ico` |
 | `sidebar.position: hidden` | Hides the sidebar on all pages |
+| `sidebar.about: false` | Hides the About widget without touching `sidebar.widgets`; the widget also self-hides when `author`, `description`, `avatar` and both social handles are empty |
 | `grid.columns: N` | Index grid columns (1 = list view) |
 | `grid.rows: N` | Rows per page in grid mode |
 | `toc.enabled: false` | Disables TOC widget and `toc.js` |

@@ -5,7 +5,7 @@ categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
 cover_image: https://placeholdpicsum.dev/800x450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
-updated: 2026-08-04
+updated: 2026-08-07
 difficulty: 1
 pinned: true
 ---
@@ -33,6 +33,7 @@ The active link is highlighted with `accent-light` text. A full-text search box 
 ```yaml
 sidebar:
   position: right      # left | right | hidden
+  about: true          # false = hide the About widget
   widgets:
     - toc              # table of contents (post pages only)
     - recent_posts     # last 5 posts by date
@@ -42,6 +43,8 @@ sidebar:
 ```
 
 Set `position: hidden` to remove the sidebar entirely — the main content expands to fill the full width. The `toc` widget only renders on post pages and is suppressed when the post has no headings.
+
+Set `about: false` to drop just the About widget while keeping the rest of the sidebar — no need to re-declare the whole `widgets:` list in your `theme_config:`. The widget also hides itself when `author`, `description`, `avatar` and both social handles are empty, so a site that hasn't filled those in never shows an empty box.
 
 ## Sponsor / coffee button
 
