@@ -3,7 +3,7 @@ title: Typography & Prose Elements
 date: 2026-05-08 09:00:00
 categories: [Design]
 tags: [typography, markdown, writing]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: Every markdown element rendered through the coldnight prose stylesheet — headings, lists, tables, blockquotes, and more.
 ---
 
@@ -92,9 +92,9 @@ Three or more dashes produce a rule:
 
 Standard markdown images get `border-radius: 6px` and are lazy-loaded. Clicking them opens the LightGallery lightbox.
 
-![A placeholder landscape photo](https://placeholdpicsum.dev/800x400)
+![A placeholder landscape photo](https://picsum.photos/800/400)
 
-![Abstract architecture](https://placeholdpicsum.dev/800x400)
+![Abstract architecture](https://picsum.photos/800/400)
 
 ---
 

@@ -4,7 +4,7 @@ date: 2026-06-03
 updated: 2026-06-03
 categories: [Demo]
 tags: [audio, theme]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: "Demonstrating the built-in audio player tag — themed controls, seek bar, mute, and keyboard navigation."
 ---
 

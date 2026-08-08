@@ -3,7 +3,7 @@ title: Math Typesetting with KaTeX
 date: 2026-05-20 13:00:00
 categories: [Development]
 tags: [math, katex, latex]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: "Inline and display math rendered at build time by KaTeX — zero runtime JavaScript, crisp at any resolution. Covers inline expressions, display blocks, aligned systems, series, matrices, and more."
 ---
 

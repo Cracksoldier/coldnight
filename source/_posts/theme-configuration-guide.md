@@ -3,7 +3,7 @@ title: Configuring the Coldnight Theme
 date: 2026-03-13 10:00:00
 categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
 updated: 2026-08-07
 difficulty: 1

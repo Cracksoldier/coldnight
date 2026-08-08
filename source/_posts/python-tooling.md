@@ -3,7 +3,7 @@ title: Python Tooling in 2026
 date: 2026-03-27 09:00:00
 categories: [Development]
 tags: [python, tooling, packaging, uv]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: uv, ruff, pyproject.toml, and type annotations — the modern Python toolchain that makes dependency management and code quality feel effortless.
 ---
 

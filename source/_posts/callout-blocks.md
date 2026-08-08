@@ -3,7 +3,7 @@ title: Callout Blocks & Alerts
 date: 2026-05-01 11:00:00
 categories: [Documentation]
 tags: [callouts, markdown, features]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: The four callout types — tip, info, warning, and danger — rendered with the coldnight colour palette and inline SVG icons.
 ---
 

@@ -4,7 +4,7 @@ date: 2026-06-01 12:00:00
 updated: 2026-06-01
 categories: [Demo]
 tags: [3d, webgl, threejs]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: "Embed interactive 3D models directly in posts using the {% model %} tag. Supports GLB, GLTF, and STL files — rendered with Three.js, no CDN required."
 abstract: "Demonstrates the **`{% model %}`** tag: an interactive Three.js WebGL viewer for GLB, GLTF, and STL files. Drag to orbit, scroll to zoom, right-click to pan."
 ---

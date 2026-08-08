@@ -14,7 +14,7 @@
 - title: "The Twelve-Factor App"
   url: "https://12factor.net/"
   abstract: "A methodology for building software-as-a-service applications that are portable, scalable, and maintainable. Required reading for anyone deploying to the cloud."
-  thumbnail: "https://placeholdpicsum.dev/800x450"
+  thumbnail: "https://picsum.photos/800/450"
   tags: [architecture]
 
 - title: "Excalidraw"
@@ -26,7 +26,7 @@
 - title: "explainshell.com"
   url: "https://explainshell.com/"
   abstract: "Paste any shell command and get an annotated breakdown of every flag, argument, and pipe. Invaluable when reading Makefiles or unfamiliar shell scripts."
-  thumbnail: "https://placeholdpicsum.dev/800x450"
+  thumbnail: "https://picsum.photos/800/450"
   tags: [cli, learning]
 
 - title: "CSS Tricks — A Complete Guide to Flexbox"
@@ -38,7 +38,7 @@
 - title: "jq Manual"
   url: "https://jqlang.github.io/jq/manual/"
   abstract: "Full reference for jq, the command-line JSON processor. Once you know three or four patterns — select, map, group_by — it replaces a surprising amount of scripting."
-  thumbnail: "https://placeholdpicsum.dev/800x450"
+  thumbnail: "https://picsum.photos/800/450"
   tags: [cli, docs, reference]
 
 - title: "PostgreSQL Documentation"
@@ -50,7 +50,7 @@
 - title: "Go Blog"
   url: "https://go.dev/blog/"
   abstract: "Official Go team blog. Covers language evolution, performance deep dives, tooling changes, and real-world patterns from the team that builds the language."
-  thumbnail: "https://placeholdpicsum.dev/800x450"
+  thumbnail: "https://picsum.photos/800/450"
   tags: [go, learning]
 
 # No `tags:` — renders no pill row and is only visible under the "All" chip.
@@ -62,5 +62,5 @@
 - title: "roadmap.sh"
   url: "https://roadmap.sh/"
   abstract: "Community-maintained visual roadmaps for backend, frontend, DevOps, and more. Useful for finding gaps in your knowledge and discovering tools worth learning next."
-  thumbnail: "https://placeholdpicsum.dev/800x450"
+  thumbnail: "https://picsum.photos/800/450"
   tags: [learning]

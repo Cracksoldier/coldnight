@@ -3,7 +3,7 @@ title: Diff Highlighting & Marked Lines
 date: 2026-04-17 09:30:00
 categories: [Development]
 tags: [git, diff, code, syntax-highlighting]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: Two advanced code block features — diff language for showing additions and deletions, and the mark option for highlighting specific lines.
 ---
 

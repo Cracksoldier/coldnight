@@ -3,7 +3,7 @@ title: Modern JavaScript Async Patterns
 date: 2026-04-10 08:00:00
 categories: [Development]
 tags: [javascript, async, promises, patterns]
-cover_image: https://placeholdpicsum.dev/800x450
+cover_image: https://picsum.photos/800/450
 excerpt: A practical reference for async/await, Promise combinators, AbortController, and async generators — with annotated examples.
 pinned: true
 ---
