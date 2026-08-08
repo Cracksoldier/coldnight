@@ -72,6 +72,13 @@ Small localStorage script offering "Continue where you left off" on long posts. 
 #### 18. Build-time internal link checker — ✅ done 2026-07-14
 Warns on internal hrefs with no matching route; catches broken cross-post links before deploy, no runtime cost. Shipped as collect-in-`after_render:html` + validate-in-`before_exit` (not `after_generate` — reading lazy route streams there would double-render), aggregated by missing target; `link_check.fail: true` exits 1 for CI. First real catch: the sitewide `/atom.xml` dead link.
 
+## Added 2026-08-08
+
+#### 19. Links page heading config + tag filtering — ✅ done 2026-08-08
+`links.title` / `links.subtitle` theme config (both `""` by default, so existing output is unchanged); title precedence is config → page front-matter `title:` → `"Links"`, guarded by the `cfgStr` non-string check. Optional per-entry `tags:` in `links.yml` (list *or* bare scalar) drives a single-select chip bar plus clickable per-card pills, both routed through one `apply()` in the new `links-filter.js`; the count line switches to `N of M links`. The chip CSS is now shared with the archive under the unprefixed `.filter-bar` / `.filter-chip` names. No config key for the filter — it appears iff some entry has tags.
+
+Caught while implementing: the **archive filter chips had never actually hidden anything**. `el.hidden = true` depends on the UA `[hidden] { display: none }` rule, which any author `display:` declaration overrides (cascade origin beats specificity), and `.archive-item` sets `display: grid`. Both `.archive-item` and `.link-card` now carry an explicit `&[hidden] { display: none; }`, matching `.toc-drawer`.
+
 ### Checked and already covered (do not re-suggest)
 
 - **Search index lazy-loading** — `search.js` already fetches `search.json` on first focus via a guarded promise.

@@ -1,47 +1,59 @@
 # Link repository
 # Required fields: title, url, abstract
-# Optional fields: subtitle, thumbnail (local path or absolute URL)
+# Optional fields: subtitle, thumbnail (local path or absolute URL),
+#                  tags (a list, or a single bare value — omit for none)
+#
+# Any entry carrying `tags:` adds its tags to the filter chip bar on /links/.
 
 - title: "Hexo Documentation"
   subtitle: "Static site generator"
   url: "https://hexo.io/docs/"
   abstract: "The official reference for Hexo — covers installation, configuration, deployment, theme development, and the plugin API."
+  tags: [docs, tools]
 
 - title: "The Twelve-Factor App"
   url: "https://12factor.net/"
   abstract: "A methodology for building software-as-a-service applications that are portable, scalable, and maintainable. Required reading for anyone deploying to the cloud."
   thumbnail: "https://placeholdpicsum.dev/800x450"
+  tags: [architecture]
 
 - title: "Excalidraw"
   subtitle: "Virtual whiteboard"
   url: "https://excalidraw.com/"
   abstract: "A hand-drawn-style collaborative whiteboard tool that runs entirely in the browser. Excellent for quick architecture sketches, flowcharts, and system diagrams."
+  tags: tools
 
 - title: "explainshell.com"
   url: "https://explainshell.com/"
   abstract: "Paste any shell command and get an annotated breakdown of every flag, argument, and pipe. Invaluable when reading Makefiles or unfamiliar shell scripts."
   thumbnail: "https://placeholdpicsum.dev/800x450"
+  tags: [cli, learning]
 
 - title: "CSS Tricks — A Complete Guide to Flexbox"
   subtitle: "css-tricks.com"
   url: "https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
   abstract: "The definitive visual reference for CSS Flexbox. Properties for both the container and child items, with diagrams for every value. Bookmarked permanently."
+  tags: [css, reference]
 
 - title: "jq Manual"
   url: "https://jqlang.github.io/jq/manual/"
   abstract: "Full reference for jq, the command-line JSON processor. Once you know three or four patterns — select, map, group_by — it replaces a surprising amount of scripting."
   thumbnail: "https://placeholdpicsum.dev/800x450"
+  tags: [cli, docs, reference]
 
 - title: "PostgreSQL Documentation"
   subtitle: "Current stable release"
   url: "https://www.postgresql.org/docs/current/"
   abstract: "The authoritative PostgreSQL manual. The indexing, query planning, and MVCC chapters are worth reading even if you only use Postgres at a surface level."
+  tags: [database, docs]
 
 - title: "Go Blog"
   url: "https://go.dev/blog/"
   abstract: "Official Go team blog. Covers language evolution, performance deep dives, tooling changes, and real-world patterns from the team that builds the language."
   thumbnail: "https://placeholdpicsum.dev/800x450"
+  tags: [go, learning]
 
+# No `tags:` — renders no pill row and is only visible under the "All" chip.
 - title: "Conventional Commits"
   subtitle: "Commit message specification"
   url: "https://www.conventionalcommits.org/"
@@ -51,3 +63,4 @@
   url: "https://roadmap.sh/"
   abstract: "Community-maintained visual roadmaps for backend, frontend, DevOps, and more. Useful for finding gaps in your knowledge and discovering tools worth learning next."
   thumbnail: "https://placeholdpicsum.dev/800x450"
+  tags: [learning]

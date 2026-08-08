@@ -355,8 +355,20 @@ npm install</code></pre>
         <tr><td class="opt-key">abstract</td><td>Yes</td><td>One or two sentence description shown on the card</td></tr>
         <tr><td class="opt-key">subtitle</td><td>No</td><td>Short tagline rendered below the title in muted text</td></tr>
         <tr><td class="opt-key">thumbnail</td><td>No</td><td>Path or URL to a cover image (16:9 crop). Omit for a text-only card.</td></tr>
+        <tr><td class="opt-key">tags</td><td>No</td><td>A YAML list (<code>[docs, tools]</code>) or a single bare value (<code>tools</code>). Omit for an untagged link.</td></tr>
       </tbody>
     </table>
+
+    <h3>Filtering by tag</h3>
+    <p>Tagging is entirely opt-in. As soon as <em>any</em> entry in <code>links.yml</code> carries a <code>tags</code> field, the page grows a row of filter chips above the grid — one per unique tag, sorted alphabetically, behind a leading <strong>All</strong> chip — and every tagged card gains a row of clickable tag pills. Clicking either narrows the board to that single tag and the count line switches from <code>10 links</code> to <code>3 of 10 links</code>. Links with no tags stay visible only under <strong>All</strong>. If no entry has tags, the chip bar is not rendered at all, so nothing changes for an existing links page.</p>
+
+    <h3>Page heading</h3>
+    <p>By default the heading reads <strong>Links</strong> and there is no subtitle. Override either through <code>theme_config:</code>:</p>
+<pre><code><span class="nb">theme_config</span><span class="pn">:</span>
+  <span class="nb">links</span><span class="pn">:</span>
+    <span class="nb">title</span><span class="pn">:</span>    <span class="str">"Bookmarks"</span>
+    <span class="nb">subtitle</span><span class="pn">:</span> <span class="str">"Reference material worth keeping within reach."</span></code></pre>
+    <p>With <code>links.title</code> left empty the heading falls back to the <code>title:</code> in <code>source/links/index.md</code>, and then to the literal <code>"Links"</code>.</p>
 
     <p>Example with all fields:</p>
 <pre><code><span class="pn">-</span> <span class="nb">title</span><span class="pn">:</span>     <span class="str">"Hexo Documentation"</span>

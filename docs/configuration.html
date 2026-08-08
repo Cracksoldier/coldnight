@@ -39,6 +39,7 @@
       <a href="#config-code">Code blocks</a>
       <a href="#config-lightgallery">LightGallery</a>
       <a href="#config-grid">Post grid</a>
+      <a href="#config-links">Links page</a>
       <a href="#config-toc">Table of contents</a>
       <a href="#config-misc">Misc toggles</a>
       <a href="#config-search">Search</a>
@@ -422,6 +423,46 @@
     <p>The SCSS rule in <code>_layout.scss</code> reads these via <code>var()</code>: <code>grid-template-columns: repeat(var(--post-grid-cols), 1fr)</code>. Since CSS custom properties cascade, each <code>.post-grid</code> uses only its own values. The media-query breakpoints in SCSS switch to <code>--post-grid-cols-md</code> at tablet width and hard-code 1 column at mobile.</p>
 
     <p>When <code>grid.columns === 1</code>, <code>index.ejs</code> also adds the <code>post-grid--list</code> modifier class, which overrides each <code>.post-card</code> to <code>flex-direction: row</code> with a fixed 180px thumbnail panel on the left.</p>
+
+    <hr>
+
+    <!-- Links page -->
+    <h2 id="config-links">Links page</h2>
+    <p>Controls the heading of the bookmark board at <code>/links/</code>. Both keys are empty by default, which reproduces the page exactly as it shipped before they existed: an <code>h1</code> reading <strong>Links</strong> and no subtitle.</p>
+
+<pre><code><span class="nb">links</span><span class="pn">:</span>
+  <span class="nb">title</span><span class="pn">:</span>    <span class="str">"Bookmarks"</span>                                  <span class="cm"># empty = front-matter title, then "Links"</span>
+  <span class="nb">subtitle</span><span class="pn">:</span> <span class="str">"Reference material worth keeping."</span>       <span class="cm"># empty = no subtitle line</span></code></pre>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">links.title</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Text of the page <code>h1</code>. When empty, falls back to the <code>title:</code> front-matter in <code>source/links/index.md</code>, then to the literal <code>"Links"</code>.</td>
+        </tr>
+        <tr>
+          <td class="opt-key">links.subtitle</td>
+          <td class="opt-type">string</td>
+          <td class="opt-default">""</td>
+          <td>Optional standfirst rendered as <code>.page-header__subtitle</code> between the <code>h1</code> and the link-count line. Empty = the element is not emitted at all.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Non-string values are ignored rather than stringified — a bare YAML <code>title: false</code> falls through to the next step of the chain instead of printing <code>false</code> as the heading. This is the same <code>cfgStr</code> guard used for <a href="#config-navbar">the navbar brand slots</a>.</p>
+
+    <h3>Tag filtering</h3>
+    <p>There is deliberately <strong>no config key</strong> for the tag filter — it is driven entirely by the data. Add a <code>tags</code> field to any entry in <code>source/_data/links.yml</code> and the chip bar appears; remove them all and it disappears.</p>
+
+<pre><code><span class="pn">-</span> <span class="nb">title</span><span class="pn">:</span>    <span class="str">"jq Manual"</span>
+  <span class="nb">url</span><span class="pn">:</span>      <span class="str">"https://jqlang.github.io/jq/manual/"</span>
+  <span class="nb">abstract</span><span class="pn">:</span> <span class="str">"Full reference for the command-line JSON processor."</span>
+  <span class="nb">tags</span><span class="pn">:</span>     <span class="pn">[</span><span class="str">cli</span><span class="pn">,</span> <span class="str">docs</span><span class="pn">,</span> <span class="str">reference</span><span class="pn">]</span>   <span class="cm"># or a single bare value: tags: cli</span></code></pre>
+
+    <p>The chips are single-select with a leading <strong>All</strong> chip, matching the <a href="#config-misc">archive filter chips</a>. Each tagged card also renders its tags as clickable pills that activate the same filter. While a tag is active the count line reads <code>3 of 10 links</code>; links with no tags are visible only under <strong>All</strong>. Filtering is client-side (<code>links-filter.js</code>, loaded only on this page) and uses the <code>hidden</code> attribute, so no URL changes and the unfiltered page is what search engines index.</p>
 
     <hr>
 

@@ -185,6 +185,8 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `favicon: /favicon.png` | Favicon image path; empty or not an image path = theme default `favicon.svg`/`.ico` |
 | `sidebar.position: hidden` | Hides the sidebar on all pages |
 | `sidebar.about: false` | Hides the About widget without touching `sidebar.widgets`; the widget also self-hides when `author`, `description`, `avatar` and both social handles are empty |
+| `links.title: "Bookmarks"` | `h1` on the links page; empty = the page's front-matter `title:`, then `"Links"` |
+| `links.subtitle: "…"` | Optional line under the links-page `h1`; empty = nothing. Tag filter chips are separate — they appear automatically whenever any entry in `links.yml` has `tags:` |
 | `grid.columns: N` | Index grid columns (1 = list view) |
 | `grid.rows: N` | Rows per page in grid mode |
 | `toc.enabled: false` | Disables TOC widget and `toc.js` |
@@ -231,6 +233,23 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `stats.enabled: true` | Emits a `/stats/` page with build-time posting statistics (opt-in; this site enables it + a Stats navbar link) |
 | `link_check.enabled: false` | Disables the build-time internal link checker (warns about hrefs with no matching route) |
 | `link_check.fail: true` | Broken internal links fail the build with exit code 1 (for CI); default is warn-only |
+
+## Link entries
+
+`source/_data/links.yml` is a flat list consumed by `layout/links.ejs` as `site.data.links`:
+
+```yaml
+- title: "Hexo Documentation"       # required
+  url: "https://hexo.io/docs/"      # required
+  abstract: "The official reference for Hexo."   # required
+  subtitle: "Static site generator"              # optional
+  thumbnail: "/images/links/hexo.png"            # optional; local path or absolute URL
+  tags: [docs, tools]                            # optional; list, single bare value, or omitted
+```
+
+`tags:` is opt-in per entry. As soon as any entry carries tags, a single-select filter chip bar renders above the grid and each tagged card gets clickable tag pills; the count line becomes `N of M links` while a tag is active. Untagged entries are visible only under the `All` chip. With no tags anywhere the bar is not rendered at all — there is no config key to force it on or off.
+
+Heading text comes from `links.title` / `links.subtitle` in `theme_config:` (see the table above), falling back to the front-matter `title:` in `source/links/index.md`.
 
 ## Glossary terms
 
