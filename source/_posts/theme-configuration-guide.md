@@ -304,7 +304,9 @@ In list view (`grid.columns: 1`) a card's thumbnail normally sits in a fixed squ
 
 Front-matter wins over the config in **both** directions, so with `cover.large: true` site-wide, `cover_large: false` pulls one post back to the compact side layout. The value must be a bare boolean, not `"true"` in quotes.
 
-The pinned hero honors the same key: instead of its 45%-wide side cover it stacks the image above the text. Posts with no thumbnail at all are unaffected, and in grid mode (`grid.columns: 2` and up) the setting does nothing — those cards already stack their cover on top. Below 640px every card stacks anyway, so large and normal cards look the same on phones.
+The pinned hero honors the same key: instead of its 45%-wide side cover it stacks the image above the text. Unlike the cards, the hero does this at **any** column count — it sits outside the post grid and is side-by-side by default there too, so switching to a grid layout does not neutralise it.
+
+Posts with no thumbnail at all are unaffected. For the cards, grid mode (`grid.columns: 2` and up) is a no-op — those already stack their cover on top. Below 640px every card stacks anyway, so large and normal cards look the same on phones.
 
 The two posts on this index with a full-width thumbnail — *Image Compare Slider Demo* and *Syntax Highlighting Showcase* — are set this way.
 

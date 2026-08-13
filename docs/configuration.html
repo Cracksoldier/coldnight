@@ -262,7 +262,7 @@
           <td class="opt-key">cover.large</td>
           <td class="opt-type">boolean</td>
           <td class="opt-default">false</td>
-          <td>Set to <code>true</code> to render card and hero thumbnails at full card width above the text instead of beside it (16/9). Applies to list view — grid cards already stack their cover on top. A post's <code>cover_large</code> front-matter overrides this in both directions, so a single post can go large on an otherwise compact index, or stay compact when the site-wide switch is on.</td>
+          <td>Set to <code>true</code> to render card and hero thumbnails at full card width above the text instead of beside it (16/9). For <em>cards</em> this applies to list view only — grid cards already stack their cover on top. The <em>pinned hero</em> is affected at any <code>grid.columns</code> value, since it sits outside the post grid and is side-by-side by default there too. A post's <code>cover_large</code> front-matter overrides this in both directions, so a single post can go large on an otherwise compact index, or stay compact when the site-wide switch is on.</td>
         </tr>
         <tr>
           <td class="opt-key">cover.aspect_ratio</td>
@@ -430,7 +430,9 @@
 
     <p>When <code>grid.columns === 1</code>, <code>index.ejs</code> also adds the <code>post-grid--list</code> modifier class, which overrides each <code>.post-card</code> to <code>flex-direction: row</code> with a fixed 180px thumbnail panel on the left.</p>
 
-    <p>Individual cards can opt out of that side panel: with <code>cover_large: true</code> in a post's front-matter (or <code>cover.large: true</code> site-wide, see <a href="#config-cover">Cover images</a>), <code>post-card.ejs</code> adds a <code>post-card--large</code> modifier and the card returns to a stacked layout with a full-width 16/9 thumbnail above the text. Because the base card is already <code>flex-direction: column</code>, that rule only has to undo the list-view overrides — which is why the modifier does nothing in grid mode. The pinned hero has the same switch (<code>pinned-post--large</code>), swapping its 45%-wide side cover for a stacked one.</p>
+    <p>Individual cards can opt out of that side panel: with <code>cover_large: true</code> in a post's front-matter (or <code>cover.large: true</code> site-wide, see <a href="#config-cover">Cover images</a>), <code>post-card.ejs</code> adds a <code>post-card--large</code> modifier and the card returns to a stacked layout with a full-width 16/9 thumbnail above the text. Because the base card is already <code>flex-direction: column</code>, that rule only has to undo the list-view overrides — it is nested inside <code>.post-grid--list</code>, which is why it does nothing in grid mode.</p>
+
+    <p>The pinned hero has the same switch (<code>pinned-post--large</code>), swapping its 45%-wide side cover for a stacked one — but that rule is <em>not</em> nested under the grid modifier. The hero renders outside <code>.post-grid</code> and is <code>flex-direction: row</code> at every column count, so unlike the cards it restructures whenever the flag is set, grid mode included.</p>
 
     <hr>
 
