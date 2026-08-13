@@ -106,6 +106,7 @@ categories: [Dev]
 tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default — bare boolean false hides the card/hero thumbnail for this post (og:image fallback unaffected)
 cover_caption: "Photo by Jane Doe"  # optional; wraps cover in <figure><figcaption>
+cover_large: true                # optional; bare boolean — full-width thumbnail above the card/hero body instead of beside it (overrides theme.cover.large in both directions)
 excerpt: "Override the auto-excerpt shown on post cards."
 description: "Custom og:description / meta description."  # optional; overrides excerpt for OG/SEO
 updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" when differs from date
@@ -214,6 +215,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `image_captions: true` | Converts `<p><img></p>` to `<figure><figcaption>` |
 | `cover.default: /images/og-default.jpg` | Fallback `og:image` for pages with no `cover_image`; place file at `source/images/og-default.jpg` |
 | `cover.fallback: false` | Posts without `cover_image` render no card/hero thumbnail instead of `cover.default`; `og:image` keeps the fallback |
+| `cover.large: true` | Card/hero thumbnails span the full card width above the text instead of sitting beside it (list view only — grid cards already stack); per-post `cover_large:` overrides it either way |
 | `audio_player: false` | Prevents `audio-player.js` from loading; `{% audio %}` tag returns empty string |
 | `compare_slider: false` | Prevents `compare-slider.js` from loading; `{% compare %}` tag returns empty string |
 | `video_facade: false` | Restores eager YouTube/Vimeo iframes for `{% video %}` (facade is default; tag stays enabled either way) |

@@ -5,7 +5,7 @@ categories: [Documentation]
 tags: [hexo, theme, configuration, setup]
 cover_image: https://picsum.photos/800/450
 excerpt: "Complete reference for every option in themes/coldnight/_config.yml — navbar, sidebar, grid, code blocks, math, diagrams, search, and all tag plugins."
-updated: 2026-08-07
+updated: 2026-08-13
 difficulty: 1
 pinned: true
 ---
@@ -280,6 +280,7 @@ Set `auto_mount: false` to opt out of automatic wiring and use only explicit gal
 cover:
   default: ""          # fallback when no cover_image in front-matter
   fallback: true       # false = no thumbnail instead of cover.default
+  large: false         # true = full-width thumbnail above the card body
   aspect_ratio: "16/9"
 ```
 
@@ -293,6 +294,19 @@ Thumbnails are entirely optional — two switches decouple them from the social-
 - `cover_image: false` in a post's front-matter (bare boolean, not `"false"`) — hides the thumbnail for that single post while the rest of the site keeps the fallback.
 
 In both cases `og:image` still uses `cover.default`, so social previews keep working for posts that opt out of the visible thumbnail.
+
+### Large thumbnails
+
+In list view (`grid.columns: 1`) a card's thumbnail normally sits in a fixed square panel to the left of the text. Large mode moves it above the body at full card width and a 16/9 ratio — worth it for image-led posts, where a 180px square doesn't do the picture justice. It is off by default and opts in at two levels:
+
+- `cover.large: true` in the theme config — every card and the pinned hero go large.
+- `cover_large: true` in a single post's front-matter — that post alone goes large.
+
+Front-matter wins over the config in **both** directions, so with `cover.large: true` site-wide, `cover_large: false` pulls one post back to the compact side layout. The value must be a bare boolean, not `"true"` in quotes.
+
+The pinned hero honors the same key: instead of its 45%-wide side cover it stacks the image above the text. Posts with no thumbnail at all are unaffected, and in grid mode (`grid.columns: 2` and up) the setting does nothing — those cards already stack their cover on top. Below 640px every card stacks anyway, so large and normal cards look the same on phones.
+
+The two posts on this index with a full-width thumbnail — *Image Compare Slider Demo* and *Syntax Highlighting Showcase* — are set this way.
 
 {% note warning %}
 If you set `cover.default`, make sure the file actually exists in your site's `source/` directory. The theme trusts the configured path — a missing file means every post without its own `cover_image` shows a broken image in its card cover, and social previews point at a 404.
@@ -388,6 +402,7 @@ Requires `pdf_viewer: true` in the theme config (the default).
 | `categories` | list | First category shown as a pill on post cards |
 | `tags` | list | Tags shown at the bottom of the post |
 | `cover_image` | string | URL or path to the cover image |
+| `cover_large` | boolean | Full-width thumbnail above the card body instead of beside it (overrides `cover.large`) |
 | `excerpt` | string | Override the auto-generated excerpt on post cards |
 | `pinned` | boolean | Promote to featured hero on index page 1 |
 | `series` | string | Group post into a numbered series nav strip |

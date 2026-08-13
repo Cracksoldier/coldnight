@@ -5,6 +5,7 @@ updated: 2026-07-15
 categories: [Development]
 tags: [syntax-highlighting, code, javascript, python]
 cover_image: https://picsum.photos/800/450
+cover_large: true
 excerpt: A tour of syntax highlighting across JavaScript, TypeScript, Python, CSS, JSON, and Bash — all rendered by the built-in highlight.js processor.
 ---
 

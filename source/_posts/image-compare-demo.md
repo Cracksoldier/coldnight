@@ -5,6 +5,7 @@ updated: 2026-07-02
 categories: [Demo]
 tags: [images, theme]
 cover_image: https://picsum.photos/800/450
+cover_large: true
 excerpt: "Demonstrating the built-in before/after compare slider tag — drag, touch, or use arrow keys to reveal the difference."
 ---
 
