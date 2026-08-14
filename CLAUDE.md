@@ -107,6 +107,8 @@ tags: [javascript, hexo]
 cover_image: /images/cover.jpg   # optional; falls back to theme.cover.default — bare boolean false hides the card/hero thumbnail for this post (og:image fallback unaffected)
 cover_caption: "Photo by Jane Doe"  # optional; wraps cover in <figure><figcaption>
 cover_large: true                # optional; bare boolean — full-width thumbnail above the card/hero body instead of beside it (overrides theme.cover.large in both directions)
+card_border: "#f5c518"           # optional; hex only (#rgb/#rgba/#rrggbb/#rrggbbaa) — recolours this post's card/hero border, incl. on hover
+card_bg: "#1c1608"               # optional; hex only — recolours this post's card/hero background; independent of card_border, non-hex values are ignored
 excerpt: "Override the auto-excerpt shown on post cards."
 description: "Custom og:description / meta description."  # optional; overrides excerpt for OG/SEO
 updated: 2026-06-01              # optional; shows "↻ Updated YYYY-MM-DD" when differs from date

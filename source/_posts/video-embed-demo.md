@@ -5,6 +5,8 @@ updated: 2026-07-11
 categories: [Demo]
 tags: [video, theme]
 excerpt: "Demonstrating the click-to-load video facade — no YouTube or Vimeo iframe loads until you press play."
+card_border: "#f43f5e"
+card_bg: "#2a0d16"
 ---
 
 The `{% raw %}{% video %}{% endraw %}` tag embeds YouTube and Vimeo videos behind a privacy-friendly click-to-load facade: the page makes no third-party player request until you actually press play. YouTube shows its cookie-free thumbnail; Vimeo gets a themed placeholder with zero external requests. Without JavaScript the facade is a plain link to the video page.

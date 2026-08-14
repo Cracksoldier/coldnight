@@ -8,6 +8,8 @@ excerpt: "Complete reference for every option in themes/coldnight/_config.yml �
 updated: 2026-08-13
 difficulty: 1
 pinned: true
+card_border: "#60a5fa"
+card_bg: "#0b1a33"
 ---
 
 All theme options live in `themes/coldnight/_config.yml`. You can override any of them in the root `_config.yml` under `theme_config:` without touching the theme source.
@@ -312,6 +314,30 @@ The two posts on this index with a full-width thumbnail — *Image Compare Slide
 
 {% note warning %}
 If you set `cover.default`, make sure the file actually exists in your site's `source/` directory. The theme trusts the configured path — a missing file means every post without its own `cover_image` shows a broken image in its card cover, and social previews point at a 404.
+{% endnote %}
+
+## Card colours
+
+Cards are uniform by default — the same elevated surface and subtle blue border everywhere. Two front-matter keys recolour a single post's card:
+
+```yaml
+---
+title: Modern JavaScript Async Patterns
+card_border: "#f5c518"
+card_bg: "#1c1608"
+---
+```
+
+There is no theme config counterpart and nothing to switch on: a post that sets neither key renders exactly as before.
+
+The keys are independent — set one, the other, or both. This post uses both; *Image Compare Slider Demo* sets only `card_border` and keeps the default background, while *Audio Player Demo* sets only `card_bg` and keeps the default border.
+
+Values must be **hex codes** — `#rgb`, `#rgba`, `#rrggbb`, or `#rrggbbaa`. Named colours and `rgb()`/`oklch()` notation are deliberately not accepted; anything that isn't a hex code is ignored per key, so a malformed `card_bg` won't take a valid `card_border` down with it.
+
+The colour is a property of the post, not of the index page, so it follows the post wherever its card appears — the grid, the pinned hero, and the *You might also like* strip at the foot of related posts. On hover a custom border keeps its colour rather than snapping to the default blue; the shadow lift still marks the hover.
+
+{% note tip %}
+`card_bg` replaces the card surface but not the text colour on top of it. Stick to dark, low-saturation backgrounds on this theme — a light fill will leave the excerpt and metadata unreadable.
 {% endnote %}
 
 ---

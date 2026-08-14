@@ -7,6 +7,7 @@ tags: [images, theme]
 cover_image: https://picsum.photos/800/450
 cover_large: true
 excerpt: "Demonstrating the built-in before/after compare slider tag — drag, touch, or use arrow keys to reveal the difference."
+card_border: "#2dd4bf"
 ---
 
 The `{% raw %}{% compare %}{% endraw %}` tag renders two stacked images with a draggable divider. It's built on a native range input, so pointer, touch, and keyboard (arrow keys) all work out of the box — without JavaScript it falls back to a static 50/50 split.

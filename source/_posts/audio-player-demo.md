@@ -6,6 +6,7 @@ categories: [Demo]
 tags: [audio, theme]
 cover_image: https://picsum.photos/800/450
 excerpt: "Demonstrating the built-in audio player tag — themed controls, seek bar, mute, and keyboard navigation."
+card_bg: "#1b1033"
 ---
 
 The `{% raw %}{% audio %}{% endraw %}` tag embeds a styled audio player that matches the blog's dark theme. Controls are fully custom — no browser chrome — with a scrubable progress bar, mute toggle, and keyboard support.

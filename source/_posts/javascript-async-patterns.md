@@ -6,6 +6,8 @@ tags: [javascript, async, promises, patterns]
 cover_image: https://picsum.photos/800/450
 excerpt: A practical reference for async/await, Promise combinators, AbortController, and async generators — with annotated examples.
 pinned: true
+card_border: "#f5c518"
+card_bg: "#1c1608"
 ---
 
 Asynchronous JavaScript has evolved significantly. This post collects the patterns worth knowing in 2026.
