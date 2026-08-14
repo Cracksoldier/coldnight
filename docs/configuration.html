@@ -60,6 +60,7 @@
       <a href="#config-epub">ePub export</a>
       <a href="#config-pdf-viewer">PDF viewer</a>
       <a href="#config-audio-player">Audio player</a>
+      <a href="#config-video">Video embeds</a>
       <a href="#config-model-viewer">3D model viewer</a>
       <a href="#config-giscus">Giscus comments</a>
       <a href="#config-mermaid">Mermaid diagrams</a>
@@ -276,9 +277,12 @@
 <pre><code><span class="nb">cover</span><span class="pn">:</span>
   <span class="nb">default</span><span class="pn">:</span>      <span class="str">"/images/default-cover.jpg"</span>
   <span class="nb">fallback</span><span class="pn">:</span>     <span class="val">true</span>
+  <span class="nb">large</span><span class="pn">:</span>        <span class="val">false</span>
   <span class="nb">aspect_ratio</span><span class="pn">:</span> <span class="str">"16/9"</span></code></pre>
 
     <p>Individual posts can opt out of the thumbnail with <code>cover_image: false</code> in their front-matter (bare YAML boolean, not <code>"false"</code>) — the card and pinned hero render without a cover strip while <code>og:image</code> still falls back to <code>cover.default</code>.</p>
+
+    <p>Card <em>colours</em> are front-matter only and have no configuration key: <code>card_border:</code> and <code>card_bg:</code> take a hex value and recolour a single post's card, pinned hero, and related-posts entry. There is deliberately no site-wide switch — the feature is inert unless a post opts in. See <a href="writing.html#front-matter">post front-matter</a> for the format rules.</p>
 
     <hr>
 
@@ -1204,6 +1208,30 @@
 <pre><code><span class="nb">audio_player</span><span class="pn">:</span> <span class="val">true</span></code></pre>
 
     <p>See the <a href="writing.html#tag-audio">{% audio %} tag</a> documentation for syntax, attribute reference, and examples.</p>
+
+    <hr>
+
+    <!-- Video embeds -->
+    <h2 id="config-video">Video embeds</h2>
+    <p>Controls how the <code>{% video %}</code> tag renders YouTube and Vimeo URLs. By default it emits a <strong>click-to-load facade</strong>: no third-party request is made until the visitor presses play, and the player then loads from the cookie-free <code>youtube-nocookie.com</code> domain. Unlike <code>audio_player</code> and <code>compare_slider</code>, this key does not disable the tag — it only changes the output.</p>
+
+    <table>
+      <thead><tr><th>Key</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="opt-key">video_facade</td>
+          <td class="opt-type">boolean</td>
+          <td class="opt-default">true</td>
+          <td>Set to <code>false</code> to restore eager <code>&lt;iframe&gt;</code> embeds for YouTube and Vimeo. The <code>{% video %}</code> tag stays enabled either way — this switch never returns an empty string. Direct video files are unaffected; they always use a native <code>&lt;video&gt;</code> element.</td>
+        </tr>
+      </tbody>
+    </table>
+
+<pre><code><span class="nb">video_facade</span><span class="pn">:</span> <span class="val">true</span></code></pre>
+
+    <p>Toggling this requires a <code>hexo clean</code> — tag output is cached in <code>db.json</code>, so an incremental <code>hexo generate</code> keeps the previous markup.</p>
+
+    <p>See the <a href="writing.html#tag-video">{% video %} tag</a> documentation for syntax and examples.</p>
 
     <hr>
 
