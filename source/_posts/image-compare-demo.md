@@ -1,7 +1,6 @@
 ---
 title: "Image Compare Slider Demo"
 date: 2026-07-02
-updated: 2026-07-02
 categories: [Demo]
 tags: [images, theme]
 cover_image: https://picsum.photos/800/450

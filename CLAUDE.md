@@ -90,7 +90,12 @@ Hexo's default `updated_option: 'mtime'` falls back to file mtime when `updated:
 
 This site therefore sets **`updated_option: 'date'`** in `_config.yml` — posts with no `updated:` get `updated == date` and stay badge-free no matter when they were checked out. Do not change it back to `'mtime'`.
 
-Consequence: the badge is now strictly opt-in. Set `updated:` explicitly in front-matter when you actually want to surface a revision date. Setting `updated:` equal to `date:` is redundant under this config (a few posts still carry it from before the fix; harmless).
+Consequence: the badge is now strictly opt-in. Set `updated:` explicitly in front-matter only when you actually want to surface a revision date — setting it equal to `date:` is a no-op under this config and should not be added to new posts. Only `syntax-highlighting-showcase.md` and `theme-configuration-guide.md` carry it.
+
+`has_explicit_updated()` keys off the presence of `updated:` in `page.raw`, and the two consumers treat its absence differently — both deliberately:
+
+- JSON-LD `dateModified` (`head.ejs`) **falls back to `page.date`**, so it is always emitted.
+- JSON Feed `date_modified` is **omitted entirely** — hence only 2 items in `/feed.json` carry it.
 
 Note this is independent of the theme's `has_explicit_updated(page)` helper, which parses `page.raw` and is unaffected by `updated_option` — it gates the stale-post warning, JSON-LD `dateModified`, and the JSON Feed's `date_modified`.
 

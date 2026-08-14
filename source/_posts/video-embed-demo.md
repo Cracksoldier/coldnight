@@ -1,7 +1,6 @@
 ---
 title: "Video Embed Demo"
 date: 2026-07-11
-updated: 2026-07-11
 categories: [Demo]
 tags: [video, theme]
 excerpt: "Demonstrating the click-to-load video facade — no YouTube or Vimeo iframe loads until you press play."

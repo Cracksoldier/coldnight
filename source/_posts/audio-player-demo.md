@@ -1,7 +1,6 @@
 ---
 title: "Audio Player Demo"
 date: 2026-06-03
-updated: 2026-06-03
 categories: [Demo]
 tags: [audio, theme]
 cover_image: https://picsum.photos/800/450

@@ -1,7 +1,6 @@
 ---
 title: "3D Model Viewer"
 date: 2026-06-01 12:00:00
-updated: 2026-06-01
 categories: [Demo]
 tags: [3d, webgl, threejs]
 cover_image: https://picsum.photos/800/450
