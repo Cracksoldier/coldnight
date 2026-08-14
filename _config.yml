@@ -90,7 +90,10 @@ meta_generator: true
 date_format: DD.MM.YYYY
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+## 'date' (not the 'mtime' default): without it, posts with no explicit
+## updated: fall back to file mtime — which is the clone time on a fresh
+## checkout — and light up a spurious "↻ Updated" badge on every post.
+updated_option: 'date'
 
 # Pagination
 ## Set per_page to 0 to disable pagination

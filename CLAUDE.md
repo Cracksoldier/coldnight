@@ -86,7 +86,13 @@ git submodule update --init
 
 ### `updated:` front-matter
 
-Hexo defaults `page.updated` to file mtime when not set. On a fresh `git clone` all mtimes reflect the clone time, triggering the "↻ Updated" badge on every post. Always set `updated:` explicitly in front-matter when surfacing a revision date.
+Hexo's default `updated_option: 'mtime'` falls back to file mtime when `updated:` is absent. On a fresh `git clone` all mtimes reflect the clone time, so `page.updated` differs from `page.date` and the theme's "↻ Updated" badge (`post.ejs`, a plain date comparison) fires on every post.
+
+This site therefore sets **`updated_option: 'date'`** in `_config.yml` — posts with no `updated:` get `updated == date` and stay badge-free no matter when they were checked out. Do not change it back to `'mtime'`.
+
+Consequence: the badge is now strictly opt-in. Set `updated:` explicitly in front-matter when you actually want to surface a revision date. Setting `updated:` equal to `date:` is redundant under this config (a few posts still carry it from before the fix; harmless).
+
+Note this is independent of the theme's `has_explicit_updated(page)` helper, which parses `page.raw` and is unaffected by `updated_option` — it gates the stale-post warning, JSON-LD `dateModified`, and the JSON Feed's `date_modified`.
 
 ### KaTeX false positives
 
