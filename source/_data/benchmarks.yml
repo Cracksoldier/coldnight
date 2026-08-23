@@ -1,0 +1,6 @@
+# Sample data for the {% chart %} tag's data= attribute.
+# `x` supplies the category axis; every other key becomes a series.
+x: [1 KB, 10 KB, 100 KB, 1 MB, 10 MB]
+Rust: [0.8, 1.9, 12.4, 108, 1120]
+Go: [1.1, 2.6, 17.8, 154, 1610]
+Python: [4.7, 11.2, 78.3, 690, 7240]

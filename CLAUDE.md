@@ -333,3 +333,36 @@ All parameters except `src` are optional:
 | `caption` | — | Plain-text caption rendered below the viewer |
 
 Three.js (~680 KB) and loader scripts are only loaded on posts that contain a `{% model %}` tag. Vendor files live at `themes/coldnight/source/vendor/three/`.
+
+## Charts
+
+`{% chart %}` renders bar, line, and pie charts as SVG **at build time** — no library, no runtime, and no `<script>` added to the page. See `source/_posts/chart-demo.md`.
+
+```
+{% chart bar title="Lines of code" %}
+Rust: 4200
+Go: 3100
+{% endchart %}
+
+{% chart line x="Jan, Feb, Mar" unit="ms" %}
+API: 182, 174, 158
+{% endchart %}
+```
+
+| Parameter | Required | Notes |
+|-----------|----------|-------|
+| type | no | First bare word: `bar`, `line`, or `pie`. Defaults to `bar` |
+| `x` | no | Comma-separated category labels; switches rows to multi-point series |
+| `data` | no | Key into `source/_data/<name>.yml`; ignored when the body is non-empty |
+| `title` | no | Heading above the chart, also the SVG accessible name |
+| `caption` | no | Muted text below the chart |
+| `unit` | no | Suffix appended to axis and table values, e.g. `ms` or `%` |
+| `max` | no | Y-axis ceiling; defaults to a rounded value above the largest data point |
+
+Shared figures can live in `source/_data/` — `x` is the category axis, every other key a series (see `source/_data/benchmarks.yml`). An inline body always overrides `data=`.
+
+For flowcharts, sequence diagrams, radar, sankey, or treemap, use a ` ```mermaid ` block instead — those render client-side.
+
+### `ignore:` in `_config.yml`
+
+`ignore: ['**/vendor/**/*.map']` keeps vendored source maps out of `public/`. Mermaid ships 214 of them (27 MB) and they were being copied on every build. Don't drop this key when bumping the theme submodule.
