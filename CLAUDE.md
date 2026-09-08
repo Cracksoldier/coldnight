@@ -199,6 +199,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `favicon: /favicon.png` | Favicon image path; empty or not an image path = theme default `favicon.svg`/`.ico` |
 | `sidebar.position: hidden` | Hides the sidebar on all pages |
 | `sidebar.about: false` | Hides the About widget without touching `sidebar.widgets`; the widget also self-hides when `author`, `description`, `avatar` and both social handles are empty |
+| `sidebar.about_title: "…"` | Heading of the About widget; empty or non-string = `"About"`. The other sidebar widgets have fixed headings |
 | `links.title: "Bookmarks"` | `h1` on the links page; empty = the page's front-matter `title:`, then `"Links"` |
 | `links.subtitle: "…"` | Optional line under the links-page `h1`; empty = nothing. Tag filter chips are separate — they appear automatically whenever any entry in `links.yml` has `tags:` |
 | `grid.columns: N` | Index grid columns (1 = list view) |
