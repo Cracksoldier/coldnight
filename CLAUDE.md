@@ -201,7 +201,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `sidebar.about: false` | Hides the About widget without touching `sidebar.widgets`; the widget also self-hides when `author`, `description`, `avatar` and both social handles are empty |
 | `sidebar.about_title: "…"` | Heading of the About widget; empty or non-string = `"About"`. The other sidebar widgets have fixed headings |
 | `sidebar.about_name: "…"` | Name line in the About widget; empty = site-level `author:`, `false` = hide the line entirely |
-| `sidebar.about_description: "…"` | Bio line in the About widget; empty = site-level `description:`, `false` = hide the line. Note the site-level `description:` also feeds `og:description`/meta and `/llms.txt` |
+| `sidebar.about_description: "…"` | Bio line in the About widget; empty = site-level `description:`, `false` = hide the line. Accepts multi-line YAML (`\|`) — newlines render as breaks; `<br>` does not (the value is escaped). Note the site-level `description:` also feeds `og:description`/meta and `/llms.txt` |
 | `links.title: "Bookmarks"` | `h1` on the links page; empty = the page's front-matter `title:`, then `"Links"` |
 | `links.subtitle: "…"` | Optional line under the links-page `h1`; empty = nothing. Tag filter chips are separate — they appear automatically whenever any entry in `links.yml` has `tags:` |
 | `grid.columns: N` | Index grid columns (1 = list view) |
