@@ -219,6 +219,7 @@ This site's `_config.yml` already has this override. Do not add Links/Showroom t
 | `mermaid.enabled: true` | Renders ` ```mermaid ` blocks as SVG |
 | `mermaid.theme: dark` | Mermaid colour scheme |
 | `math.enabled: true` | KaTeX build-time math rendering |
+| `math.epub: mathml` | ePub export keeps formulas as MathML (+ hidden TeX fallback) instead of the default MathJax SVG images; `svg` images are the only form FBReader renders |
 | `social.share: true` | Shows X/Twitter, LinkedIn, copy-link buttons in post footer |
 | `word_count: false` | Hides word count from post header |
 | `reading_time: false` | Removes reading-time estimates everywhere |
